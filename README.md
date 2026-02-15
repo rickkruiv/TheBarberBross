@@ -1,4 +1,8 @@
-# 💈 BarberBross
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6c3c2010-2929-4359-b81a-2a3b1c67110d" 
+       alt="barberbrossNextGen" 
+       width="640" />
+</p>
 
 ## Visão do Sistema
 
