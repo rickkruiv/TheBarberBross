@@ -19,7 +19,7 @@ Uma plataforma **SaaS multi-tenant** para:
 ## Complexidade Técnica
 - Multi-tenant (cada barbearia isolada no banco)
 - Controle de permissões (RBAC)
-- Microserviço ou arquitetura modular
+- Arquitetura modular
 - Dashboard com gráficos dinâmicos
 - Sistema de pontuação/fidelidade
 - Notificações push
