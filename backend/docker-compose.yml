@@ -6,29 +6,36 @@ services:
     container_name: barberbross-postgres
     restart: always
     environment:
-      POSTGRES_DB: barberbross
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      TZ: America/Sao_Paulo
+      POSTGRES_DB: ${DB_BARBERBROSS}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: ${TZ}
+    ports:
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
-    build: .
+    image: maven:3.9.9-eclipse-temurin-17
     container_name: barberbross-backend
+    working_dir: /app
+    volumes:
+      - .:/app
+      - maven_cache:/root/.m2
+    command: mvn spring-boot:run
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     depends_on:
       postgres:
         condition: service_healthy
-    env_file:
-      - .env
-    restart: always
 
 volumes:
   postgres_data:
+  maven_cache:
