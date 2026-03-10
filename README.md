@@ -15,11 +15,12 @@ Uma plataforma **SaaS multi-tenant** para:
 - BI com métricas estratégicas
 - Aplicativo mobile para clientes
 - Aplicativo mobile interno para barbeiros
+- Módulo de portfólio para barbeiros e barbearias
+- Módulo de comunidade de profissionais (Eventos, oportunidades e networking) 
 
 ## Complexidade Técnica
-- Multi-tenant (cada barbearia isolada no banco)
 - Controle de permissões (RBAC)
-- Microserviço ou arquitetura modular
+- Arquitetura modular
 - Dashboard com gráficos dinâmicos
 - Sistema de pontuação/fidelidade
 - Notificações push
