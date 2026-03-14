@@ -1,4 +1,6 @@
 package com.barberbross.BarberBross.dto.response;
 
-public record DTOLoginResponse(String token) {
+import com.barberbross.BarberBross.enums.NivelAcesso;
+
+public record DTOLoginResponse(Long usuarioId, String name, NivelAcesso nivelAcesso, String token) {
 }
