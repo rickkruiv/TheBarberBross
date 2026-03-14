@@ -4,7 +4,6 @@ import com.barberbross.BarberBross.dto.request.DTOAutenticacaoRequest;
 import com.barberbross.BarberBross.dto.request.DTOClienteRequest;
 import com.barberbross.BarberBross.dto.request.DTOFuncionarioRequest;
 import com.barberbross.BarberBross.dto.response.DTOClienteResponse;
-import com.barberbross.BarberBross.dto.response.DTOFuncionarioResponse;
 import com.barberbross.BarberBross.dto.response.DTOFuncionarioSimplesResponse;
 import com.barberbross.BarberBross.service.AutenticacaoService;
 import jakarta.validation.Valid;

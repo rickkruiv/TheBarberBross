@@ -5,11 +5,9 @@ import com.barberbross.BarberBross.dto.request.DTOAutenticacaoRequest;
 import com.barberbross.BarberBross.dto.request.DTOClienteRequest;
 import com.barberbross.BarberBross.dto.request.DTOFuncionarioRequest;
 import com.barberbross.BarberBross.dto.response.DTOClienteResponse;
-import com.barberbross.BarberBross.dto.response.DTOFuncionarioResponse;
 import com.barberbross.BarberBross.dto.response.DTOFuncionarioSimplesResponse;
 import com.barberbross.BarberBross.dto.response.DTOLoginResponse;
 import com.barberbross.BarberBross.model.Usuario;
-import com.barberbross.BarberBross.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,9 +18,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AutenticacaoService {
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private ClienteService clienteService;
