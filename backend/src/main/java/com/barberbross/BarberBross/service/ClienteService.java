@@ -4,9 +4,12 @@ import com.barberbross.BarberBross.dto.request.DTOClienteRequest;
 import com.barberbross.BarberBross.dto.response.DTOClienteResponse;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.Cliente;
+import com.barberbross.BarberBross.model.Usuario;
 import com.barberbross.BarberBross.repository.ClienteRepository;
+import com.barberbross.BarberBross.repository.UsuarioRepository;
 import com.barberbross.BarberBross.validation.implementations.ClienteCamposUnicosValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,15 +18,24 @@ import java.util.List;
 public class ClienteService {
 
     @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
     private ClienteRepository clienteRepository;
 
     @Autowired
     private ClienteCamposUnicosValidator validator;
 
-    public DTOClienteResponse salvarCliente(DTOClienteRequest novoCliente) {
-        validator.validar(novoCliente);
-        Cliente c = new Cliente(novoCliente);
+    public DTOClienteResponse salvarCliente(DTOClienteRequest dto) {
+        validator.validar(dto);
+
+        String senhaEncriptada = new BCryptPasswordEncoder().encode(dto.senha());
+        Usuario u = new Usuario(dto, senhaEncriptada);
+        usuarioRepository.save(u);
+
+        Cliente c = new Cliente(dto, u);
         clienteRepository.save(c);
+
         return new DTOClienteResponse(c);
     }
 

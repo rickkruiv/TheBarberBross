@@ -33,6 +33,18 @@ CREATE TABLE empresas
 );
 
 -- =========================
+-- USUARIOS
+-- =========================
+CREATE TABLE usuarios
+(
+    usuario_id   BIGSERIAL PRIMARY KEY,
+    username     VARCHAR(200) NOT NULL UNIQUE,
+    senha        VARCHAR(255) NOT NULL,
+    nivel_acesso VARCHAR(30)  NOT NULL
+);
+
+
+-- =========================
 -- CLIENTES
 -- =========================
 CREATE TABLE clientes
@@ -40,8 +52,11 @@ CREATE TABLE clientes
     cliente_id BIGSERIAL PRIMARY KEY,
     nome       VARCHAR(50)  NOT NULL,
     email      VARCHAR(255) NOT NULL UNIQUE,
-    senha      VARCHAR(50)  NOT NULL,
-    telefone   VARCHAR(15)  NOT NULL
+    telefone   VARCHAR(15)  NOT NULL,
+    usuario_id BIGINT UNIQUE,
+
+    CONSTRAINT fk_cliente_usuario FOREIGN KEY (usuario_id)
+        REFERENCES usuarios (usuario_id)
 );
 
 -- =========================
@@ -49,35 +64,24 @@ CREATE TABLE clientes
 -- =========================
 CREATE TABLE funcionarios
 (
-    funcionario_id BIGSERIAL PRIMARY KEY,
-    nome           VARCHAR(50)  NOT NULL,
-    cpf            VARCHAR(14)  NOT NULL UNIQUE,
-    rg             VARCHAR(12) UNIQUE,
-    telefone       VARCHAR(15)  NOT NULL,
-    email          VARCHAR(100) NOT NULL UNIQUE,
-    nascimento     DATE,
-    estado_civil   VARCHAR(30),
-    endereco_id    BIGINT,
+    funcionario_id      BIGSERIAL PRIMARY KEY,
+    nome                VARCHAR(50)  NOT NULL,
+    cpf                 VARCHAR(14)  NOT NULL UNIQUE,
+    telefone            VARCHAR(15)  NOT NULL,
+    email               VARCHAR(100) NOT NULL UNIQUE,
+    nascimento          DATE,
+    data_contratacao    DATE,
+    salario_base        NUMERIC(10, 2),
+    percentual_comissao NUMERIC(5, 2),
+    ativo               BOOLEAN,
+    endereco_id         BIGINT,
+    usuario_id          BIGINT UNIQUE,
 
-    CONSTRAINT fk_funcionario_endereco
-        FOREIGN KEY (endereco_id)
-            REFERENCES enderecos (endereco_id)
-);
+    CONSTRAINT fk_funcionario_endereco FOREIGN KEY (endereco_id)
+        REFERENCES enderecos (endereco_id),
 
--- =========================
--- USUARIOS
--- =========================
-CREATE TABLE usuarios
-(
-    usuario_id     BIGSERIAL PRIMARY KEY,
-    username       VARCHAR(20)  NOT NULL UNIQUE,
-    senha          VARCHAR(255) NOT NULL,
-    nivel_acesso   VARCHAR(30)  NOT NULL,
-    funcionario_id BIGINT UNIQUE,
-
-    CONSTRAINT fk_usuario_funcionario
-        FOREIGN KEY (funcionario_id)
-            REFERENCES funcionarios (funcionario_id)
+    CONSTRAINT fk_funcionario_usuario FOREIGN KEY (usuario_id)
+        REFERENCES usuarios (usuario_id)
 );
 
 -- =========================
@@ -248,10 +252,10 @@ CREATE TABLE redes_sociais
 CREATE TABLE fornecedores
 (
     fornecedor_id BIGSERIAL PRIMARY KEY,
-    nome             VARCHAR(255) NOT NULL,
-    cnpj             VARCHAR(255) NOT NULL,
-    email             VARCHAR(255) NOT NULL,
-    endereco_id      BIGINT,
+    nome          VARCHAR(255) NOT NULL,
+    cnpj          VARCHAR(255) NOT NULL,
+    email         VARCHAR(255) NOT NULL,
+    endereco_id   BIGINT,
 
     CONSTRAINT fk_fornecedor_endereco
         FOREIGN KEY (endereco_id)

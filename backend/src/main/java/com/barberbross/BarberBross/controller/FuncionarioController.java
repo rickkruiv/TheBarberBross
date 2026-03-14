@@ -22,11 +22,11 @@ public class FuncionarioController {
     @Autowired
     private FuncionarioService funcionarioService;
 
-
-    @PostMapping
-    public ResponseEntity<DTOFuncionarioSimplesResponse> salvarFuncionario(@RequestBody @Valid DTOFuncionarioRequest novoFuncionario){
-        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioService.salvarFuncionario(novoFuncionario));
-    }
+    //Vai deixar de existir
+//    @PostMapping
+//    public ResponseEntity<DTOFuncionarioSimplesResponse> salvarFuncionario(@RequestBody @Valid DTOFuncionarioRequest novoFuncionario){
+//        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioService.salvarFuncionario(novoFuncionario));
+//    }
 
     @PostMapping("{id}/endereco")
     public ResponseEntity<HttpStatus> salvarEnderecoFuncionario(@PathVariable Long id,

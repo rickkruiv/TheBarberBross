@@ -12,7 +12,4 @@ public record DTOUsuarioRequest(
         String senha,
 
         @NotNull
-        Long funcionarioId,
-
-        @NotNull
         NivelAcesso nivelAcesso) {}
