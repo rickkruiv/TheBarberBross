@@ -34,10 +34,9 @@ public class AutenticacaoService {
     public ResponseEntity fazerLogin(@Valid DTOAutenticacaoRequest dto) {
         var usernameSenha = new UsernamePasswordAuthenticationToken(dto.username(), dto.senha());
         var auth = authenticationManager.authenticate(usernameSenha);
-
-        var token = tokenService.gerarToken((Usuario) auth.getPrincipal());
-
-        return ResponseEntity.ok(new DTOLoginResponse(token));
+        Usuario u = (Usuario) auth.getPrincipal();
+        var token = tokenService.gerarToken(u);
+        return ResponseEntity.ok(new DTOLoginResponse(u.getUsuarioId(), u.getUsername(), u.getNivelAcesso(), token));
     }
 
     public ResponseEntity<DTOClienteResponse> fazerRegistroCliente(@Valid DTOClienteRequest dto) {
