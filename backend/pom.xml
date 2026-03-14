@@ -91,6 +91,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
