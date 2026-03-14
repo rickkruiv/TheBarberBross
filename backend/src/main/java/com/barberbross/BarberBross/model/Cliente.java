@@ -20,22 +20,23 @@ public class Cliente {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(length = 50, nullable = false)
-    private String senha;
-
     @Column(length = 15, nullable = false)
     private String telefone;
+
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Agendamento> agendamentos;
 
     public Cliente() {}
 
-    public Cliente(DTOClienteRequest c) {
+    public Cliente(DTOClienteRequest c, Usuario u) {
         this.nome = c.nome();
         this.email = c.email();
-        this.senha = c.senha();
         this.telefone = c.telefone();
+        this.usuario = u;
         this.agendamentos = new ArrayList<>();
     }
 
@@ -49,10 +50,12 @@ public class Cliente {
 
     public String getTelefone() { return telefone; }
 
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
     public void atualizarDados(DTOClienteRequest dto) {
         this.email = dto.email();
         this.nome = dto.nome();
-        this.senha = dto.senha();
         this.telefone = dto.telefone();
     }
 }

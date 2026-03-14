@@ -1,10 +1,10 @@
 package com.barberbross.BarberBross.dto.request;
 
-import com.barberbross.BarberBross.enums.EstadoCivil;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record DTOFuncionarioRequest(
@@ -13,7 +13,6 @@ public record DTOFuncionarioRequest(
 
         @NotBlank
         String cpf,
-        String rg,
 
         @NotBlank
         String telefone,
@@ -22,8 +21,17 @@ public record DTOFuncionarioRequest(
         @Email
         String email,
 
+        @NotBlank
+        String senha,
+
         @NotNull
         LocalDate nascimento,
 
         @NotNull
-        EstadoCivil estadoCivil) {}
+        LocalDate dataContratacao,
+
+        @NotNull
+        BigDecimal salarioBase,
+
+        @NotNull
+        BigDecimal percentualComissao) {}

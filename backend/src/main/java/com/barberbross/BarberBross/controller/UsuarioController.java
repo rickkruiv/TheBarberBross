@@ -19,10 +19,10 @@ public class UsuarioController {
     @Autowired
     public UsuarioService usuarioService;
 
-    @PostMapping
-    public ResponseEntity<DTOUsuarioResponse> salvarUsuario(@RequestBody @Valid DTOUsuarioRequest novoUsuario){
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.salvarUsuario(novoUsuario));
-    }
+//    @PostMapping vai deixar de existir se pa
+//    public ResponseEntity<DTOUsuarioResponse> salvarUsuario(@RequestBody @Valid DTOUsuarioRequest novoUsuario){
+//        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.salvarUsuario(novoUsuario));
+//    }
 
     @GetMapping
     public ResponseEntity<List<DTOUsuarioResponse>> listarUsuarios(){

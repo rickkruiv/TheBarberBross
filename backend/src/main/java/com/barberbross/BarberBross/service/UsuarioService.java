@@ -3,12 +3,9 @@ package com.barberbross.BarberBross.service;
 import com.barberbross.BarberBross.dto.request.DTOUsuarioRequest;
 import com.barberbross.BarberBross.dto.response.DTOUsuarioResponse;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
-import com.barberbross.BarberBross.model.Funcionario;
 import com.barberbross.BarberBross.model.Usuario;
-import com.barberbross.BarberBross.repository.FuncionarioRepository;
 import com.barberbross.BarberBross.repository.UsuarioRepository;
 import com.barberbross.BarberBross.validation.implementations.UsuarioCamposUnicosValidator;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,25 +18,17 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private FuncionarioRepository funcionarioRepository;
-
-    @Autowired
     private UsuarioCamposUnicosValidator validator;
 
-    @Transactional
-    public DTOUsuarioResponse salvarUsuario(DTOUsuarioRequest dto) {
-        validator.validar(dto);
-
-        Funcionario funcionario = funcionarioRepository.findById(dto.funcionarioId())
-                .orElseThrow(() -> new NotFoundException(
-                        "Funcionário não encontrado com id: " + dto.funcionarioId()
-                ));
-
-        Usuario u = new Usuario(dto, funcionario);
-        usuarioRepository.save(u);
-        funcionario.setUsuario(u);
-        return new DTOUsuarioResponse(u);
-    }
+//    @Transactional
+//    public DTOUsuarioResponse salvarUsuario(DTOUsuarioRequest dto, String senhaEncriptada) {
+//        validator.validar(dto);
+//        Usuario u = new Usuario(dto, senhaEncriptada);
+//        usuarioRepository.save(u);
+//
+// n vai mais existir se pa
+//        return new DTOUsuarioResponse(u);
+//    }
 
     public List<DTOUsuarioResponse> listarUsuarios() {
         return usuarioRepository.findAll()

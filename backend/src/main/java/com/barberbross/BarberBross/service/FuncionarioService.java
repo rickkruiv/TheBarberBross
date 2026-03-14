@@ -10,10 +10,13 @@ import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.Agendamento;
 import com.barberbross.BarberBross.model.CargoFuncionario;
 import com.barberbross.BarberBross.model.Funcionario;
+import com.barberbross.BarberBross.model.Usuario;
 import com.barberbross.BarberBross.repository.FuncionarioRepository;
+import com.barberbross.BarberBross.repository.UsuarioRepository;
 import com.barberbross.BarberBross.validation.implementations.FuncionarioCamposUnicosValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +28,9 @@ public class FuncionarioService {
     private EnderecoService enderecoService;
 
     @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
     private FuncionarioRepository funcionarioRepository;
 
     @Autowired
@@ -32,8 +38,14 @@ public class FuncionarioService {
 
     public DTOFuncionarioSimplesResponse salvarFuncionario(DTOFuncionarioRequest dto){
         validator.validar(dto);
-        Funcionario f = new Funcionario(dto);
+
+        String senhaEncriptografada = new BCryptPasswordEncoder().encode(dto.senha());
+        Usuario u = new Usuario(dto, senhaEncriptografada);
+        usuarioRepository.save(u);
+
+        Funcionario f = new Funcionario(dto, u);
         funcionarioRepository.save(f);
+
         return new DTOFuncionarioSimplesResponse(f);
     }
 

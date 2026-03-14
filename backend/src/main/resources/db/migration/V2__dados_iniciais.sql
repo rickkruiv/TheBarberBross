@@ -24,10 +24,22 @@ VALUES ('BarberBross LTDA',
         1);
 
 -- =========================
+-- USUARIO
+-- =========================
+INSERT INTO usuarios (username, senha, nivel_acesso)
+VALUES ('carlos',
+        '$2a$10$/TD27y5oqGaoRJUcZrjWk.AtTZ0FjRUBDeAyFa5mVovaOgvMOh0Eq',
+        'ADMIN'),
+
+       ('joaosouza',
+        '$2a$10$/TD27y5oqGaoRJUcZrjWk.AtTZ0FjRUBDeAyFa5mVovaOgvMOh0Eq',
+        'CLIENTE');
+
+-- =========================
 -- CLIENTE
 -- =========================
-INSERT INTO clientes (nome, email, senha, telefone)
-VALUES ('João Silva', 'joao@gmail.com', '123456', '(44) 98888-1111');
+INSERT INTO clientes (nome, email, telefone, usuario_id)
+VALUES ('João Souza', 'joao@gmail.com', '(44) 98888-1111', 2);
 
 -- =========================
 -- CATEGORIAS
@@ -56,23 +68,18 @@ VALUES ('Pomada Modeladora', 'Pomada efeito seco', 3),
 -- =========================
 -- FUNCIONARIO
 -- =========================
-INSERT INTO funcionarios (nome, cpf, rg, telefone, email, nascimento, estado_civil, endereco_id)
-VALUES ('Carlos Barbeiro',
+INSERT INTO funcionarios (nome, cpf, telefone, email, nascimento, data_contratacao, salario_base, percentual_comissao, ativo,
+                          endereco_id, usuario_id)
+VALUES ('Carlos da Silva',
         '123.456.789-00',
-        '12.345.678-9',
         '(44) 97777-7777',
         'carlos@barberbross.com',
         '1995-05-10',
-        'SOLTEIRO',
-        2);
-
--- =========================
--- USUARIO
--- =========================
-INSERT INTO usuarios (username, senha, nivel_acesso, funcionario_id)
-VALUES ('carlos',
-        '123456',
-        'ADMIN',
+        '2026-01-01',
+        '3000',
+        '30',
+        true,
+        2,
         1);
 
 -- =========================
