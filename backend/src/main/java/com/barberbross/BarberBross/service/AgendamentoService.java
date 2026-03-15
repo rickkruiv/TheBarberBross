@@ -1,8 +1,10 @@
 package com.barberbross.BarberBross.service;
 
 import com.barberbross.BarberBross.dto.request.DTOAgendamentoRequest;
+import com.barberbross.BarberBross.dto.request.DTOAtualizaServicosResquest;
 import com.barberbross.BarberBross.dto.response.DTOAgendamentoResponse;
 import com.barberbross.BarberBross.enums.Status;
+import com.barberbross.BarberBross.exceptions.BadRequestException;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.*;
 import com.barberbross.BarberBross.repository.AgendamentoRepository;
@@ -10,6 +12,8 @@ import com.barberbross.BarberBross.validation.implementations.AgendamentoConflit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -49,8 +53,15 @@ public class AgendamentoService {
         return new DTOAgendamentoResponse(novo);
     }
 
-    public List<DTOAgendamentoResponse> listarAgendamentos(Long empresaId) {
-        return agendamentoRepository.findByEmpresaId(empresaId)
+    public List<DTOAgendamentoResponse> listarAgendamentosPorDia(Long empresaId, LocalDate data) {
+        return agendamentoRepository.listarAgendamentosPorData(empresaId, data.atStartOfDay(), data.atTime(LocalTime.MAX))
+                .stream()
+                .map(DTOAgendamentoResponse::new)
+                .toList();
+    }
+
+    public List<DTOAgendamentoResponse> listarAgendamentosPorPeriodo(Long empresaId, LocalDate inicio, LocalDate fim) {
+        return agendamentoRepository.listarAgendamentosPorData(empresaId, inicio.atStartOfDay(), fim.atTime(LocalTime.MAX))
                 .stream()
                 .map(DTOAgendamentoResponse::new)
                 .toList();
@@ -61,31 +72,33 @@ public class AgendamentoService {
         return new DTOAgendamentoResponse(a);
     }
 
-    public DTOAgendamentoResponse editarAgendamento(Long agendamentoId, DTOAgendamentoRequest dto) {
+    public DTOAgendamentoResponse editarServicosAgendamento(Long agendamentoId, DTOAtualizaServicosResquest dto) {
         Agendamento agendamentoAtual = buscarAgendamento(agendamentoId);
 
-        if (dto.dataHorario().isAfter(agendamentoAtual.getDataHorario()) ||
-                dto.dataHorario().isBefore(agendamentoAtual.getDataHorario())){
-            agendamentoValidation.validar(dto);
+        if (agendamentoAtual.getStatus() == Status.PENDENTE || agendamentoAtual.getStatus() == Status.EM_ANDAMENTO){
+            agendamentoAtual.limparServicos();
+
+            List<Servico> servicos = servicoService.buscarListaDeServicos(dto);
+            for (Servico s : servicos){ agendamentoAtual.adicionarServico(s); }
+
+            agendamentoRepository.save(agendamentoAtual);
+
+            return new DTOAgendamentoResponse(agendamentoAtual);
         }
 
-        agendamentoAtual.limparServicos();
-
-        List<Servico> servicos = servicoService.buscarListaDeServicos(dto);
-        for (Servico s : servicos){ agendamentoAtual.adicionarServico(s); }
-        Funcionario funcionario = funcionarioService.buscarFuncionario(dto.funcionarioId());
-
-        agendamentoAtual.atualizarDados(dto, funcionario);
-        agendamentoRepository.save(agendamentoAtual);
-
-        return new DTOAgendamentoResponse(agendamentoAtual);
+        throw new BadRequestException("Não foi possível alterar os serviços. Agendamento está: " + agendamentoAtual.getStatus());
     }
 
     public DTOAgendamentoResponse atualizarStatus(Long agendamentoId, Status status) {
         Agendamento existente = buscarAgendamento(agendamentoId);
-        existente.setStatus(status);
-        agendamentoRepository.save(existente);
-        return new DTOAgendamentoResponse(existente);
+
+        if (existente.getStatus() == Status.PENDENTE || existente.getStatus() == Status.EM_ANDAMENTO){
+            existente.setStatus(status);
+            agendamentoRepository.save(existente);
+            return new DTOAgendamentoResponse(existente);
+        }
+
+        throw new BadRequestException("Não foi possível alterar o status. Agendamento está: " + existente.getStatus());
     }
 
     public void deletarAgendamento(Long agendamentoId) {

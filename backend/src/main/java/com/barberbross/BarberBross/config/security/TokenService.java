@@ -16,6 +16,9 @@ public class TokenService {
     @Value("${JWT_SECRET}")
     private String secret;
 
+    @Value("${HORAS_TOKEN}")
+    private int horasToken;
+
     public String gerarToken(Usuario u) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -24,7 +27,7 @@ public class TokenService {
                     .withSubject(u.getUsername())
                     .withClaim("user_id", u.getUsuarioId())
                     .withClaim("nivel_acesso", u.getNivelAcesso().name())
-                    .withExpiresAt(Instant.now().plusSeconds(7200))
+                    .withExpiresAt(Instant.now().plusSeconds(horasToken))
                     .sign(algorithm);
         } catch (JWTCreationException e) {
             throw new RuntimeException("Erro na criação do token", e); //melhorar essa exceção dps
