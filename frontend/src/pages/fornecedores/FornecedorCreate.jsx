@@ -23,7 +23,7 @@ import {
 } from "../../services/fornecedores"
 import { fetchCategories } from "../../services/categories"
 import { toastError, toastSuccess } from "../../services/toast"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 const STATUS_OPTIONS = ["Ativo", "Inativo"]
 

@@ -12,7 +12,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import SectionCard from "../../components/SectionCard/SectionCard";
+import SectionCard from "../../shared/SectionCard/SectionCard";
 import CurrencyField from "../../components/CurrencyField/CurrencyField";
 import ActionBar from "../../components/ActionBar/ActionBar";
 import { toastSuccess, toastError } from "../../services/toast";

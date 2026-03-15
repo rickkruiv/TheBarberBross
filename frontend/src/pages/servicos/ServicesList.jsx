@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchServices, deleteService } from "../../services/services";
 import { toastError, toastSuccess } from "../../services/toast";
-import DefaultLoading from "../../components/loading/DefaultLoading";
+import DefaultLoading from "../../shared/Loading/DefaultLoading";
 
 const formatCurrency = (value) => {
   if (value == null) return "-";

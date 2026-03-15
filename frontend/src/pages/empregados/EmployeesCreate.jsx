@@ -24,13 +24,13 @@ import { useParams, useLocation, useNavigate } from "react-router-dom"
 import MaskedTextField from "../../components/MaskedTextField/MaskedTextField"
 import CurrencyField from "../../components/CurrencyField/CurrencyField"
 import DateField from "../../components/DateField/DateField"
-import SectionCard from "../../components/SectionCard/SectionCard"
+import SectionCard from "../../shared/SectionCard/SectionCard"
 import { BenefitSwitchRow, BenefitCheckRow } from "../../components/BenefitRow/BenefitRow"
 import AvatarUpload from "../../components/AvatarUpload/AvatarUpload"
 import ActionBar from "../../components/ActionBar/ActionBar"
 import { createEmployee, updateEmployee, fetchEmployeeById, mapEstadoCivilEnumToLabel } from "../../services/employees"
 import { toastSuccess, toastError } from "../../services/toast"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 const schema = Yup.object({
   nome: Yup.string().required("Informe o nome"),

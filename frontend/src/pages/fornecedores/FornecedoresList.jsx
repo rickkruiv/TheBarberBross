@@ -24,7 +24,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { listFornecedores, deleteFornecedor } from "../../services/fornecedores"
 import { toastError, toastSuccess } from "../../services/toast"
 import StatCard from "../../components/StatCard/StatCard"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 export default function FornecedoresList() {
   const navigate = useNavigate()

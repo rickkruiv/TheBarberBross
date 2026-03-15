@@ -26,7 +26,7 @@ import StatCard from "../../components/StatCard/StatCard"
 import useDebounce from "../../hooks/useDebounce"
 import { fetchEmployees, exportEmployees } from "../../services/employees"
 import { toastError, toastSuccess } from "../../services/toast"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 export default function EmployeesList() {
   const navigate = useNavigate()

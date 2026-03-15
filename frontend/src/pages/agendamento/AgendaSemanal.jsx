@@ -19,8 +19,8 @@ import { fetchAgendamentos } from "../../services/agendamentos"
 import { fetchServices } from "../../services/services"
 import { fetchEmployees } from "../../services/employees"
 import { toastError } from "../../services/toast"
-import AgendamentoModal from "../../components/modals/ApointmentDetailModal";
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import AgendamentoModal from "../../components/Modals/ApointmentDetailModal";
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
 
@@ -205,15 +205,10 @@ export default function AgendaSemanal() {
     }
   }, [errorAgenda, errorServices, errorEmployees])
 
-  const agendamentos = Array.isArray(agendaData)
-    ? agendaData
-    : agendaData?.data || []
-  const services = Array.isArray(servicesData)
-    ? servicesData
-    : servicesData?.data || []
-  const employees = Array.isArray(employeesData)
-    ? employeesData
-    : employeesData?.data || []
+  const agendamentos = agendaData
+  const services = servicesData
+  const employees = employeesData
+
 
   const isLoading = loadingAgenda || loadingServices || loadingEmployees
 

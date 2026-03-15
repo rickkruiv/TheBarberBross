@@ -38,7 +38,7 @@ import {
   tipoToLabel
 } from "../../services/categories"
 import { toastError, toastSuccess } from "../../services/toast"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 function CategoryModal({ open, onClose, category, onSaved }) {
   const isEdit = !!category

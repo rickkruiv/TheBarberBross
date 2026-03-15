@@ -6,7 +6,6 @@ import TopbarUser from "../modules/TopbarUser"
 import Sidebar, { drawerWidth, miniWidth } from "../modules/Sidebar"
 
 export default function DashboardLayout() {
-  const isMobile = useMediaQuery("(max-width:900px)")
   const [open, setOpen] = React.useState(() => {
     const v = localStorage.getItem("sidebarOpen")
     return v === null ? true : JSON.parse(v)
