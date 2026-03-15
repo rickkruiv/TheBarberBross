@@ -4,15 +4,20 @@ export const darkColors = {
   backgroundSecondary: "#26272B", // fundo secundario
   surface: "#35313B",             // cards
   surfaceElevated: "#453745",     // modais / componentes
+  backgroundInverse: "#F5F5F7",
+  surfaceInverse: "#CFCFD2",
 
   // texto
   text: "#F5F5F5",            // texto principal
   textSecondary: "#CFCFD2",   // texto secundário
   textMuted: "#9A9AA0",       // texto menos importante
-  textInverse: "#111111",
+  textInverse: "#1C1C1E",
+  textSecundaryInverse: "#4F4F56",
 
   // cores principais
   primary: "#FF1457",
+  secundary: "#C7265B",
+  terciary: "#B83260",
   primaryHover: "#E0124D",
   primarySoft: "#613C4C",
 
@@ -36,15 +41,20 @@ export const lightColors = {
   backgroundSecondary: "#ECECF0", // fundo secundario
   surface: "#FFFFFF",             // cards
   surfaceElevated: "#F3EEF1",     // modais / componentes elevados
+  backgroundInverse: "#2B2C30",
+  surfaceInverse: "#35313B",
 
   // texto
   text: "#1C1C1E",              // texto principal
   textSecondary: "#4F4F56",     // texto secundário
   textMuted: "#8E8E93",         // texto menos importante
-  textInverse: "#FFFFFF",
+  textInverse: "#F5F5F5",
+  textSecundaryInverse: "#CFCFD2",
 
   // cores principais
   primary: "#FF1457",
+  secundary: "#C7265B",
+  terciary: "#B83260",
   primaryHover: "#E0124D",
   primarySoft: "#FFD6E2",
 

@@ -3,35 +3,39 @@ import { StyleSheet } from "react-native";
 import TabItem from "../../components/TabItem";
 import { usePathname } from "expo-router";
 import { useTheme } from "../../theme/ThemeProvider";
+import AppHeader from "../../components/AppHeader";
 
 export default function Layout() {
   const pathname = usePathname();
-  const theme    = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <Tabs>
-      <TabSlot />
+    <>
+      <AppHeader />
+      <Tabs>
+        <TabSlot />
 
-      <TabList style={[styles.tabBar, { backgroundColor: theme.colors.background }]}>
+        <TabList style={[styles.tabBar, { backgroundColor: colors.background }]}>
 
-        <TabTrigger name="home" href="/home" style={styles.tabTrigger}>
-          <TabItem label="Home" icon="home" active={pathname === "/home" || pathname === "/"} />
-        </TabTrigger>
+          <TabTrigger name="home" href="/home" style={styles.tabTrigger}>
+            <TabItem label="Home" icon="home" active={pathname === "/home" || pathname === "/"} />
+          </TabTrigger>
 
-        <TabTrigger name="search" href="/search" style={styles.tabTrigger}>
-          <TabItem label="Search" icon="search" active={pathname === "/search"} />
-        </TabTrigger>
+          <TabTrigger name="appointments" href="/appointments" style={styles.tabTrigger}>
+            <TabItem label="Appointments" icon="time-outline" active={pathname === "/appointments"} />
+          </TabTrigger>
 
-        <TabTrigger name="appointments" href="/appointments" style={styles.tabTrigger}>
-          <TabItem label="Appointments" icon="clock-o" active={pathname === "/appointments"} />
-        </TabTrigger>
+          <TabTrigger name="aihaircutview" href="/aihaircutview" style={styles.tabTrigger}>
+            <TabItem label="Haircut Preview" icon="sparkles" active={pathname === "/aihaircutview"} />
+          </TabTrigger>
 
-        <TabTrigger name="menu" href="/menu" style={styles.tabTrigger}>
-          <TabItem label="Menu" icon="user-circle" active={pathname === "/menu"} />
-        </TabTrigger>
+          <TabTrigger name="menu" href="/menu" style={styles.tabTrigger}>
+            <TabItem label="Menu" icon="person-circle-outline" active={pathname === "/menu"} />
+          </TabTrigger>
 
-      </TabList>
-    </Tabs>
+        </TabList>
+      </Tabs>
+    </>
   );
 }
 

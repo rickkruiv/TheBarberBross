@@ -4,11 +4,11 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from "../../theme/ThemeProvider";
 
 export default function Menu() {
-  const theme = useTheme();
+  const { colors, typography } = useTheme();
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Text style={[theme.typography.title, { color: theme.colors.text }]}>Menu Screen!</Text>
-      <Link href={"/home"} style={[styles.button, { color: theme.colors.primary }]}>Go to Home screen</Link>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[typography.title, { color: colors.text }]}>Menu Screen!</Text>
+      <Link href={"/home"} style={[styles.button, { color: colors.primary }]}>Go to Home screen</Link>
       <StatusBar style="auto" />
     </View>
   );
