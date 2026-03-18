@@ -10,10 +10,7 @@ export function ThemeProvider({ children }: any) {
   const systemScheme = useColorScheme();
   const [themeMode, setThemeMode] = useState<"system" | "light" | "dark">("system");
 
-  const scheme =
-    themeMode === "system"
-      ? systemScheme ?? "dark"
-      : themeMode;
+  const scheme = themeMode === "system" ? systemScheme ?? "dark" : themeMode;
 
   const colors = scheme === "dark" ? darkColors : lightColors;
 
