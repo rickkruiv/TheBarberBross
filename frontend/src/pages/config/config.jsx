@@ -15,11 +15,11 @@ import AccessTime from "@mui/icons-material/AccessTime"
 import CloudUpload from "@mui/icons-material/CloudUpload"
 import { Formik, Form } from "formik"
 import * as Yup from "yup"
-import SectionCard from "../../components/SectionCard/SectionCard"
+import SectionCard from "../../shared/SectionCard/SectionCard"
 import { fetchEmpresaAtual, salvarEmpresa } from "../../services/empresa"
 import { fetchSocialMedias, upsertSocialMedia, deleteSocialMedia } from "../../services/socialMedia"
 import { toastError, toastSuccess } from "../../services/toast"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 const schema = Yup.object({
   nomeFantasia: Yup.string().required("Informe o nome fantasia"),
@@ -120,7 +120,7 @@ export default function Company() {
           const empresaSocials = (allSocials || []).filter(
             s => s.empresaId === empresa.empresaId
           )
-
+          
           const keys = ["instagram", "facebook", "tiktok", "whatsappBusiness"]
           empresaSocials.slice(0, 4).forEach((s, idx) => {
             const key = keys[idx]

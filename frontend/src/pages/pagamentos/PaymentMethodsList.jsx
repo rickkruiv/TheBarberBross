@@ -30,7 +30,7 @@ import SearchIcon from "@mui/icons-material/Search"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { fetchPayments, createPayment, updatePayment, deletePayment } from "../../services/payment"
 import { toastError, toastSuccess } from "../../services/toast"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 const METHOD_OPTIONS = [
   { code: "DINHEIRO", label: "Dinheiro", icon: "💵" },

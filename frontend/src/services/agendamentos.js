@@ -25,7 +25,7 @@ function buildPayload(values) {
 }
 
 export async function fetchAgendamentos(params) {
-  const config = params ? { params } : undefined
+  const config = params;
   const { data } = await api.get(`/agendamentos?empresaId=7`, config) // fazer por passagem de parametros dps
   return data
 }

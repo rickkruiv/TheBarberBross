@@ -6,10 +6,6 @@ import {
   Box,
   Typography,
   List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Collapse,
   useMediaQuery
 } from "@mui/material"
 import DashboardIcon from "@mui/icons-material/Dashboard"
@@ -21,14 +17,17 @@ import WorkIcon from "@mui/icons-material/Work"
 import EventAvailableIcon from "@mui/icons-material/EventAvailable"
 import SettingsIcon from "@mui/icons-material/Settings"
 import LocalShippingIcon from "@mui/icons-material/LocalShipping"
-import { NavLink } from "react-router-dom"
+import Abas from "../components/Abas/abas"
+import Group from "../components/GrupoAbas/GrupoAbas"
 
 export const drawerWidth = 300
 export const miniWidth = 80
 
 const openedMixin = theme => ({
   width: drawerWidth,
-  transition: theme.transitions.create("width", { duration: theme.transitions.duration.shorter }),
+  transition: theme.transitions.create("width", {
+    duration: theme.transitions.duration.shorter
+  }),
   overflowX: "hidden",
   borderRight: "1px solid #1E2733",
   backgroundColor: theme.palette.background.default
@@ -36,48 +35,31 @@ const openedMixin = theme => ({
 
 const closedMixin = theme => ({
   width: miniWidth,
-  transition: theme.transitions.create("width", { duration: theme.transitions.duration.shorter }),
+  transition: theme.transitions.create("width", {
+    duration: theme.transitions.duration.shorter
+  }),
   overflowX: "hidden",
   borderRight: "1px solid #1E2733",
   backgroundColor: theme.palette.background.default
 })
 
 const DrawerStyled = styled(Drawer, {
-  shouldForwardProp: prop => prop !== "open" && prop !== "mobile"
-})(({ theme, open, mobile }) => ({
+  shouldForwardProp: prop => prop !== "open"
+})(({ theme, open }) => ({
   width: open ? drawerWidth : miniWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
-  "& .MuiDrawer-paper": mobile ? openedMixin(theme) : open ? openedMixin(theme) : closedMixin(theme)
+  "& .MuiDrawer-paper": 
+     open
+      ? openedMixin(theme)
+      : closedMixin(theme)
 }))
 
-function Group({ icon, label, children, open: groupOpen, onToggle, sidebarOpen, setSidebarOpen }) {
-  const handleClick = () => {
-    if (!sidebarOpen) {
-      setSidebarOpen(true)
-      onToggle()
-    } else {
-      onToggle()
-    }
-  }
 
-  return (
-    <>
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon sx={{ minWidth: 40 }}>{icon}</ListItemIcon>
-        <ListItemText primary={label} />
-      </ListItemButton>
-      <Collapse in={sidebarOpen && Boolean(groupOpen)} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding sx={{ pl: 4 }}>
-          {children}
-        </List>
-      </Collapse>
-    </>
-  )
-}
+
 
 export default function Sidebar({ open, onToggle, setSidebarOpen }) {
-  const [openGroup, setOpenGroup] = React.useState("Agenda");
+  const [openGroup, setOpenGroup] = React.useState("Agenda")
   const isMobile = useMediaQuery("(max-width:900px)")
   const variant = isMobile ? "temporary" : "permanent"
 
@@ -110,6 +92,7 @@ export default function Sidebar({ open, onToggle, setSidebarOpen }) {
         >
           BB
         </Box>
+
         <Box sx={{ display: { xs: "block", md: open ? "block" : "none" } }}>
           <Typography variant="subtitle1" fontWeight={800}>
             BarberBross
@@ -131,147 +114,146 @@ export default function Sidebar({ open, onToggle, setSidebarOpen }) {
       >
         {open && (
           <Typography
-          variant="caption"
-          sx={{
-            px: 2,
-            pb: 0.5,
-            color: "text.secondary",
-            textTransform: "uppercase",
-            fontWeight: 600
-          }}
-        >
-          Menu Principal
-        </Typography>
+            variant="caption"
+            sx={{
+              px: 2,
+              pb: 0.5,
+              color: "text.secondary",
+              textTransform: "uppercase",
+              fontWeight: 600
+            }}
+          >
+            Menu Principal
+          </Typography>
         )}
 
-        <ListItemButton component={NavLink} to="/">
-          <ListItemIcon sx={{ minWidth: 40 }}>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </ListItemButton>
+        <Abas to="/" icon={<DashboardIcon />} text="Dashboard" />
 
-        <Group icon={<EventAvailableIcon />}
-               label="Agenda"
-               open={openGroup === "Agenda"}
-               onToggle={() => setOpenGroup(openGroup === "Agenda" ? null : "Agenda")}
-               sidebarOpen={open}
-               setSidebarOpen={setSidebarOpen} >
-          <ListItemButton component={NavLink} to="/agenda/novo">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <AddCircleOutlineIcon />
-            </ListItemIcon>
-            <ListItemText primary="Novo Agendamento" />
-          </ListItemButton>
-          <ListItemButton component={NavLink} to="/agenda/visualizar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <VisibilityIcon />
-            </ListItemIcon>
-            <ListItemText primary="Visualizar Agendamentos" />
-          </ListItemButton>
-          <ListItemButton component={NavLink} to="/agenda/semanal">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <EventAvailableIcon />
-            </ListItemIcon>
-            <ListItemText primary="Agenda Semanal" />
-          </ListItemButton>
-        </Group>
- 
-        <Group icon={<PeopleIcon />}
-               label="Funcionários"
-               open={openGroup === "Funcionários"}
-               onToggle={() => setOpenGroup(openGroup === "Funcionários" ? null : "Funcionários")}
-               sidebarOpen={open}
-               setSidebarOpen={setSidebarOpen}>
-          <ListItemButton component={NavLink} to="/funcionarios/cadastrar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <AddCircleOutlineIcon />
-            </ListItemIcon>
-            <ListItemText primary="Cadastrar" />
-          </ListItemButton>
-          <ListItemButton component={NavLink} to="/funcionarios/visualizar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <VisibilityIcon />
-            </ListItemIcon>
-            <ListItemText primary="Visualizar" />
-          </ListItemButton>
+        <Group
+          icon={<EventAvailableIcon />}
+          label="Agenda"
+          open={openGroup === "Agenda"}
+          onToggle={() => setOpenGroup(openGroup === "Agenda" ? null : "Agenda")}
+          sidebarOpen={open}
+          setSidebarOpen={setSidebarOpen}
+        >
+          <Abas
+            to="/agenda/novo"
+            icon={<AddCircleOutlineIcon />}
+            text="Novo Agendamento"
+          />
+          <Abas
+            to="/agenda/visualizar"
+            icon={<VisibilityIcon />}
+            text="Visualizar Agendamentos"
+          />
+          <Abas
+            to="/agenda/semanal"
+            icon={<EventAvailableIcon />}
+            text="Agenda Semanal"
+          />
         </Group>
 
-        <Group icon={<WorkIcon />}
-               label="Serviços"
-               open={openGroup === "Serviços"}
-               onToggle={() => setOpenGroup(openGroup === "Serviços" ? null : "Serviços")}
-               sidebarOpen={open}
-               setSidebarOpen={setSidebarOpen}>
-          <ListItemButton component={NavLink} to="/servicos/cadastrar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <AddCircleOutlineIcon />
-            </ListItemIcon>
-            <ListItemText primary="Cadastrar" />
-          </ListItemButton>
-          <ListItemButton component={NavLink} to="/servicos/visualizar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <VisibilityIcon />
-            </ListItemIcon>
-            <ListItemText primary="Visualizar" />
-          </ListItemButton>
+        <Group
+          icon={<PeopleIcon />}
+          label="Funcionários"
+          open={openGroup === "Funcionários"}
+          onToggle={() =>
+            setOpenGroup(openGroup === "Funcionários" ? null : "Funcionários")
+          }
+          sidebarOpen={open}
+          setSidebarOpen={setSidebarOpen}
+        >
+          <Abas
+            to="/funcionarios/cadastrar"
+            icon={<AddCircleOutlineIcon />}
+            text="Cadastrar"
+          />
+          <Abas
+            to="/funcionarios/visualizar"
+            icon={<VisibilityIcon />}
+            text="Visualizar"
+          />
         </Group>
 
-        <Group icon={<Inventory2Icon />} 
-               label="Produtos"
-               open={openGroup === "Produtos"}
-               onToggle={() => setOpenGroup(openGroup === "Produtos" ? null : "Produtos")}
-               sidebarOpen={open}
-               setSidebarOpen={setSidebarOpen}>
-          <ListItemButton component={NavLink} to="/produtos/cadastrar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <AddCircleOutlineIcon />
-            </ListItemIcon>
-            <ListItemText primary="Cadastrar" />
-          </ListItemButton>
-          <ListItemButton component={NavLink} to="/produtos/visualizar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <VisibilityIcon />
-            </ListItemIcon>
-            <ListItemText primary="Visualizar" />
-          </ListItemButton>
+        <Group
+          icon={<WorkIcon />}
+          label="Serviços"
+          open={openGroup === "Serviços"}
+          onToggle={() => setOpenGroup(openGroup === "Serviços" ? null : "Serviços")}
+          sidebarOpen={open}
+          setSidebarOpen={setSidebarOpen}
+        >
+          <Abas
+            to="/servicos/cadastrar"
+            icon={<AddCircleOutlineIcon />}
+            text="Cadastrar"
+          />
+          <Abas
+            to="/servicos/visualizar"
+            icon={<VisibilityIcon />}
+            text="Visualizar"
+          />
         </Group>
 
-        <Group icon={<LocalShippingIcon />} 
-               label="Fornecedores"
-               open={openGroup === "Fornecedores"}
-               onToggle={() => setOpenGroup(openGroup === "Fornecedores" ? null : "Fornecedores")}
-               sidebarOpen={open}
-               setSidebarOpen={setSidebarOpen}>
-          <ListItemButton component={NavLink} to="/fornecedores/cadastrar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <AddCircleOutlineIcon />
-            </ListItemIcon>
-            <ListItemText primary="Cadastrar" />
-          </ListItemButton>
-          <ListItemButton component={NavLink} to="/fornecedores/visualizar">
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <VisibilityIcon />
-            </ListItemIcon>
-            <ListItemText primary="Visualizar" />
-          </ListItemButton>
+        <Group
+          icon={<Inventory2Icon />}
+          label="Produtos"
+          open={openGroup === "Produtos"}
+          onToggle={() => setOpenGroup(openGroup === "Produtos" ? null : "Produtos")}
+          sidebarOpen={open}
+          setSidebarOpen={setSidebarOpen}
+        >
+          <Abas
+            to="/produtos/cadastrar"
+            icon={<AddCircleOutlineIcon />}
+            text="Cadastrar"
+          />
+          <Abas
+            to="/produtos/visualizar"
+            icon={<VisibilityIcon />}
+            text="Visualizar"
+          />
         </Group>
 
-        <Group icon={<SettingsIcon />} 
-               label="Configurações"
-               open={openGroup === "Configurações"}
-               onToggle={() => setOpenGroup(openGroup === "Configurações" ? null : "Configurações")}
-               sidebarOpen={open}
-               setSidebarOpen={setSidebarOpen}>
-          <ListItemButton component={NavLink} to="/configuracoes/dados-barbearia">
-            <ListItemText primary="Dados da Barbearia" />
-          </ListItemButton>
-          <ListItemButton component={NavLink} to="/configuracoes/categorias">
-            <ListItemText primary="Categorias" />
-          </ListItemButton>
-          <ListItemButton component={NavLink} to="/configuracoes/metodos-pagamento">
-            <ListItemText primary="Métodos de Pagamento" />
-          </ListItemButton>
+        <Group
+          icon={<LocalShippingIcon />}
+          label="Fornecedores"
+          open={openGroup === "Fornecedores"}
+          onToggle={() =>
+            setOpenGroup(openGroup === "Fornecedores" ? null : "Fornecedores")
+          }
+          sidebarOpen={open}
+          setSidebarOpen={setSidebarOpen}
+        >
+          <Abas
+            to="/fornecedores/cadastrar"
+            icon={<AddCircleOutlineIcon />}
+            text="Cadastrar"
+          />
+          <Abas
+            to="/fornecedores/visualizar"
+            icon={<VisibilityIcon />}
+            text="Visualizar"
+          />
+        </Group>
+
+        <Group
+          icon={<SettingsIcon />}
+          label="Configurações"
+          open={openGroup === "Configurações"}
+          onToggle={() =>
+            setOpenGroup(openGroup === "Configurações" ? null : "Configurações")
+          }
+          sidebarOpen={open}
+          setSidebarOpen={setSidebarOpen}
+        >
+          <Abas to="/configuracoes/dados-barbearia" text="Dados da Barbearia" />
+          <Abas to="/configuracoes/categorias" text="Categorias" />
+          <Abas
+            to="/configuracoes/metodos-pagamento"
+            text="Métodos de Pagamento"
+          />
         </Group>
       </List>
     </DrawerStyled>

@@ -25,7 +25,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { listProdutos, deleteProduto } from "../../services/produto"
 import { fetchCategories } from "../../services/categories"
 import { toastError, toastSuccess } from "../../services/toast"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 export default function ProdutoList() {
   const [search, setSearch] = useState("")

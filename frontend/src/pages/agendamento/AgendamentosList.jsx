@@ -32,9 +32,9 @@ import { useQuery } from "@tanstack/react-query"
 import { fetchAgendamentos, deleteAgendamento, updateStatusAgendamento } from "../../services/agendamentos"
 import StatCard from "../../components/StatCard/StatCard"
 import { toastError, toastSuccess } from "../../services/toast"
-import AgendamentoModal from "../../components/modals/ApointmentDetailModal"
-import StatusSelect from "../../components/statusSelect/statusSelect"
-import DefaultLoading from "../../components/loading/DefaultLoading"
+import AgendamentoModal from "../../components/Modals/ApointmentDetailModal"
+import StatusSelect from "../../components/StatusSelect/statusSelect"
+import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import { TableSortLabel } from "@mui/material"
 
 function formatDate(value) {
