@@ -18,12 +18,14 @@ import AgendamentosList from "../pages/agendamento/AgendamentosList";
 import AgendaSemanal from "../pages/agendamento/AgendaSemanal";
 import Login from "../pages/login/Login";
 import { AuthProvider } from "../contexts/AuthContext";
+import TesteWebSocket from "../components/TesteWebSocket/TesteWebsockt";
 
 export default function Rotas() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/teste-websocket" element={<TesteWebSocket />} />
           <Route path="/login" element={<Login />} />
 
           <Route element={<ProtectedRoute />}>
