@@ -16,14 +16,9 @@ export default function Login() {
             senha: Yup.string().min(6, "Min 6").required("Obrigatório"),
         }),
         onSubmit: async (values, { setSubmitting }) => {
-            console.log("teste");
             try {
                 const { data } = await api.post("/clientes", values);
-
-                const token = data?.token || "";
-                
-                localStorage.setItem("token", token);
-
+                localStorage.setItem("token", data?.token || "");
                 navigate("/users");
             } finally { setSubmitting(false); }
         },

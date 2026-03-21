@@ -7,6 +7,8 @@ import React, {
   useState
 } from "react";
 import api from "../services/api";
+import SockJS from 'sockjs-client';
+import { Client } from "@stomp/stompjs";
 
 const AuthContext = createContext({});
 
@@ -37,6 +39,8 @@ export function AuthProvider({ children }) {
     localStorage.setItem("@app:nivelAcesso", nivelAcesso);
 
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+    localStorage.setItem("token", token);
 
     const userData = {
       name,
