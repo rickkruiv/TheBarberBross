@@ -1,5 +1,5 @@
-import React from "react"
 import { Box, Paper, Typography, Stack } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts"
 
@@ -14,6 +14,8 @@ const chartCardSx = {
 }
 
 export default function WeeklyChart({ weeklyData }) {
+  const theme = useTheme();
+
   return (
     <Box sx={{ flex: 1 }}>
       <Paper sx={chartCardSx}>
@@ -30,7 +32,7 @@ export default function WeeklyChart({ weeklyData }) {
               <XAxis dataKey="dia" stroke="#9CA3AF" />
               <YAxis stroke="#9CA3AF" allowDecimals={false} />
               <Tooltip cursor={{fill: 'transparent'}} />
-              <Bar dataKey="qtd" radius={[4, 4, 0, 0]} fill="#62B6A5" />
+              <Bar dataKey="qtd" radius={[4, 4, 0, 0]} fill={theme.palette.primary.main} />
             </BarChart>
           </ResponsiveContainer>
         </Box>

@@ -6,7 +6,7 @@ const theme = createTheme({
     primary: { main: "#FF1457" },
     secondary: { main: "#8FA3BF" },
     background: { default: "#0B1117", paper: "#0C1116" },
-    text: { primary: "#E6EDF3", secondary: "#9BA7B4", tertiary: "#90caf9" },
+    text: { primary: "#E6EDF3", secondary: "#9BA7B4", tertiary: "#613C4C" },
     divider: "#1E2733"
   },
   shape: { borderRadius: 5 },
@@ -50,7 +50,7 @@ const theme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
-        contained: { backgroundColor: "#62B6A5", color: "#0B1117", "&:hover": { backgroundColor: "#58A897" } }
+        contained: { backgroundColor: "#FF1457", color: "#0B1117", "&:hover": { backgroundColor: "#613C4C" } }
       }
     },
     MuiDivider: {

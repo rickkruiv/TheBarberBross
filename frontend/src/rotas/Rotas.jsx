@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Box } from "@mui/material";
 import ProtectedRoute from "./Protected";
 import DashboardLayout from "../layouts/DashboardLayout";
 import { AuthProvider } from "../contexts/AuthContext";
@@ -26,7 +27,7 @@ export default function Rotas() {
     <AuthProvider>
       <WebSocketProvider>
         <BrowserRouter>
-          <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", color: "#62B6A5" }}>Carregando...</div>}>
+          <Suspense fallback={<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", color: "primary.main" }}>Carregando...</Box>}>
             <Routes>
               <Route path="/login" element={<Login />} />
 

@@ -266,13 +266,13 @@ export default function AgendamentoCreate() {
                                     py: 1.5,
                                     borderRadius: 2,
                                     border: "1px solid",
-                                    borderColor: selected ? "#62B6A5" : "rgba(255,255,255,0.06)",
+                                    borderColor: selected ? "primary.main" : "rgba(255,255,255,0.06)",
                                     bgcolor: selected ? "#151F2A" : "#0C1116"
                                   }}
                                 >
                                   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
                                     <Typography fontWeight={700}>{service.nome}</Typography>
-                                    <Typography sx={{ color: "#62B6A5", fontWeight: 700 }}>
+                                    <Typography sx={{ color: "primary.main", fontWeight: 700 }}>
                                       {formatBRL(service.preco)}
                                     </Typography>
                                   </Box>
@@ -374,11 +374,11 @@ export default function AgendamentoCreate() {
                                     flex: "1 1 110px",
                                     justifyContent: "flex-start",
                                     borderRadius: 999,
-                                    borderColor: selected ? "#62B6A5" : "rgba(255,255,255,0.12)",
-                                    bgcolor: selected ? "#62B6A5" : "transparent",
+                                    borderColor: selected ? "primary.main" : "rgba(255,255,255,0.12)",
+                                    bgcolor: selected ? "primary.main" : "transparent",
                                     color: selected ? "#0B1117" : "inherit",
                                     "&:hover": {
-                                      bgcolor: selected ? "#58a897" : "rgba(255,255,255,0.04)"
+                                      bgcolor: selected ? "text.tertiary" : "rgba(255,255,255,0.04)"
                                     }
                                   }}
                                 >
@@ -525,10 +525,10 @@ export default function AgendamentoCreate() {
                     disabled={isSubmitting}
                     onClick={submitForm}
                     sx={{
-                      bgcolor: "#62B6A5",
+                      bgcolor: "primary.main",
                       color: "#0B1117",
                       px: 4,
-                      "&:hover": { bgcolor: "#58a897" }
+                      "&:hover": { bgcolor: "text.tertiary" }
                     }}
                   >
                     {isEdit ? "Salvar Alterações" : "Confirmar Agendamento"}

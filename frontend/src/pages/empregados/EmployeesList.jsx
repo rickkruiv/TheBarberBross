@@ -81,9 +81,9 @@ export default function EmployeesList() {
           variant="contained"
           startIcon={<PersonAdd />}
           sx={{
-            bgcolor: "#62B6A5",
+            bgcolor: "primary.main",
             color: "#0B1117",
-            "&:hover": { bgcolor: "#58a897" }
+            "&:hover": { bgcolor: "text.tertiary" }
           }}
         >
           Novo Funcionário
@@ -147,9 +147,9 @@ export default function EmployeesList() {
                 variant="contained"
                 startIcon={<PersonAdd />}
                 sx={{
-                  bgcolor: "#62B6A5",
+                  bgcolor: "primary.main",
                   color: "#0B1117",
-                  "&:hover": { bgcolor: "#58a897" }
+                  "&:hover": { bgcolor: "text.tertiary" }
                 }}
               >
                 Cadastrar Funcionário
