@@ -1,15 +1,25 @@
 package com.barberbross.BarberBross.controller;
 
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/teste-websocket")
 public class TesteWebSocketController {
 
-    @MessageMapping("/mensagem")
-    @SendTo("/topic/mensagem")
-    public String enviarMensagem(String msg) {
-        return "Recebido: " + msg;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+
+    @GetMapping
+    public void teste() {
+        simpMessagingTemplate.convertAndSend(
+                "/topic/empresa/1/agendamentos",
+                "Teste vindo do backend"
+        );
     }
 }

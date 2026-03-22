@@ -1,67 +1,13 @@
 import React, { useMemo, useState } from "react"
-import {
-  Box,
-  Paper,
-  Typography,
-  FormControl,
-  Select,
-  MenuItem,
-  Stack
-} from "@mui/material"
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined"
-import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined"
-import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined"
-import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined"
-import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined"
-import ContentCutOutlinedIcon from "@mui/icons-material/ContentCutOutlined"
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined"
-import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined"
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined"
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  LineChart,
-  Line
-} from "recharts"
+import { Box, Typography, FormControl, Select, MenuItem } from "@mui/material"
 import { useQuery } from "@tanstack/react-query"
 import { fetchAgendamentos } from "../../services/agendamentos"
 import { fetchDashboard } from "../../services/dashboard"
-
-const summaryCardSx = {
-  borderRadius: 3,
-  bgcolor: "#0C1116",
-  border: "1px solid #1E2733",
-  p: 2.5
-}
-
-const chartCardSx = {
-  borderRadius: 3,
-  bgcolor: "#0C1116",
-  border: "1px solid #1E2733",
-  p: 2.5,
-  height: 320,
-  display: "flex",
-  flexDirection: "column"
-}
-
-const headerIconBox = {
-  width: 36,
-  height: 36,
-  borderRadius: 2,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center"
-}
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL"
-})
+import SummaryCards from "../../components/SummaryCards/SummaryCards"
+import WeeklyChart from "../../components/WeeklyChart/WeeklyChart"
+import RevenueChart from "../../components/RevenueChart/RevenueChart"
+import PeakHoursChart from "../../components/PeakHoursChart/PeakHoursChart"
+import PerformanceCard from "../../components/PerformanceCard/PerformanceCard"
 
 export default function Dashboard() {
   const [periodo, setPeriodo] = useState("mes")
@@ -197,92 +143,7 @@ export default function Dashboard() {
         </FormControl>
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 2,
-          mb: 3
-        }}
-      >
-        <Box sx={{ flex: "1 1 220px", minWidth: 220 }}>
-          <Paper sx={summaryCardSx}>
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Box>
-                <Typography variant="body2" color="text.secondary">
-                  Receita Total
-                </Typography>
-                <Typography variant="h5" sx={{ mt: 1 }}>
-                  {currencyFormatter.format(serverSummary.receitaTotal)}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">-</Typography>
-              </Box>
-              <Box sx={{ ...headerIconBox, bgcolor: "#0F172A" }}>
-                <MonetizationOnOutlinedIcon />
-              </Box>
-            </Stack>
-          </Paper>
-        </Box>
-
-        <Box sx={{ flex: "1 1 220px", minWidth: 220 }}>
-          <Paper sx={summaryCardSx}>
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Box>
-                <Typography variant="body2" color="text.secondary">
-                  Agendamentos
-                </Typography>
-                <Typography variant="h5" sx={{ mt: 1 }}>
-                  {serverSummary.agendamentos}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">-</Typography>
-              </Box>
-              <Box sx={{ ...headerIconBox, bgcolor: "#0B1120" }}>
-                <EventAvailableOutlinedIcon />
-              </Box>
-            </Stack>
-          </Paper>
-        </Box>
-
-        <Box sx={{ flex: "1 1 220px", minWidth: 220 }}>
-          <Paper sx={summaryCardSx}>
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Box>
-                <Typography variant="body2" color="text.secondary">
-                  Ticket Médio
-                </Typography>
-                <Typography variant="h5" sx={{ mt: 1 }}>
-                  {currencyFormatter.format(serverSummary.ticketMedio)}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">-</Typography>
-              </Box>
-              <Box sx={{ ...headerIconBox, bgcolor: "#1E1B4B" }}>
-                <PaymentsOutlinedIcon />
-              </Box>
-            </Stack>
-          </Paper>
-        </Box>
-
-        <Box sx={{ flex: "1 1 220px", minWidth: 220 }}>
-          <Paper sx={summaryCardSx}>
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Box>
-                <Typography variant="body2" color="text.secondary">
-                  Taxa de Ocupação
-                </Typography>
-                <Typography variant="h5" sx={{ mt: 1 }}>
-                  {serverSummary.taxaOcupacao.toFixed(1)}%
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  -
-                </Typography>
-              </Box>
-              <Box sx={{ ...headerIconBox, bgcolor: "#1D0033" }}>
-                <TrendingUpOutlinedIcon />
-              </Box>
-            </Stack>
-          </Paper>
-        </Box>
-      </Box>
+      <SummaryCards serverSummary={serverSummary} />
 
       <Box
         sx={{
@@ -292,127 +153,13 @@ export default function Dashboard() {
           mb: 3
         }}
       >
-        <Box sx={{ flex: 1 }}>
-          <Paper sx={chartCardSx}>
-            <Stack direction="row" spacing={1} alignItems="center" mb={2}>
-              <QueryStatsOutlinedIcon sx={{ color: "#22C55E" }} />
-              <Typography variant="subtitle1" fontWeight={600}>
-                Agendamentos por Dia da Semana
-              </Typography>
-            </Stack>
-            <Box sx={{ flex: 1 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={weeklyData}
-                  margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-                  <XAxis dataKey="dia" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" allowDecimals={false} />
-                  <Tooltip />
-                  <Bar dataKey="qtd" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-        </Box>
-
-        <Box sx={{ flex: 1 }}>
-          <Paper sx={chartCardSx}>
-            <Stack direction="row" spacing={1} alignItems="center" mb={2}>
-              <ContentCutOutlinedIcon sx={{ color: "#38BDF8" }} />
-              <Typography variant="subtitle1" fontWeight={600}>
-                Receita por Serviço
-              </Typography>
-            </Stack>
-            <Box sx={{ flex: 1 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={serviceRevenueData}
-                  layout="vertical"
-                  margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-                  <XAxis
-                    type="number"
-                    stroke="#9CA3AF"
-                    tickFormatter={v => currencyFormatter.format(v)}
-                  />
-                  <YAxis dataKey="servico" type="category" stroke="#9CA3AF" />
-                  <Tooltip
-                    formatter={value => currencyFormatter.format(value)}
-                    labelFormatter={label => `Serviço: ${label}`}
-                  />
-                  <Bar dataKey="valor" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-        </Box>
+        <WeeklyChart weeklyData={weeklyData} />
+        <RevenueChart serviceRevenueData={serviceRevenueData} />
       </Box>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        <Box>
-          <Paper sx={chartCardSx}>
-            <Stack direction="row" spacing={1} alignItems="center" mb={2}>
-              <AccessTimeOutlinedIcon sx={{ color: "#22C55E" }} />
-              <Typography variant="subtitle1" fontWeight={600}>
-                Horários de Pico
-              </Typography>
-            </Stack>
-            <Box sx={{ flex: 1 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={peakHoursData}
-                  margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-                  <XAxis dataKey="hora" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" allowDecimals={false} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="qtd" dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-        </Box>
-
-        <Box>
-          <Paper
-            sx={{
-              borderRadius: 3,
-              bgcolor: "#0C1116",
-              border: "1px solid #1E2733",
-              p: 2.5,
-              height: 260,
-              display: "flex",
-              flexDirection: "column"
-            }}
-          >
-            <Stack direction="row" spacing={1} alignItems="center" mb={6}>
-              <EmojiEventsOutlinedIcon sx={{ color: "#22C55E" }} />
-              <Typography variant="subtitle1" fontWeight={600}>
-                Desempenho dos Profissionais
-              </Typography>
-            </Stack>
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "text.secondary",
-                gap: 1
-              }}
-            >
-              <GroupOutlinedIcon sx={{ fontSize: 40 }} />
-              <Typography variant="body2">
-                Nenhum dado de desempenho disponível
-              </Typography>
-            </Box>
-          </Paper>
-        </Box>
+        <PeakHoursChart peakHoursData={peakHoursData} />
+        <PerformanceCard />
       </Box>
     </Box>
   )

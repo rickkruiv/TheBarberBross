@@ -13,8 +13,6 @@ import {
 } from "@mui/material";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import GoogleIcon from "@mui/icons-material/Google";
-import AppleIcon from "@mui/icons-material/Apple";
 import { useAuth } from "../../contexts/AuthContext";
 
 export default function Login() {
@@ -106,7 +104,7 @@ export default function Login() {
                       borderColor: isDark ? alpha("#ffffff", 0.24) : alpha("#000000", 0.18)
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#62B6A5"
+                      borderColor: theme.palette.primary.main
                     }
                   }
                 }}
@@ -132,7 +130,7 @@ export default function Login() {
                       borderColor: isDark ? alpha("#ffffff", 0.24) : alpha("#000000", 0.18)
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#62B6A5"
+                      borderColor: theme.palette.primary.main
                     }
                   }
                 }}
@@ -167,15 +165,15 @@ export default function Login() {
                   fontSize: 15,
                   fontWeight: 700,
                   textTransform: "none",
-                  backgroundColor: "#62B6A5",
+                  backgroundColor: theme.palette.primary.main,
                   color: "#121212",
                   boxShadow: "none",
                   "&:hover": {
-                    backgroundColor: "#62B6A5",
+                    backgroundColor: theme.palette.primary.main,
                     boxShadow: "none"
                   },
                   "&.Mui-disabled": {
-                    backgroundColor: alpha("#62B6A5", 0.65),
+                    backgroundColor: alpha(theme.palette.primary.main, 0.65),
                     color: alpha("#121212", 0.75)
                   }
                 }}

@@ -7,8 +7,6 @@ import React, {
   useState
 } from "react";
 import api from "../services/api";
-import SockJS from 'sockjs-client';
-import { Client } from "@stomp/stompjs";
 
 const AuthContext = createContext({});
 
@@ -21,7 +19,6 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("@app:name");
     localStorage.removeItem("@app:userId");
     localStorage.removeItem("@app:nivelAcesso");
-    delete api.defaults.headers.common.Authorization;
     setUser(null);
   }, []);
 
@@ -37,10 +34,6 @@ export function AuthProvider({ children }) {
     localStorage.setItem("@app:name", name);
     localStorage.setItem("@app:userId", userId);
     localStorage.setItem("@app:nivelAcesso", nivelAcesso);
-
-    api.defaults.headers.common.Authorization = `Bearer ${token}`;
-
-    localStorage.setItem("token", token);
 
     const userData = {
       name,
@@ -65,8 +58,6 @@ export function AuthProvider({ children }) {
     const nivelAcesso = localStorage.getItem("@app:nivelAcesso");
 
     if (token && name && userId && nivelAcesso) {
-      api.defaults.headers.common.Authorization = `Bearer ${token}`;
-
       setUser({
         name,
         userId,
