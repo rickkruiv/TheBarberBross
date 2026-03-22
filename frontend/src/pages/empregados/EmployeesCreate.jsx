@@ -586,7 +586,7 @@ export default function EmployeesCreate() {
                               border: 0,
                               borderRadius: 12,
                               padding: "0 16px",
-                              background: "#62B6A5",
+                              background: "primary.main",
                               color: "#0B1117",
                               fontWeight: 700,
                               cursor: "pointer"
@@ -702,7 +702,7 @@ export default function EmployeesCreate() {
                       sx={{
                         mt: 1,
                         pl: 2,
-                        borderLeft: "4px solid #62B6A5",
+                        borderLeft: "4px solid #FF1457",
                         color: "text.secondary"
                       }}
                     >

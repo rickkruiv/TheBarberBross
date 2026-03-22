@@ -432,9 +432,9 @@ export default function ProdutoCreate() {
             startIcon={<EditIcon />}
             onClick={() => navigate(`/produtos/${id}/editar`)}
             sx={{
-              bgcolor: "#62B6A5",
+              bgcolor: "primary.main",
               color: "#0B1117",
-              "&:hover": { bgcolor: "#58a897" }
+              "&:hover": { bgcolor: "text.tertiary" }
             }}
           >
             Editar Produto
@@ -456,9 +456,9 @@ export default function ProdutoCreate() {
               onClick={handleSubmit}
               disabled={saving}
               sx={{
-                bgcolor: "#62B6A5",
+                bgcolor: "primary.main",
                 color: "#0B1117",
-                "&:hover": { bgcolor: "#58a897" }
+                "&:hover": { bgcolor: "text.tertiary" }
               }}
             >
               {isEdit ? "Salvar alterações" : "Salvar Produto"}
