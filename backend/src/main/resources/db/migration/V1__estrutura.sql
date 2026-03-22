@@ -74,8 +74,12 @@ CREATE TABLE funcionarios
     salario_base        NUMERIC(10, 2),
     percentual_comissao NUMERIC(5, 2),
     ativo               BOOLEAN,
+    empresa_id          BIGINT,
     endereco_id         BIGINT,
     usuario_id          BIGINT UNIQUE,
+
+    CONSTRAINT fk_funcionario_empresa FOREIGN KEY (empresa_id)
+        REFERENCES empresas (empresa_id),
 
     CONSTRAINT fk_funcionario_endereco FOREIGN KEY (endereco_id)
         REFERENCES enderecos (endereco_id),

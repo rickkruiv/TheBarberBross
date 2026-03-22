@@ -28,6 +28,7 @@
         "socket.io": "^4.8.3",
         "socket.io-client": "^4.8.3",
         "sockjs-client": "^1.6.1",
+        "ws": "^8.19.0",
         "yup": "^1.7.0"
     },
     "devDependencies": {

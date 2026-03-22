@@ -44,6 +44,10 @@ public class Funcionario  implements TemEndereco {
     @Column(nullable = false)
     private Boolean ativo;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
@@ -97,6 +101,8 @@ public class Funcionario  implements TemEndereco {
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public Empresa getEmpresa() { return empresa; }
 
     public Endereco getEndereco() { return endereco; }
 

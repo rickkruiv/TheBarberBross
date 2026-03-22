@@ -27,7 +27,8 @@ export function WebSocketProvider({ children }) {
     const socketUrl = `${baseUrl}/ws`;
 
     const stompClient = new Client({
-      webSocketFactory: () => new SockJS(socketUrl),
+      //webSocketFactory: () => new SockJS(socketUrl),
+      brokerURL: "ws://localhost:8080/ws",
       connectHeaders: {
         Authorization: `Bearer ${token}`
       },
@@ -39,6 +40,11 @@ export function WebSocketProvider({ children }) {
     stompClient.onConnect = (frame) => {
       console.log("Conectado", JSON.stringify(frame));
       setIsConnected(true);
+
+      stompClient.subscribe("/topic/empresa/1/agendamentos", (msg) => {
+          console.log("Mensagem recebida:", msg.body);
+        });
+
     };
 
     stompClient.onStompError = (frame) => {

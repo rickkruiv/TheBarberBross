@@ -20,4 +20,7 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
                             @Param("email") String email,
                             @Param("telefone") String telefone,
                             @Param("id") Long id);
+
+
+    Funcionario findByUsuarioUsuarioId(Long usuarioId);
 }
