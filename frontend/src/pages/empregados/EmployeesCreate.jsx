@@ -135,8 +135,8 @@ export default function EmployeesCreate() {
 
   if (loading) {
     return (
-      
-      <DefaultLoading loadMessage="Carregando funcionário..."/>
+
+      <DefaultLoading loadMessage="Carregando funcionário..." />
     )
   }
 

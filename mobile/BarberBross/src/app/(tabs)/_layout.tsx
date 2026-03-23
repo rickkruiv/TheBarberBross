@@ -1,5 +1,5 @@
 import { Tabs, TabList, TabSlot, TabTrigger } from "expo-router/ui";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import TabItem from "../../components/TabItem";
 import { usePathname } from "expo-router";
 import { useTheme } from "../../theme/ThemeProvider";
@@ -10,10 +10,10 @@ export default function Layout() {
   const { colors } = useTheme();
 
   return (
-    <>
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
       <AppHeader />
-      <Tabs>
-        <TabSlot />
+      <Tabs style={styles.tabsContainer}>
+        <TabSlot style={styles.slot} />
 
         <TabList style={[styles.tabBar, { backgroundColor: colors.background }]}>
 
@@ -35,11 +35,20 @@ export default function Layout() {
 
         </TabList>
       </Tabs>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+  tabsContainer: {
+    flex: 1,
+  },
+  slot: {
+    flex: 1,
+  },
   tabBar: {
     flexDirection: 'row',
     padding: 10,
