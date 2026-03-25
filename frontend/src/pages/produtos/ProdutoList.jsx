@@ -133,9 +133,9 @@ export default function ProdutoList() {
             sx={{
               borderRadius: 20,
               px: 3,
-              bgcolor: "#62B6A5",
+              bgcolor: "primary.main",
               color: "#0B1117",
-              "&:hover": { bgcolor: "#58a897" }
+              "&:hover": { bgcolor: "text.tertiary" }
             }}
           >
             Novo Produto

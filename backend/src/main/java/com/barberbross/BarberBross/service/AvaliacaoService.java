@@ -38,11 +38,8 @@ public class AvaliacaoService {
         return new DTOAvaliacaoResponse(a);
     }
 
-    public List<DTOAvaliacaoResponse> listarAvalicao(){
-        return avaliacaoRepository.findAll()
-                .stream()
-                .map(DTOAvaliacaoResponse::new)
-                .toList();
+    public List<DTOAvaliacaoResponse> listarAvalicaoPorEmpresa(Long empresaId){
+        return avaliacaoRepository.listarAvaliacoesPorEmpresa(empresaId).stream().map(DTOAvaliacaoResponse::new).toList();
     }
 
     public DTOAvaliacaoResponse buscarAvaliacaoPorId(Long id){

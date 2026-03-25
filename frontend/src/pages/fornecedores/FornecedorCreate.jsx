@@ -621,9 +621,9 @@ export default function FornecedorCreate() {
               variant="contained"
               onClick={() => navigate(`/fornecedores/${id}/editar`)}
               sx={{
-                bgcolor: "#62B6A5",
+                bgcolor: "primary.main",
                 color: "#0B1117",
-                "&:hover": { bgcolor: "#58a897" }
+                "&:hover": { bgcolor: "text.tertiary" }
               }}
             >
               Editar
@@ -646,9 +646,9 @@ export default function FornecedorCreate() {
               onClick={handleSubmit}
               disabled={saving}
               sx={{
-                bgcolor: "#62B6A5",
+                bgcolor: "primary.main",
                 color: "#0B1117",
-                "&:hover": { bgcolor: "#58a897" }
+                "&:hover": { bgcolor: "text.tertiary" }
               }}
             >
               {isNew ? "Salvar Fornecedor" : "Salvar Alterações"}

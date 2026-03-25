@@ -69,7 +69,7 @@ VALUES ('Pomada Modeladora', 'Pomada efeito seco', 3),
 -- FUNCIONARIO
 -- =========================
 INSERT INTO funcionarios (nome, cpf, telefone, email, nascimento, data_contratacao, salario_base, percentual_comissao, ativo,
-                          endereco_id, usuario_id)
+                          empresa_id, endereco_id, usuario_id)
 VALUES ('Carlos da Silva',
         '123.456.789-00',
         '(44) 97777-7777',
@@ -79,6 +79,7 @@ VALUES ('Carlos da Silva',
         '3000',
         '30',
         true,
+        1,
         2,
         1);
 

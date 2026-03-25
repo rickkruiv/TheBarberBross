@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,9 +21,19 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
             FROM Agendamento a\s
             WHERE a.empresa.empresaId = :empresaId\s
             AND a.dataHorario BETWEEN :inicio AND :fim""")
-    List<Agendamento> listarAgendamentosPorData(@Param("empresaId") Long empresaId,
-                                                @Param("inicio") LocalDateTime inicio,
-                                                @Param("fim") LocalDateTime fim);
+    List<Agendamento> listarAgendamentosEmpresaPorData(@Param("empresaId") Long empresaId,
+                                                       @Param("inicio") LocalDateTime inicio,
+                                                       @Param("fim") LocalDateTime fim);
+
+
+    @Query("""
+            SELECT a\s
+            FROM Agendamento a\s
+            WHERE a.funcionario.funcionarioId = :funcionarioId\s
+            AND a.dataHorario BETWEEN :inicio AND :fim""")
+    List<Agendamento> listarAgendamentosBarbeiroPorData(@Param("funcionarioId") Long funcionarioId,
+                                                        @Param("inicio") LocalDateTime inicio,
+                                                        @Param("fim") LocalDateTime fim);
 
     @Query("""
              SELECT COUNT(a) > 0

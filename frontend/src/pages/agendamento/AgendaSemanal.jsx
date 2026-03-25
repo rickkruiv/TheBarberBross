@@ -300,7 +300,7 @@ export default function AgendaSemanal() {
                     <ChevronLeft />
                   </IconButton>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <CalendarMonth sx={{ fontSize: 20, color: "#62B6A5" }} />
+                    <CalendarMonth sx={{ fontSize: 20, color: "primary.main" }} />
                     <Typography fontWeight={700} noWrap>
                       {formatWeekRange(weekStart)}
                     </Typography>
@@ -398,7 +398,7 @@ export default function AgendaSemanal() {
                         p: 2,
                         cursor: "pointer",
                         border: "1px solid",
-                        borderColor: isSelected ? "#62B6A5" : isToday ? "#374151" : "#1E2733",
+                        borderColor: isSelected ? "primary.main" : isToday ? "#374151" : "#1E2733",
                         bgcolor: isSelected ? "#132022" : "#0C1116",
                         display: "flex",
                         flexDirection: "column",
@@ -454,7 +454,7 @@ export default function AgendaSemanal() {
                     gap: 1
                   }}
                 >
-                  <AccessTime sx={{ fontSize: 18, color: "#62B6A5" }} />
+                  <AccessTime sx={{ fontSize: 18, color: "primary.main" }} />
                   <Typography variant="subtitle1" fontWeight={700}>
                     Agenda Semanal
                   </Typography>

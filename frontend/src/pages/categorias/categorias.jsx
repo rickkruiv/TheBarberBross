@@ -113,7 +113,7 @@ function CategoryModal({ open, onClose, category, onSaved }) {
           variant="contained"
           onClick={handleSubmit}
           disabled={saving}
-          sx={{ bgcolor: "#62B6A5", color: "#0B1117", "&:hover": { bgcolor: "#58a897" } }}
+          sx={{ bgcolor: "primary.main", color: "#0B1117", "&:hover": { bgcolor: "text.tertiary" } }}
         >
           Adicionar
         </Button>
@@ -198,7 +198,7 @@ export default function SettingsCategories() {
           variant="contained"
           startIcon={<Add />}
           onClick={handleNew}
-          sx={{ bgcolor: "#62B6A5", color: "#0B1117", "&:hover": { bgcolor: "#58a897" } }}
+          sx={{ bgcolor: "primary.main", color: "#0B1117", "&:hover": { bgcolor: "text.tertiary" } }}
         >
           Nova Categoria
         </Button>

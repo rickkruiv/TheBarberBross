@@ -269,10 +269,10 @@ export default function Company() {
                             variant="contained"
                             component="label"
                             sx={{
-                              bgcolor: "#62B6A5",
+                              bgcolor: "primary.main",
                               color: "#0B1117",
                               alignSelf: "flex-start",
-                              "&:hover": { bgcolor: "#58a897" }
+                              "&:hover": { bgcolor: "text.tertiary" }
                             }}
                           >
                             Escolher arquivo
@@ -653,10 +653,10 @@ export default function Company() {
                   disabled={isSubmitting}
                   variant="contained"
                   sx={{
-                    bgcolor: "#62B6A5",
+                    bgcolor: "primary.main",
                     color: "#0B1117",
                     px: 4,
-                    "&:hover": { bgcolor: "#58a897" }
+                    "&:hover": { bgcolor: "text.tertiary" }
                   }}
                 >
                   Salvar alterações

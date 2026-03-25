@@ -26,8 +26,7 @@ public class AgendamentoController {
     @PostMapping
     @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<DTOAgendamentoResponse> salvarAgendamento(@RequestBody @Valid DTOAgendamentoRequest agendamento) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(agendamentoService.salvarAgendamento(agendamento));
+        return ResponseEntity.status(HttpStatus.CREATED).body(agendamentoService.salvar(agendamento));
     }
 
     @GetMapping("/{agendamentoId}")
@@ -36,22 +35,37 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentoService.buscarAgendamentoPorId(agendamentoId));
     }
 
-    @GetMapping("/empresas/{empresaId}/{data}")
-    @PreAuthorize("hasRole('COLABORADOR')")
-    public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosPorDia(@PathVariable Long empresaId,
-                                                                                 @PathVariable LocalDate data) {
-        return ResponseEntity.ok(agendamentoService.listarAgendamentosPorDia(empresaId, data));
+    @GetMapping("/empresa/{data}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosPorEmpresaDia(@PathVariable LocalDate data) {
+        return ResponseEntity.ok(agendamentoService.listarAgendamentosEmpresaPorDia(data));
     }
 
-    @GetMapping("/empresas/{empresaId}/")
+    @GetMapping("/barbeiro/{funcionarioId}/{data}")
     @PreAuthorize("hasRole('COLABORADOR')")
-    public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosPorPeriodo(@PathVariable Long empresaId,
-                                                                                @RequestParam LocalDate inicio,
+    public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosPorFuncionarioDia(@PathVariable Long funcionarioId,
+                                                                                            @PathVariable LocalDate data){
+        return ResponseEntity.ok(agendamentoService.listarAgendamentosBarbeiroPorDia(funcionarioId, data));
+
+    }
+
+    @GetMapping("/empresa/")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosEmpresaPorPeriodo(@RequestParam LocalDate inicio,
                                                                                 @RequestParam LocalDate fim) {
-        return ResponseEntity.ok(agendamentoService.listarAgendamentosPorPeriodo(empresaId, inicio, fim));
+        return ResponseEntity.ok(agendamentoService.listarAgendamentosEmpresaPorPeriodo(inicio, fim));
+    }
+
+    @GetMapping("/barbeiro/{funcionarioId}/")
+    @PreAuthorize("hasRole('COLABORADOR')")
+    public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosBarbeiroPorPeriodo(@PathVariable Long funcionarioId,
+                                                                                             @RequestParam LocalDate inicio,
+                                                                                             @RequestParam LocalDate fim){
+        return ResponseEntity.ok(agendamentoService.listarAgendamentosBarbeiroPorPeriodo(funcionarioId,inicio, fim));
     }
 
     @PatchMapping("/{agendamentoId}")
+    @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<DTOAgendamentoResponse> editarServicosAgendamento(@PathVariable Long agendamentoId,
                                                                     @RequestBody @Valid DTOAtualizaServicosResquest servicos) {
         return ResponseEntity.ok(agendamentoService.editarServicosAgendamento(agendamentoId, servicos));
@@ -65,7 +79,7 @@ public class AgendamentoController {
     }
 
     @DeleteMapping("/{agendamentoId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<HttpStatus> deletarAgendamento(@PathVariable Long agendamentoId) {
         agendamentoService.deletarAgendamento(agendamentoId);
         return ResponseEntity.noContent().build();
