@@ -7,8 +7,10 @@ import com.barberbross.BarberBross.dto.request.DTOFuncionarioRequest;
 import com.barberbross.BarberBross.dto.response.DTOClienteResponse;
 import com.barberbross.BarberBross.dto.response.DTOFuncionarioSimplesResponse;
 import com.barberbross.BarberBross.dto.response.DTOLoginResponse;
+import com.barberbross.BarberBross.enums.NivelAcesso;
 import com.barberbross.BarberBross.exceptions.BadRequestException;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
+import com.barberbross.BarberBross.model.Funcionario;
 import com.barberbross.BarberBross.model.Usuario;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,15 @@ public class AutenticacaoService {
         var auth = authenticationManager.authenticate(usernameSenha);
         Usuario u = (Usuario) auth.getPrincipal();
         var token = tokenService.gerarToken(u);
-        return new DTOLoginResponse(u.getUsuarioId(), u.getUsername(), u.getNivelAcesso(), token);
+
+        if (u.getNivelAcesso().equals(NivelAcesso.COLABORADOR) || u.getNivelAcesso().equals(NivelAcesso.ADMIN)){
+            Funcionario f = funcionarioService.buscarFuncionarioPorUserId(u.getUsuarioId());
+            return new DTOLoginResponse(u.getUsuarioId(), f.getFuncionarioId(), f.getEmpresa().getEmpresaId(),
+                    u.getUsername(), u.getNivelAcesso(), token);
+        }
+
+        return new DTOLoginResponse(u.getUsuarioId(), null, null,
+                u.getUsername(), u.getNivelAcesso(), token);
     }
 
     public DTOClienteResponse fazerRegistroCliente(@Valid DTOClienteRequest dto) {

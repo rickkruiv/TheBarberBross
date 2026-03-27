@@ -122,4 +122,8 @@ public class FuncionarioService {
                        " foi encontrado na Empresa: " + empresaId));
     }
 
+    protected Funcionario buscarFuncionarioPorUserId(Long userId){
+        return funcionarioRepository.findByUsuarioUsuarioId(userId);
+    }
+
 }
