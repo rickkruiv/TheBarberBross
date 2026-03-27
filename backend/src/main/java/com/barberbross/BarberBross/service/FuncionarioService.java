@@ -7,10 +7,8 @@ import com.barberbross.BarberBross.dto.response.DTOFuncionarioResponse;
 import com.barberbross.BarberBross.dto.response.DTOFuncionarioSimplesResponse;
 import com.barberbross.BarberBross.exceptions.ConflictException;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
-import com.barberbross.BarberBross.model.Agendamento;
-import com.barberbross.BarberBross.model.CargoFuncionario;
-import com.barberbross.BarberBross.model.Funcionario;
-import com.barberbross.BarberBross.model.Usuario;
+import com.barberbross.BarberBross.model.*;
+import com.barberbross.BarberBross.repository.EmpresaRepository;
 import com.barberbross.BarberBross.repository.FuncionarioRepository;
 import com.barberbross.BarberBross.repository.UsuarioRepository;
 import com.barberbross.BarberBross.validation.implementations.FuncionarioCamposUnicosValidator;
@@ -34,6 +32,9 @@ public class FuncionarioService {
     private FuncionarioRepository funcionarioRepository;
 
     @Autowired
+    private EmpresaRepository empresaRepository;
+
+    @Autowired
     private FuncionarioCamposUnicosValidator validator;
 
     public DTOFuncionarioSimplesResponse salvarFuncionario(DTOFuncionarioRequest dto){
@@ -41,9 +42,12 @@ public class FuncionarioService {
 
         String senhaEncriptografada = new BCryptPasswordEncoder().encode(dto.senha());
         Usuario u = new Usuario(dto, senhaEncriptografada);
+        Empresa e = empresaRepository.findById(dto.empresaId())
+                .orElseThrow(() -> new NotFoundException("Nenhuma empresa encontrada"));
+
         usuarioRepository.save(u);
 
-        Funcionario f = new Funcionario(dto, u);
+        Funcionario f = new Funcionario(dto, e, u);
         funcionarioRepository.save(f);
 
         return new DTOFuncionarioSimplesResponse(f);
@@ -110,6 +114,16 @@ public class FuncionarioService {
     protected Funcionario buscarFuncionario(Long id){
         return funcionarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nenhum Funcionário encontrado com id: " + id));
+    }
+
+    protected Funcionario buscarFuncionarioPorEmpresa(Long funcionarioId, Long empresaId){
+       return funcionarioRepository.findFuncionarioPorEmpresa(funcionarioId, empresaId)
+               .orElseThrow(() -> new NotFoundException("Nenhum Funcionário com id: " + funcionarioId +
+                       " foi encontrado na Empresa: " + empresaId));
+    }
+
+    protected Funcionario buscarFuncionarioPorUserId(Long userId){
+        return funcionarioRepository.findByUsuarioUsuarioId(userId);
     }
 
 }

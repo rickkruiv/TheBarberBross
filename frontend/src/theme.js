@@ -3,10 +3,10 @@ import { createTheme } from "@mui/material/styles"
 const theme = createTheme({
   palette: {
     mode: "dark",
-    primary: { main: "#62B6A5" },
+    primary: { main: "#FF1457" },
     secondary: { main: "#8FA3BF" },
     background: { default: "#0B1117", paper: "#0C1116" },
-    text: { primary: "#E6EDF3", secondary: "#9BA7B4", tertiary: "#90caf9" },
+    text: { primary: "#E6EDF3", secondary: "#9BA7B4", tertiary: "#613C4C" },
     divider: "#1E2733"
   },
   shape: { borderRadius: 5 },
@@ -50,54 +50,54 @@ const theme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
-        contained: { backgroundColor: "#62B6A5", color: "#0B1117", "&:hover": { backgroundColor: "#58A897" } }
+        contained: { backgroundColor: "#FF1457", color: "#0B1117", "&:hover": { backgroundColor: "#613C4C" } }
       }
     },
-     MuiDivider: {
-    styleOverrides: {
-      root: {
-        borderColor: "#1E2733"
-      }
-    }
-  },
-  MuiToggleButtonGroup: {
-    styleOverrides: {
-      root: {
-        borderRadius: 12,
-        overflow: "hidden",
-        border: "1px solid #2B3544",
-        backgroundColor: "#101821"
-      },
-      grouped: {
-        margin: 0,
-        border: "none",
-        "&:not(:first-of-type)": {
-          borderLeft: "1px solid #2B3544"
-        }
-      },
-      groupedHorizontal: {
-        margin: 0,
-        border: "none",
-        "&:not(:first-of-type)": {
-          borderLeft: "1px solid #2B3544"
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          borderColor: "#1E2733"
         }
       }
-    }
-  },
-  MuiToggleButton: {
-    styleOverrides: {
-      root: {
-        textTransform: "none",
-        borderRadius: 0,
-        padding: "12px 16px",
-        fontWeight: 800,
-        "&.Mui-selected": {
-          backgroundColor: "#1B2734"
+    },
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          overflow: "hidden",
+          border: "1px solid #2B3544",
+          backgroundColor: "#101821"
+        },
+        grouped: {
+          margin: 0,
+          border: "none",
+          "&:not(:first-of-type)": {
+            borderLeft: "1px solid #2B3544"
+          }
+        },
+        groupedHorizontal: {
+          margin: 0,
+          border: "none",
+          "&:not(:first-of-type)": {
+            borderLeft: "1px solid #2B3544"
+          }
         }
       }
-    }
-  },
-  MuiListItemButton: {
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          borderRadius: 0,
+          padding: "12px 16px",
+          fontWeight: 800,
+          "&.Mui-selected": {
+            backgroundColor: "#1B2734"
+          }
+        }
+      }
+    },
+    MuiListItemButton: {
       styleOverrides: {
         root: {
           transition: "all .2s",

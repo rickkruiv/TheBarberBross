@@ -190,10 +190,10 @@ export default function AgendamentosList() {
           startIcon={<EventAvailable />}
           onClick={() => navigate("/agenda/novo")}
           sx={{
-            bgcolor: "#62B6A5",
+            bgcolor: "primary.main",
             color: "#0B1117",
             whiteSpace: "nowrap",
-            "&:hover": { bgcolor: "#58a897" },
+            "&:hover": { bgcolor: "text.tertiary" },
             width: "250px",
             p: 1.4
           }}
@@ -284,9 +284,9 @@ export default function AgendamentosList() {
                 startIcon={<EventAvailable />}
                 onClick={() => navigate("/agenda/novo")}
                 sx={{
-                  bgcolor: "#62B6A5",
+                  bgcolor: "primary.main",
                   color: "#0B1117",
-                  "&:hover": { bgcolor: "#58a897" }
+                  "&:hover": { bgcolor: "text.tertiary" }
                 }}
               >
                 Criar Agendamento

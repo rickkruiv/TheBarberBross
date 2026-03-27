@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     boolean existsByEmailOrTelefone(String email, String telefone);
 
@@ -17,4 +19,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     boolean existeDuplicado(@Param("email") String email,
                             @Param("telefone") String telefone,
                             @Param("id") Long id);
+
+    Optional<Cliente> findByUsuarioUsuarioId(Long userId);
 }

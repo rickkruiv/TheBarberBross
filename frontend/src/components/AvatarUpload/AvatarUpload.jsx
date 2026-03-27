@@ -15,7 +15,7 @@ export default function AvatarUpload(){
             height:112,
             bgcolor:"#0C1116"}}
         />
-        <IconButton size="small" sx={{position:"absolute",right:6,bottom:6,bgcolor:"#62B6A5",color:"#0B1117","&:hover":{bgcolor:"#7CE0C3"}}}>
+        <IconButton size="small" sx={{position:"absolute",right:6,bottom:6,bgcolor:"primary.main",color:"#0B1117","&:hover":{bgcolor:"text.tertiary"}}}>
             <CloudUploadIcon fontSize="small"/>
             </IconButton>
         </Box>

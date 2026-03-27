@@ -44,6 +44,10 @@ public class Funcionario  implements TemEndereco {
     @Column(nullable = false)
     private Boolean ativo;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
@@ -58,12 +62,13 @@ public class Funcionario  implements TemEndereco {
     @OneToMany(mappedBy = "funcionario")
     private List<CargoFuncionario> cargosFuncionario;
 
-    public Funcionario(DTOFuncionarioRequest dto, Usuario u) {
+    public Funcionario(DTOFuncionarioRequest dto, Empresa e, Usuario u) {
         this.nome = dto.nome();
         this.cpf = dto.cpf();
         this.telefone = dto.telefone();
         this.email = dto.email();
         this.nascimento = dto.nascimento();
+        this.empresa = e;
         this.dataContratacao = dto.dataContratacao();
         this.salarioBase = dto.salarioBase();
         this.percentualComissao = dto.percentualComissao();
@@ -97,6 +102,8 @@ public class Funcionario  implements TemEndereco {
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public Empresa getEmpresa() { return empresa; }
 
     public Endereco getEndereco() { return endereco; }
 
