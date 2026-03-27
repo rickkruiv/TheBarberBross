@@ -1,20 +1,16 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
+import { YStack, Text } from 'tamagui';
 
 export default function HomeSection({ title, children }) {
-  const { colors, typography } = useTheme();
 
   return (
-    <>
-      <Text style={[typography.body, { fontWeight: 'bold', color: colors.textSecondary }]}>
+    <YStack gap="$3">
+      <Text fontSize="$4" fontWeight="600" color="$text">
         {title}
       </Text>
-      <View>
+
+      <YStack gap="$2">
         {children}
-      </View>
-    </>
+      </YStack>
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-})

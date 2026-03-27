@@ -1,7 +1,10 @@
-import { View, FlatList, Text, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
+import { router } from 'expo-router';
+import { FlatList, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { MapPin } from '@tamagui/lucide-icons-2';
+import { XStack, YStack, Text } from 'tamagui';
+import { useTheme } from 'tamagui';
+import { formatDistance } from '../utils/format';
 
 const data = [
   {
@@ -10,7 +13,7 @@ const data = [
     open: true,
     openingHours: "09:00 - 19:00",
     name: "Mr. Chavozo",
-    distance: '0.1Km',
+    distance: 0.1,
   },
   {
     id: "2",
@@ -18,7 +21,7 @@ const data = [
     open: true,
     openingHours: "9:30 - 19:30",
     name: "Sr. Calixto",
-    distance: '4.1Km',
+    distance: 4.1,
   },
   {
     id: "3",
@@ -26,7 +29,7 @@ const data = [
     open: true,
     openingHours: "09:00 - 19:00",
     name: "Dom Jorge",
-    distance: '1.3Km',
+    distance: 1.3,
   },
   {
     id: "4",
@@ -34,12 +37,12 @@ const data = [
     open: false,
     openingHours: "10:00 - 20:00",
     name: "Barbearia do Menezes",
-    distance: '0.02Km',
+    distance: 0.02,
   },
 ]
 
 export default function DiscoverCard() {
-  const { colors, typography } = useTheme();
+  const theme = useTheme();
 
   return (
     <FlatList
@@ -49,58 +52,58 @@ export default function DiscoverCard() {
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
 
-        <View style={[styles.card, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border }]}>
-          <Image
-            source={item.image}
-            style={styles.image}
-            contentFit="cover"
-          />
+        <Pressable
+          onPress={() => router.push("/barberShop")}
+          style={({ pressed }) => ({
+            opacity: pressed ? 0.7 : 1,
+            transform: [{ scale: pressed ? 0.99 : 1 }],
+          })}
+        >
+          <YStack
+            width={180}
+            height={250}
+            borderRadius="$4"
+            marginRight="$3"
+            overflow="hidden"
+            backgroundColor="$backgroundSecondary"
+          >
+            <Image
+              source={item.image}
+              style={styles.image}
+              contentFit="cover"
+            />
 
-          <View style={styles.content}>
-            <View style={styles.info}>
-              <Text style={[typography.caption, { color: item.open ? colors.success : colors.error }]}>{item.open ? "OPEN NOW" : "CLOSED"}</Text>
-              <Text style={[typography.caption, { color: colors.textSecondary }]}>{item.openingHours}</Text>
-            </View>
+            <YStack padding="$3" gap="$2">
+              <XStack gap="$2" alignItems="center">
+                <Text
+                  fontSize="$3"
+                  color={item.open ? "$success" : "$error"}
+                  fontWeight="600"
+                >
+                  {item.open ? "OPEN NOW" : "CLOSED"}
+                </Text>
+                <Text fontSize="$3" color="$textSecondary">
+                  {item.openingHours}
+                </Text>
+              </XStack>
 
-            <Text style={[typography.subtitle, { color: colors.text }]}>{item.name}</Text>
-            <View style={[styles.distanceChip]}>
-              <Ionicons name="location-sharp" size={12} color={colors.textMuted} />
-              <Text style={[typography.caption, { color: colors.textMuted }]}>{item.distance}</Text>
-            </View>
-          </View>
-        </View>
+              <Text fontSize="$4" fontWeight="700" color="$text">{item.name}</Text>
+
+              <XStack alignItems="center" gap="$2">
+                <MapPin size={12} color={theme.textSecondary.val} />
+                <Text fontSize="$3" color="$textSecondary">{formatDistance(item.distance)}</Text>
+              </XStack>
+            </YStack>
+          </YStack>
+        </Pressable>
       )}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    width: 180,
-    height: 250,
-    borderRadius: 12,
-    marginRight: 12,
-    overflow: "hidden",
-  },
   image: {
     width: "100%",
     height: 160,
-  },
-  content: {
-    gap: 4,
-    padding: 12,
-  },
-  info: {
-    gap: 10,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-  },
-  distanceChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingVertical: 3,
-    gap: 4,
   },
 })

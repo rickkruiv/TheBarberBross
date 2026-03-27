@@ -20,7 +20,8 @@
         "foregroundImage": "./src/assets/android-icon-foreground.png",
         "backgroundImage": "./src/assets/android-icon-background.png",
         "monochromeImage": "./src/assets/android-icon-monochrome.png"
-      }
+      },
+      "package": "com.anonymous.BarberBross"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
@@ -34,7 +35,8 @@
           "barStyle": "light",
           "visibility": "visible"
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }

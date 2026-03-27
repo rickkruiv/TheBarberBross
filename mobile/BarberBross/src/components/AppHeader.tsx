@@ -1,41 +1,34 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useTheme } from '../theme/ThemeProvider';
+import { XStack, Text, useTheme } from 'tamagui';
 
 export default function AppHeader() {
-  const { colors, typography } = useTheme();
+  const theme = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[{ color: colors.text }, typography.title]}>BarberBross</Text>
+    <XStack 
+      padding={"$5"}
+      alignItems="center"
+      justifyContent="space-between"
+      backgroundColor={"$background"}
+      >
+      <Text
+        fontWeight={"600"}
+        fontSize={"$5"}
+        color={theme.text.val}
+      >
+        BarberBross
+      </Text>
 
-      <View style={styles.actions}>
-        <Pressable style={styles.icon}>
-          <Ionicons name={!true ? "notifications" : "notifications-outline"} size={22} color={colors.text} />
+      <XStack gap={"$3"} >
+        <Pressable>
+          <Ionicons name={!true ? "notifications" : "notifications-outline"} size={22} color={theme.text.val} />
         </Pressable>
 
-        <Pressable style={styles.icon}>
-          <Ionicons name="menu" size={24} color={colors.text} />
+        <Pressable>
+          <Ionicons name="menu" size={24} color={theme.text.val} />
         </Pressable>
-      </View>
-    </View>
+      </XStack>
+    </XStack>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: 70,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between'
-  },
-  actions: {
-    flexDirection: 'row',
-    gap: 15,
-  },
-  icon: {
-  },
-})

@@ -1,6 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Image } from 'expo-image';
-import { useTheme } from '../theme/ThemeProvider';
+import { YStack, Text, Image, XStack, Button } from 'tamagui';
 
 const data = {
   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6pnWIg8ieDPCXAuLnryBmdB_E2BoZXJ1mjw&s",
@@ -9,59 +7,40 @@ const data = {
 }
 
 export default function LatestVisitCard() {
-  const { colors, typography } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.textSecondary }]}>
-      <Image
-        source={data.image}
-        style={{ width: 50, height: 50, borderRadius: 12 }}
-      />
+    <XStack
+      height={70}
+      padding="$3"
+      borderRadius="$4"
+      backgroundColor="$backgroundInverse"
+      borderWidth={1}
+      borderColor="$border"
+      alignItems="center"
+      gap="$3"
+    >
+      <XStack borderRadius="$3" overflow="hidden">
+        <Image
+          src={data.image}
+          width={50}
+          height={50}
+        />
+      </XStack>
 
-      <View style={styles.content}>
-        <View style={styles.info}>
-          <Text style={[typography.subtitle, { color: colors.textInverse }]}>{data.name}</Text>
-          <View style={styles.service}>
-            <Text style={[typography.caption, { color: colors.textSecundaryInverse, fontWeight: 'bold' }]}>{data.service}</Text>
-          </View>
-        </View>
-        <Pressable style={[styles.button, { backgroundColor: colors.background }]}>
-          <Text style={[typography.body, { color: colors.text, fontWeight: 'bold' }]}>Book</Text>
-        </Pressable>
-      </View>
-    </View>
+      <XStack flex={1} justifyContent="space-between" alignItems="center" gap="$3">
+        <YStack>
+          <Text fontSize="$4" fontWeight="600" color="$textInverse">{data.name}</Text>
+          <Text fontSize="$3" color="$textSecundaryInverse">{data.service}</Text>
+        </YStack>
+
+        <Button
+          size="$6"
+          backgroundColor="$background"
+          borderRadius="$2"
+        >
+          <Button.Text fontSize="$4" color="$text">Book</Button.Text>
+        </Button>
+      </XStack>
+    </XStack>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: 70,
-    padding: 12,
-    borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  content: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 12
-  },
-  info: {
-    flex: 1
-  },
-  service: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 4,
-  },
-  button: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignItems: 'center'
-  }
-});

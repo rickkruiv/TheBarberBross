@@ -1,27 +1,27 @@
-import { Link } from "expo-router";
-import { StatusBar } from 'expo-status-bar';
-import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from "../../theme/ThemeProvider";
+import { Link } from "expo-router"
+import { StatusBar } from "expo-status-bar"
+import { YStack, Text, Button } from "tamagui"
 
 export default function Appointments() {
-  const { colors, typography } = useTheme();
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[typography.title, { color: colors.text }]}>Appointment Screen!</Text>
-      <Link href={"/search"} style={[styles.button, { color: colors.primary }]}>Go to Search screen</Link>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <YStack
+      flex={1}
+      alignItems="center"
+      justifyContent="center"
+      gap="$3"
+      backgroundColor="$background"
+    >
+      <Text color="$text" fontSize="$5">
+        Appointment Screen!
+      </Text>
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    fontSize: 20,
-    textDecorationLine: "underline",
-  },
-});
+      <Link href="/teste" asChild>
+        <Button size="$3">
+          Go to Search screen
+        </Button>
+      </Link>
+
+      <StatusBar style="auto" />
+    </YStack>
+  )
+}
