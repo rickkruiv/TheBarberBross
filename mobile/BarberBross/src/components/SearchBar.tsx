@@ -1,48 +1,46 @@
-import { View, StyleSheet, TextInput } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { forwardRef } from 'react';
+import { XStack, Input } from 'tamagui'
+import { Search } from '@tamagui/lucide-icons-2'
+import { forwardRef } from 'react'
+import { useTheme } from 'tamagui'
 
-type props = {
-  onFocus?: () => void;
-  autoFocus: boolean;
+type Props = {
+  onFocus?: () => void
+  autoFocus?: boolean
 }
 
-const SearchBar = forwardRef<TextInput, props>(({ onFocus, autoFocus }, ref) =>  {
-  const { colors, typography } = useTheme();
+const SearchBar = forwardRef<any, Props>(({ onFocus, autoFocus }, ref) => {
+  const theme = useTheme()
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.backgroundSecondary , borderColor: colors.divider}]}>
-      <Ionicons name="search" size={20} color={colors.textMuted} />
+    <XStack
+      width="100%"
+      paddingHorizontal="$4"
+      paddingVertical="$1"
+      borderRadius="$10"
+      borderWidth={1}
+      borderColor="$border"
+      alignItems="center"
+      gap="$2"
+      backgroundColor="$backgroundSecondary"
+    >
+      
+      <Search size={18} color={theme.textSecondary.val} />
 
-      <TextInput
+      <Input
         ref={ref}
-        autoFocus={autoFocus}
-        placeholder='Search'
-        placeholderTextColor={colors.textMuted}
+        flex={1}
+        size="$8"
+        borderWidth={0}
+        padding="$2"
+        backgroundColor="transparent"
+        placeholder="Search"
+        placeholderTextColor="$textSecondary"
         onFocus={onFocus}
-        style={[styles.input, typography.body, { color: colors.text }]}
+        autoFocus={autoFocus}
+        fontSize={"$2"}
       />
-    </View>
-  );
-});
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    borderRadius: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    borderWidth: 1,
-    borderRightWidth: 1,
-    gap: 5,
-  },
-  input: {
-    width: '100%',
-  },
+    </XStack>
+  )
 })
 
-export default SearchBar;
+export default SearchBar

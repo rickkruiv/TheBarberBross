@@ -1,34 +1,34 @@
-import { View, Text, StyleSheet } from "react-native";
-// import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { useTheme } from "../theme/ThemeProvider";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { YStack, Text } from "tamagui"
+import Ionicons from "@expo/vector-icons/Ionicons"
+import { useTheme } from "tamagui"
 
-type TabItemProps = {
-  label: string;
-  icon: React.ComponentProps<typeof Ionicons>["name"];
-  active: boolean;
-};
-
-export default function TabItem({ label, icon, active }: TabItemProps) {
-  const { colors } = useTheme();
+export default function TabItem({ label, icon, active }: any) {
+  const theme = useTheme()
 
   return (
-    <View style={styles.tabButton}>
-      {/* <MaterialCommunityIcons name={icon} size={26} color={active ? colors.terciary : colors.text} /> */}
-      <Ionicons name={icon} size={24} color={active ? colors.terciary : colors.text} />
-      <Text style={[styles.tabText, { color: active ? colors.terciary : colors.text }]}>{label}</Text>
-    </View>
-  );
-}
+    <YStack
+      flex={1}
+      alignItems="center"
+      justifyContent="center"
+      gap="$1"
+      padding="$1"
+      borderRadius="$4"
+      pressStyle={{ scale: 0.95 }}
+      backgroundColor={active ? "$primarySoft" : "transparent"}
+    >
+      <Ionicons
+        name={icon}
+        size={22}
+        color={active ? theme.primary.val : theme.text.val}
+      />
 
-const styles = StyleSheet.create({
-  tabButton: {
-    flexDirection: 'column',
-    gap: 4,
-    alignItems: 'center'
-  },
-  tabText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-})
+      <Text
+        fontSize="$3"
+        fontWeight="600"
+        color={active ? "$primary" : "$text"}
+      >
+        {label}
+      </Text>
+    </YStack>
+  )
+}
