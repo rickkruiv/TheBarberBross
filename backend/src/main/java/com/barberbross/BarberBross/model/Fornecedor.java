@@ -23,6 +23,10 @@ public class Fornecedor implements TemEndereco {
     @Column(unique = true)
     private String email;
 
+    @OneToOne
+    @JoinColumn(name = "usuario_id", unique = true, nullable = false)
+    private Usuario usuario;
+
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;

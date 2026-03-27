@@ -68,4 +68,9 @@ public class ClienteService {
         return clienteRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado com esse id: " + id));
     }
+
+    protected Cliente buscarClientePorUsuario(Long userId) {
+        return clienteRepository.findByUsuarioUsuarioId(userId).
+                orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado com userId: " + userId));
+    }
 }

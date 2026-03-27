@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
     boolean existsByCpfOrEmailOrTelefone(String cpf, String email, String telefone);
 
@@ -23,4 +25,13 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
 
 
     Funcionario findByUsuarioUsuarioId(Long usuarioId);
+
+
+
+    @Query("""
+            SELECT f\s
+            FROM Funcionario f\s
+            WHERE f.funcionarioId = :funcionarioId AND f.empresa.empresaId = :empresaId""")
+    Optional<Funcionario> findFuncionarioPorEmpresa(@Param("funcionarioId") Long funcionarioId,
+                                       @Param("empresaId") Long empresaId);
 }

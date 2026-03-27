@@ -75,6 +75,8 @@ public class Empresa implements TemEndereco {
 
     public List<Agendamento> getAgendamentos() { return agendamentos; }
 
+    public List<Funcionario> getFuncionarios() { return funcionarios; }
+
     public void atualizarDados(DTOEmpresaRequest dto) {
         this.razaoSocial = dto.razaoSocial();
         this.nomeFantasia = dto.nomeFantasia();

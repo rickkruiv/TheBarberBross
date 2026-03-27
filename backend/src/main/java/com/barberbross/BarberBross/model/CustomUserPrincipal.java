@@ -19,6 +19,13 @@ public class CustomUserPrincipal implements UserDetails {
         this.authorities = authorities;
     }
 
+    public CustomUserPrincipal(Long userId, Collection<? extends GrantedAuthority> authorities) {
+        this.userId = userId;
+        this.authorities = authorities;
+        this.funcionarioId = null;
+        this.empresaId = null;
+    }
+
     public Long getUserId() { return userId; }
 
     public Long getFuncionarioId() { return funcionarioId; }

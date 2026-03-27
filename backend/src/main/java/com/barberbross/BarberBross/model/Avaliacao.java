@@ -25,6 +25,10 @@ public class Avaliacao {
     @JoinColumn(name = "servico_id", nullable = false)
     private Servico servico;
 
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id", nullable = false)
+    private Funcionario funcionario;
+
     @Column(nullable = false)
     private Integer avaliacao;
 

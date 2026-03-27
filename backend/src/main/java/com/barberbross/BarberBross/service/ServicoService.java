@@ -1,6 +1,7 @@
 package com.barberbross.BarberBross.service;
 
 import com.barberbross.BarberBross.dto.request.DTOAgendamentoRequest;
+import com.barberbross.BarberBross.dto.request.DTOAtualizaServicosResquest;
 import com.barberbross.BarberBross.dto.request.DTOServicoRequest;
 import com.barberbross.BarberBross.dto.response.DTOServicoResponse;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
@@ -66,6 +67,10 @@ public class ServicoService {
     protected Servico buscarServico(Long id){
         return servicoRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Nenhum serviço encontrado com id: " + id));
+    }
+
+    protected List<Servico> buscarListaDeServicos(DTOAtualizaServicosResquest dto){
+        return servicoRepository.findAllById(dto.servicos());
     }
 
     protected List<Servico> buscarListaDeServicos(DTOAgendamentoRequest dto){

@@ -32,4 +32,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         System.out.println("Interceptor registrado!");
         registration.interceptors(interceptor);
     }
+
+
 }

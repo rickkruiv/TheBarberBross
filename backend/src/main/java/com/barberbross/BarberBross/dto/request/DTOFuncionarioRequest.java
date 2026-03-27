@@ -28,6 +28,9 @@ public record DTOFuncionarioRequest(
         LocalDate nascimento,
 
         @NotNull
+        Long empresaId,
+
+        @NotNull
         LocalDate dataContratacao,
 
         @NotNull
