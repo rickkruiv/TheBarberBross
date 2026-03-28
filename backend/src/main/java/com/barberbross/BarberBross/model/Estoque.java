@@ -14,18 +14,18 @@ public class Estoque {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long estoqueId;
 
-    @OneToMany(mappedBy = "estoque", cascade = CascadeType.ALL)
-    private List<ItemEstoque> produtos;
+    @OneToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
 
-    public Estoque(DTOEstoqueRequest dto) { this.produtos = new ArrayList<>(); }
+    @OneToMany(mappedBy = "estoque", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemEstoque> itensEstoque;
+
+    public Estoque(DTOEstoqueRequest dto) { this.itensEstoque = new ArrayList<>(); }
     public Estoque() {}
     
     public Long getEstoqueId() { return estoqueId; }
 
-    public List<ItemEstoque> getProdutos() { return produtos; }
+    public List<ItemEstoque> getItensEstoque() { return itensEstoque; }
 
-    public void adicionarProduto(Produto p, Integer qtd){
-        ItemEstoque item = new ItemEstoque(this, p, qtd);
-        produtos.add(item);
-    }
 }

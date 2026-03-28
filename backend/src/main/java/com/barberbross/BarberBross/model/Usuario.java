@@ -30,6 +30,16 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private NivelAcesso nivelAcesso;
 
+    @OneToOne(mappedBy = "usuario")
+    private Fornecedor fornecedor;
+
+    @OneToOne(mappedBy = "usuario")
+    private Funcionario funcionario;
+
+    @OneToOne(mappedBy = "usuario")
+    private Cliente cliente;
+
+
     public Usuario(DTOUsuarioRequest dto, String senha) {
         this.username = dto.username();
         this.senha = senha;

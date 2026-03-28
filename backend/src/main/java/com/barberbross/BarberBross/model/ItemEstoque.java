@@ -2,7 +2,7 @@ package com.barberbross.BarberBross.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "itens_estoque")
@@ -10,36 +10,36 @@ public class ItemEstoque {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
+    private Long itemEstoqueId;
 
     @ManyToOne
+    @JoinColumn(name = "estoque_id")
     private Estoque estoque;
 
     @ManyToOne
+    @JoinColumn(name = "produto_id")
     private Produto produto;
 
-    private Integer quantidade;
+    private int quantidade;
 
-    private LocalDateTime dataEntrada;
+    private BigDecimal precoVenda;
 
-    private LocalDateTime dataSaida;
+    public ItemEstoque() {}
 
-    public ItemEstoque(Estoque estoque, Produto produto, Integer quantidade) {
-        this.estoque = estoque;
+    public ItemEstoque(Long produtosEstoqueId, Produto produto, Estoque estoque, int quantidade, BigDecimal precoVenda) {
         this.produto = produto;
+        this.estoque = estoque;
         this.quantidade = quantidade;
-        this.dataEntrada = LocalDateTime.now();
+        this.precoVenda = precoVenda;
     }
 
-    public Long getItemId() {return itemId; }
-
-    public Estoque getEstoque() { return estoque; }
+    public Long getItemEstoqueId() { return itemEstoqueId; }
 
     public Produto getProduto() { return produto; }
 
-    public Integer getQuantidade() { return quantidade; }
+    public Estoque getEstoque() { return estoque; }
 
-    public LocalDateTime getDataEntrada() { return dataEntrada; }
+    public int getQuantidade() { return quantidade; }
 
-    public LocalDateTime getDataSaida() { return dataSaida; }
+    public BigDecimal getPrecoVenda() { return precoVenda; }
 }

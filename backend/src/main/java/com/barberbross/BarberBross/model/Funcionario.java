@@ -1,7 +1,6 @@
 package com.barberbross.BarberBross.model;
 
 import com.barberbross.BarberBross.dto.request.DTOFuncionarioRequest;
-import com.barberbross.BarberBross.interfaces.TemEndereco;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -9,10 +8,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Table(name = "funcionarios")
-public class Funcionario  implements TemEndereco {
+public class Funcionario  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,13 +42,12 @@ public class Funcionario  implements TemEndereco {
     @Column(nullable = false)
     private Boolean ativo;
 
+    @OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
+    private List<Avaliacao> avaliacoes;
+
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "endereco_id")
-    private Endereco endereco;
 
     @OneToOne
     @JoinColumn(name = "usuario_id", unique = true, nullable = false)
@@ -60,7 +57,7 @@ public class Funcionario  implements TemEndereco {
     private List<Agendamento> agendamentos = new ArrayList<>();
 
     @OneToMany(mappedBy = "funcionario")
-    private List<CargoFuncionario> cargosFuncionario;
+    private List<SocialMedia> redesSociais;
 
     public Funcionario(DTOFuncionarioRequest dto, Empresa e, Usuario u) {
         this.nome = dto.nome();
@@ -75,7 +72,6 @@ public class Funcionario  implements TemEndereco {
         this.ativo = true;
         this.usuario = u;
         this.agendamentos = new ArrayList<>();
-        this.cargosFuncionario = new ArrayList<>();
     }
 
     public Funcionario() {}
@@ -105,23 +101,15 @@ public class Funcionario  implements TemEndereco {
 
     public Empresa getEmpresa() { return empresa; }
 
-    public Endereco getEndereco() { return endereco; }
-
     public List<Agendamento> getAgendamentos() { return agendamentos; }
 
-    public List<CargoFuncionario> getCargosFuncionario() { return cargosFuncionario; }
-
-    public void atualizarDados(DTOFuncionarioRequest dto, List<Agendamento> agendamentos
-            , List<CargoFuncionario> historicoCargos) {
+    public void atualizarDados(DTOFuncionarioRequest dto, List<Agendamento> agendamentos) {
         this.cpf = dto.cpf();
         this.email = dto.email();
         this.nome = dto.nome();
         this.nascimento = dto.nascimento();
         this.telefone = dto.telefone();
         this.agendamentos = agendamentos;
-        this.cargosFuncionario = historicoCargos;
     }
 
-    @Override
-    public void atualizarEndereco(Endereco e) { this.endereco = e; }
 }

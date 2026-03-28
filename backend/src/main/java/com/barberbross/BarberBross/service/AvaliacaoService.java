@@ -3,10 +3,7 @@ package com.barberbross.BarberBross.service;
 import com.barberbross.BarberBross.dto.request.DTOAvaliacaoRequest;
 import com.barberbross.BarberBross.dto.response.DTOAvaliacaoResponse;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
-import com.barberbross.BarberBross.model.Avaliacao;
-import com.barberbross.BarberBross.model.Cliente;
-import com.barberbross.BarberBross.model.Empresa;
-import com.barberbross.BarberBross.model.Servico;
+import com.barberbross.BarberBross.model.*;
 import com.barberbross.BarberBross.repository.AvaliacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,13 +23,13 @@ public class AvaliacaoService {
     private ClienteService clienteService;
 
     @Autowired
-    private ServicoService servicoService;
+    private AgendamentoService agendamentoService;
 
     public DTOAvaliacaoResponse salvarAvaliacao(DTOAvaliacaoRequest novaAvaliacao){
         Empresa empresa = empresaService.buscarEmpresa(novaAvaliacao.empresaId());
         Cliente cliente = clienteService.buscarCliente(novaAvaliacao.clienteId());
-        Servico servico = servicoService.buscarServico(novaAvaliacao.servicoId());
-        Avaliacao a = new Avaliacao(novaAvaliacao, cliente, empresa, servico);
+        Agendamento agendamento = agendamentoService.buscarAgendamento(novaAvaliacao.agendamentoId());
+        Avaliacao a = new Avaliacao(novaAvaliacao, cliente, empresa, agendamento);
 
         avaliacaoRepository.save(a);
         return new DTOAvaliacaoResponse(a);

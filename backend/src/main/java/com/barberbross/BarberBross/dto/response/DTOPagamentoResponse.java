@@ -4,12 +4,13 @@ import com.barberbross.BarberBross.enums.FormaPagamento;
 import com.barberbross.BarberBross.enums.Status;
 import com.barberbross.BarberBross.model.Pagamento;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record DTOPagamentoResponse(
         Long pagamentoId,
         Long agendamentoId,
-        double valor,
+        BigDecimal valor,
         LocalDateTime dataPagamento,
         FormaPagamento formaPagamento,
         Status status) {

@@ -6,6 +6,7 @@ import com.barberbross.BarberBross.enums.FormaPagamento;
 import com.barberbross.BarberBross.enums.Status;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,22 +17,32 @@ public class Pagamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pagamentoId;
 
-    @ManyToOne
-    @JoinColumn(name = "agendamento_agendamento_id")
-    private Agendamento agendamento;
-
-    private double valor;
-
+    @Column(nullable = false)
     private LocalDateTime dataPagamento;
 
-    private FormaPagamento formaPagamento;
+    @Column(nullable = false)
+    private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Enumerated(EnumType.STRING)
+    private FormaPagamento formaPagamento;
+
+    @ManyToOne
+    @JoinColumn(name = "agendamento_id")
+    private Agendamento agendamento;
+
+    @ManyToOne
+    @JoinColumn(name = "pedido_id")
+    private Pedido pedido;
+
+    //se pa dps vão ter outros atributos para conexão com alguma API de pagamento
+
+    //dps pensar na lógica dessa classe!!!!!
+
     public Pagamento(DTOPagamentoRequest dto, Agendamento a) {
         this.agendamento = a;
-        this.valor = dto.valor();
         this.dataPagamento = dto.dataPagamento();
         this.formaPagamento = dto.formaPagamento();
         this.status = Status.PENDENTE;
@@ -43,7 +54,7 @@ public class Pagamento {
 
     public Agendamento getAgendamento() { return agendamento; }
 
-    public double getValor() { return valor; }
+    public BigDecimal getValor() { return valor; }
 
     public LocalDateTime getDataPagamento() { return dataPagamento; }
 

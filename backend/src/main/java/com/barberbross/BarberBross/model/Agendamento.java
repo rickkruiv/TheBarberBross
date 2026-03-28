@@ -4,6 +4,7 @@ import com.barberbross.BarberBross.dto.request.DTOAgendamentoRequest;
 import com.barberbross.BarberBross.enums.Status;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +27,11 @@ public class Agendamento {
     @Column(length = 100)
     private String observacao;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(
-        name = "servico_agendamento",
-        joinColumns = @JoinColumn(name = "agendamentoId"),
-        inverseJoinColumns = @JoinColumn(name = "servicoId")
-    )
-    private List<Servico> servicos;
+    @OneToMany(mappedBy = "agendamento", cascade = CascadeType.MERGE, orphanRemoval = true)
+    private List<AgendamentoServico> servicos;
 
     @Column(nullable = false)
-    private double valorTotal;
+    private BigDecimal valorTotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -46,8 +42,14 @@ public class Agendamento {
     private Empresa empresa;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario_id")
+    @JoinColumn(name = "funcionario_id", nullable = false)
     private Funcionario funcionario;
+
+    @OneToOne(mappedBy = "agendamento", cascade = CascadeType.ALL)
+    private Avaliacao avaliacao;
+
+    @OneToMany(mappedBy = "agendamento")
+    private List<Pagamento> pagamentos;
 
     public Agendamento() {}
 
@@ -58,6 +60,7 @@ public class Agendamento {
         this.cliente = c;
         this.empresa = e;
         this.funcionario = f;
+        this.valorTotal = BigDecimal.ZERO;
         this.servicos = new ArrayList<>();
     }
 
@@ -75,20 +78,21 @@ public class Agendamento {
 
     public String getObservacao() { return observacao; }
 
-    public double getValorTotal() { return valorTotal; }
+    public BigDecimal getValorTotal() { return valorTotal; }
 
     public Funcionario getFuncionario() { return funcionario; }
 
-    public List<Servico> getServicos() { return servicos; }
+    public List<AgendamentoServico> getServicos() { return servicos; }
 
+    //mudar isso aqui, se pa vai pra associativa agr
     public void adicionarServico(Servico s){
-        this.servicos.add(s);
-        this.valorTotal += s.getPreco();
+        this.servicos.stream().map(AgendamentoServico::getServico);
+        this.valorTotal = this.valorTotal.add(s.getPreco());
     }
 
     public void limparServicos() {
         this.servicos.clear();
-        this.valorTotal = 0.0;
+        this.valorTotal = BigDecimal.ZERO;
     }
 
     public void atualizarDados(DTOAgendamentoRequest agendamento, Funcionario funcionario) {

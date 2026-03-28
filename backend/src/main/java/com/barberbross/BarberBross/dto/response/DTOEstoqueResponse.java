@@ -10,7 +10,7 @@ public record DTOEstoqueResponse(
         List<ItemEstoque> produtos) {
 
     public DTOEstoqueResponse(Estoque e){
-        this(e.getEstoqueId(), e.getProdutos());
+        this(e.getEstoqueId(), e.getItensEstoque());
     }
 
 }
