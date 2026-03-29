@@ -1,6 +1,7 @@
 package com.barberbross.BarberBross.notification.service;
 
 import com.barberbross.BarberBross.dto.response.DTOAgendamentoResponse;
+import com.barberbross.BarberBross.dto.response.DTOAvaliacaoResponse;
 import com.barberbross.BarberBross.model.Agendamento;
 import com.barberbross.BarberBross.model.WebSocketPayload;
 import com.barberbross.BarberBross.notification.channel.WebSocketNotificationChannel;

@@ -7,16 +7,10 @@ import java.math.BigDecimal;
 
 public record DTOAvaliacaoRequest(
         @NotNull
-        Long clienteId,
-
-        @NotNull
-        Long empresaId,
-
-        @NotNull
         Long agendamentoId,
 
         @NotNull
-        BigDecimal avaliacao,
+        BigDecimal nota,
 
         @NotBlank
         String comentario) {}

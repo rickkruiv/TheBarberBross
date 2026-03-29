@@ -40,11 +40,12 @@ public class Avaliacao {
 
     public Avaliacao() {}
 
-    public Avaliacao(DTOAvaliacaoRequest dto, Cliente c, Empresa e, Agendamento a) {
+    public Avaliacao(DTOAvaliacaoRequest dto, Cliente c, Empresa e, Agendamento a, Funcionario f) {
         this.cliente = c;
         this.empresa = e;
         this.agendamento = a;
-        this.nota = dto.avaliacao();
+        this.funcionario = f;
+        this.nota = dto.nota();
         this.comentario = dto.comentario();
         this.data = LocalDateTime.now();
     }
@@ -66,7 +67,7 @@ public class Avaliacao {
     public LocalDateTime getData() { return data; }
 
     public void atualizarDados(DTOAvaliacaoRequest dto) {
-        this.nota = dto.avaliacao();
+        this.nota = dto.nota();
         this.comentario = dto.comentario();
     }
 }
