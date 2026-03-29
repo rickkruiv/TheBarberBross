@@ -19,4 +19,11 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {
     List<Avaliacao> listarAvaliacoesPorEmpresa(@Param("empresaId") Long empresaId);
 
 
+    @Query("""
+                SELECT a
+                FROM Avaliacao a
+                WHERE a.funcionario.funcionarioId = :funcionarioId
+                ORDER BY a.data DESC
+            """)
+    List<Avaliacao> listarAvaliacoesPorBarbeiro(@Param("funcionarioId") Long funcionarioId);
 }

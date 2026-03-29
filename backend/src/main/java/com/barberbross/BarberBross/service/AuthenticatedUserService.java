@@ -44,7 +44,13 @@ public class AuthenticatedUserService {
     public boolean isAdmin(){
         CustomUserPrincipal principal = get();
         return principal.getAuthorities().stream().
-                anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_ADMIN"));
+                anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    public boolean isFornecedor(){
+        CustomUserPrincipal principal = get();
+        return principal.getAuthorities().stream().
+                anyMatch(a -> a.getAuthority().equals("ROLE_FORNECEDOR"));
     }
 
 }

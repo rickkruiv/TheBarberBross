@@ -65,10 +65,10 @@ VALUES (1, 1, 20.00),
        (3, 1, 25.00);
 
 INSERT INTO agendamentos (data_horario, status, observacao, valor_total, cliente_id, empresa_id,
-                          funcionario_id)
-VALUES ('2026-03-31 10:00:00', 'PENDENTE', '', 50.00, 1, 1, 1),
-       ('2026-03-31 11:00:00', 'PENDENTE', 'Preferência por fade', 80.00, 1, 1, 2),
-       ('2026-03-31 14:00:00', 'PENDENTE', '', 40.00, 1, 2, 3);
+                          funcionario_id, duracao_total)
+VALUES ('2026-03-31 10:00:00', 'PENDENTE', '', 50.00, 1, 1, 1, 30),
+       ('2026-03-31 11:00:00', 'PENDENTE', 'Preferência por fade', 80.00, 1, 1, 2, 25),
+       ('2026-03-31 14:00:00', 'PENDENTE', '', 40.00, 1, 2, 3, 60);
 
 INSERT INTO agendamentos_servicos (agendamento_id, servico_id, preco, duracao)
 VALUES (1, 1, 50.00, 30),

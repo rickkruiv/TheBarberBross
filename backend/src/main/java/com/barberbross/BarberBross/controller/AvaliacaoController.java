@@ -26,17 +26,26 @@ public class AvaliacaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(avaliacaoService.salvarAvaliacao(novaAvaliacao));
     }
 
-    @GetMapping("/empresas/{empresaId}")
-    public ResponseEntity<List<DTOAvaliacaoResponse>> listarAvaliacoes(@PathVariable Long empresaId){
+    @GetMapping("/empresa/{empresaId}")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<List<DTOAvaliacaoResponse>> listarAvaliacoesPorEmpresa(@PathVariable Long empresaId){
         return ResponseEntity.ok(avaliacaoService.listarAvalicaoPorEmpresa(empresaId));
     }
 
+
+    @GetMapping("/barbeiro/{funcionarioId}")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<List<DTOAvaliacaoResponse>> listarAvaliacoesPorBarbeiro(@PathVariable Long funcionarioId){
+        return ResponseEntity.ok(avaliacaoService.listarAvalicaoPorBarbeiro(funcionarioId));
+    }
+
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<DTOAvaliacaoResponse> buscarAvaliacaoPorId(@PathVariable Long id){
         return ResponseEntity.ok(avaliacaoService.buscarAvaliacaoPorId(id));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<DTOAvaliacaoResponse> editarAvaliacao(@PathVariable Long id,
                                                                 @RequestBody @Valid DTOAvaliacaoRequest avaliacao){
