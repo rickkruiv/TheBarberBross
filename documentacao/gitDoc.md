@@ -104,10 +104,10 @@ git commit -m "Adicionado autenticacao JWT ao sistema"
 
 ## ⬆️ Enviando para o GitHub (Push)
 
-Primeiro **pull** da branch HEAD para atualizar a branch e resolver conflitos:
+Primeiro **pull** da branch desenvolvimento para atualizar a branch e resolver conflitos:
 
 ```bash
-git pull origin HEAD
+git pull origin desenvolvimento
 ```
 
 Em seguida **push** da branch:
@@ -182,7 +182,7 @@ git checkout -b BB-11-LoadBalance
 git add .
 git commit -m "Configurado Load Balance"
 
-git pull origin HEAD
+git pull origin desenvolvimento
 
 git push origin BB-11-LoadBalance
 ```
