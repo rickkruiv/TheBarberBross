@@ -15,6 +15,7 @@ public record DTOAgendamentoResponse(
         String observacao,
         List<Long> servicosIds,
         BigDecimal valorTotal,
+        Integer duracaoTotal,
         Long clienteId,
         Long empresaId,
         Long funcionarioId) {
@@ -22,8 +23,8 @@ public record DTOAgendamentoResponse(
 
     public DTOAgendamentoResponse(Agendamento a){
         this(a.getAgendamentoId(), a.getDataHorario(), a.getStatus(), a.getObservacao(),
-                a.getServicos().stream().map(AgendamentoServico::getAgendamentosServicosId).toList(),
-                a.getValorTotal(), a.getCliente().getClienteId(),
+                a.getServicos().stream().map(AgendamentoServico::getServicoId).toList(),
+                a.getValorTotal(), a.getDuracaoTotal(), a.getCliente().getClienteId(),
                 a.getEmpresa().getEmpresaId(), a.getFuncionario().getFuncionarioId());
     }
 }

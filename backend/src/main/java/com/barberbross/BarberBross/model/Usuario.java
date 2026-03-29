@@ -73,9 +73,9 @@ public class Usuario implements UserDetails {
         return nivelAcesso;
     }
 
-    public void atualizarDados(DTOUsuarioRequest dto) {
+    public void atualizarDados(DTOUsuarioRequest dto, String senha) {
         this.username = dto.username();
-        this.senha = dto.senha();
+        this.senha = senha;
         this.nivelAcesso = dto.nivelAcesso();
     }
 

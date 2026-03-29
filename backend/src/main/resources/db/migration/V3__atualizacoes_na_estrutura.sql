@@ -38,6 +38,9 @@ DROP TABLE IF EXISTS cargos_funcionarios CASCADE;
 -- ALTERAÇÕES
 -- =========================
 
+ALTER TABLE agendamentos
+    ADD COLUMN duracao_total INTEGER NOT NULL;
+
 ALTER TABLE avaliacoes
 DROP
 COLUMN avaliacao;
@@ -96,6 +99,9 @@ ALTER TABLE redes_sociais
 ALTER TABLE redes_sociais
     ADD CONSTRAINT fk_rs_funcionario FOREIGN KEY (funcionario_id)
         REFERENCES funcionarios (funcionario_id);
+
+ALTER TABLE redes_sociais
+    ALTER COLUMN empresa_id DROP NOT NULL;
 
 -- =========================
 -- ALTERAÇÕES

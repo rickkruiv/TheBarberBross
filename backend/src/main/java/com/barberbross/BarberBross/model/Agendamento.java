@@ -27,11 +27,14 @@ public class Agendamento {
     @Column(length = 100)
     private String observacao;
 
-    @OneToMany(mappedBy = "agendamento", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AgendamentoServico> servicos;
 
     @Column(nullable = false)
     private BigDecimal valorTotal;
+
+    @Column(nullable = false)
+    private Integer duracaoTotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -60,6 +63,7 @@ public class Agendamento {
         this.cliente = c;
         this.empresa = e;
         this.funcionario = f;
+        this.duracaoTotal = 0;
         this.valorTotal = BigDecimal.ZERO;
         this.servicos = new ArrayList<>();
     }
@@ -84,10 +88,21 @@ public class Agendamento {
 
     public List<AgendamentoServico> getServicos() { return servicos; }
 
-    //mudar isso aqui, se pa vai pra associativa agr
+    public Integer getDuracaoTotal() { return duracaoTotal; }
+
+    public Avaliacao getAvaliacao() { return avaliacao; }
+
     public void adicionarServico(Servico s){
-        this.servicos.stream().map(AgendamentoServico::getServico);
-        this.valorTotal = this.valorTotal.add(s.getPreco());
+        AgendamentoServico as = new AgendamentoServico(this, s);
+        this.servicos.add(as);
+        calcularDuracaoTotal();
+        recalcularValorTotal();
+    }
+
+    public void recalcularValorTotal() {
+        this.valorTotal = this.servicos.stream()
+                .map(AgendamentoServico::getPreco)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void limparServicos() {
@@ -100,6 +115,12 @@ public class Agendamento {
         this.dataHorario = agendamento.dataHorario();
         this.observacao = agendamento.observacao();
         this.funcionario = funcionario;
+    }
+
+    public void calcularDuracaoTotal(){
+        this.duracaoTotal = this.servicos.stream()
+                .map(AgendamentoServico::getDuracao)
+                .reduce(0, Integer::sum);
     }
 
 }

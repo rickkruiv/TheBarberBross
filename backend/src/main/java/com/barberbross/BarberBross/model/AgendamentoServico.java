@@ -28,10 +28,11 @@ public class AgendamentoServico {
 
     public AgendamentoServico() {}
 
-    public AgendamentoServico(Long agendamentosServicosId, Agendamento agendamento, Servico servico) {
-        this.agendamentosServicosId = agendamentosServicosId;
+    public AgendamentoServico(Agendamento agendamento, Servico servico) {
         this.agendamento = agendamento;
         this.servico = servico;
+        this.preco = servico.getPreco();
+        this.duracao = servico.getDuracao();
     }
 
     public Long getAgendamentosServicosId() { return agendamentosServicosId; }
@@ -39,4 +40,10 @@ public class AgendamentoServico {
     public Agendamento getAgendamento() { return agendamento; }
 
     public Servico getServico() { return servico; }
+
+    public BigDecimal getPreco() { return preco; }
+
+    public Integer getDuracao() { return duracao; }
+
+    public Long getServicoId() { return servico.getServicoId(); }
 }

@@ -81,7 +81,7 @@ public class FuncionarioService {
         funcionarioRepository.delete(f);
     }
 
-    protected Funcionario buscarFuncionario(Long id){
+    public Funcionario buscarFuncionario(Long id){
         return funcionarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nenhum Funcionário encontrado com id: " + id));
     }
@@ -89,7 +89,7 @@ public class FuncionarioService {
     protected Funcionario buscarFuncionarioPorEmpresa(Long funcionarioId, Long empresaId){
        return funcionarioRepository.findFuncionarioPorEmpresa(funcionarioId, empresaId)
                .orElseThrow(() -> new NotFoundException("Nenhum Funcionário com id: " + funcionarioId +
-                       " foi encontrado na Empresa: " + empresaId));
+                       " foi encontrado na Empresa: " + empresaId)); //melhorar essa msg
     }
 
     protected Funcionario buscarFuncionarioPorUserId(Long userId){
