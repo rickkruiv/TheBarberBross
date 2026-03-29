@@ -2,12 +2,14 @@ package com.barberbross.BarberBross.dto.response;
 
 import com.barberbross.BarberBross.model.Servico;
 
+import java.math.BigDecimal;
+
 public record DTOServicoResponse(
         Long servicoId,
         String nome,
         String descricao,
         Long categoriaId,
-        double preco,
+        BigDecimal preco,
         int duracao) {
 
     public DTOServicoResponse(Servico s) {

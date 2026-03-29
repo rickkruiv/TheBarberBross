@@ -1,6 +1,7 @@
 package com.barberbross.BarberBross.model;
 
 import com.barberbross.BarberBross.dto.request.DTOSocialMediaRequest;
+import com.barberbross.BarberBross.enums.Plataforma;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,9 +15,17 @@ public class SocialMedia {
     @Column(nullable = false)
     private String url;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Plataforma plataforma;
+
     @ManyToOne
-    @JoinColumn(name = "empresaId", nullable = false)
+    @JoinColumn(name = "empresa_id")
     private Empresa empresa;
+
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id")
+    private Funcionario funcionario;
 
     public SocialMedia(DTOSocialMediaRequest dto, Empresa e) {
         this.url = dto.url();

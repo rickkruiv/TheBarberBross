@@ -35,15 +35,27 @@ public class Empresa implements TemEndereco {
     @Column(nullable = false)
     private TipoAssinatura tipoAssinatura;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true) //colocar nullabel false dps
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Agendamento> agendamentos;
 
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY) //colocar nullabel false dps
     private List<Funcionario> funcionarios;
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SocialMedia> redesSociais;
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Pedido> pedidos;
+
+    @OneToOne(mappedBy = "empresa", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Estoque estoque;
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Avaliacao> avaliacoes;
 
     public Empresa(DTOEmpresaRequest dto) {
         this.razaoSocial = dto.razaoSocial();
@@ -53,6 +65,8 @@ public class Empresa implements TemEndereco {
         this.email = dto.email();
         this.tipoAssinatura = dto.tipoAssinatura();
         this.agendamentos = new ArrayList<>();
+        this.funcionarios = new ArrayList<>();
+        this.redesSociais = new ArrayList<>();
     }
 
     public Empresa() {}
@@ -76,6 +90,8 @@ public class Empresa implements TemEndereco {
     public List<Agendamento> getAgendamentos() { return agendamentos; }
 
     public List<Funcionario> getFuncionarios() { return funcionarios; }
+
+    public List<SocialMedia> getRedesSociais() { return redesSociais; }
 
     public void atualizarDados(DTOEmpresaRequest dto) {
         this.razaoSocial = dto.razaoSocial();

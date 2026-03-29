@@ -7,6 +7,7 @@ import com.barberbross.BarberBross.model.Usuario;
 import com.barberbross.BarberBross.repository.UsuarioRepository;
 import com.barberbross.BarberBross.validation.implementations.UsuarioCamposUnicosValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,8 +49,8 @@ public class UsuarioService {
         if(!usuarioAtual.getUsername().equals(dto.username())){
             validator.validar(dto);
         }
-
-        usuarioAtual.atualizarDados(dto);
+        String senhaHash = new BCryptPasswordEncoder().encode(dto.senha()); //gambiarra só pra testar um negócio
+        usuarioAtual.atualizarDados(dto, senhaHash);
         usuarioRepository.save(usuarioAtual);
         return new DTOUsuarioResponse(usuarioAtual);
     }

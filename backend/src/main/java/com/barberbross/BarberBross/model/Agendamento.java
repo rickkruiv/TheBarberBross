@@ -4,6 +4,7 @@ import com.barberbross.BarberBross.dto.request.DTOAgendamentoRequest;
 import com.barberbross.BarberBross.enums.Status;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +27,14 @@ public class Agendamento {
     @Column(length = 100)
     private String observacao;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(
-        name = "servico_agendamento",
-        joinColumns = @JoinColumn(name = "agendamentoId"),
-        inverseJoinColumns = @JoinColumn(name = "servicoId")
-    )
-    private List<Servico> servicos;
+    @OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AgendamentoServico> servicos;
 
     @Column(nullable = false)
-    private double valorTotal;
+    private BigDecimal valorTotal;
+
+    @Column(nullable = false)
+    private Integer duracaoTotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -46,8 +45,14 @@ public class Agendamento {
     private Empresa empresa;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario_id")
+    @JoinColumn(name = "funcionario_id", nullable = false)
     private Funcionario funcionario;
+
+    @OneToOne(mappedBy = "agendamento", cascade = CascadeType.ALL)
+    private Avaliacao avaliacao;
+
+    @OneToMany(mappedBy = "agendamento")
+    private List<Pagamento> pagamentos;
 
     public Agendamento() {}
 
@@ -58,6 +63,8 @@ public class Agendamento {
         this.cliente = c;
         this.empresa = e;
         this.funcionario = f;
+        this.duracaoTotal = 0;
+        this.valorTotal = BigDecimal.ZERO;
         this.servicos = new ArrayList<>();
     }
 
@@ -75,20 +82,32 @@ public class Agendamento {
 
     public String getObservacao() { return observacao; }
 
-    public double getValorTotal() { return valorTotal; }
+    public BigDecimal getValorTotal() { return valorTotal; }
 
     public Funcionario getFuncionario() { return funcionario; }
 
-    public List<Servico> getServicos() { return servicos; }
+    public List<AgendamentoServico> getServicos() { return servicos; }
+
+    public Integer getDuracaoTotal() { return duracaoTotal; }
+
+    public Avaliacao getAvaliacao() { return avaliacao; }
 
     public void adicionarServico(Servico s){
-        this.servicos.add(s);
-        this.valorTotal += s.getPreco();
+        AgendamentoServico as = new AgendamentoServico(this, s);
+        this.servicos.add(as);
+        calcularDuracaoTotal();
+        recalcularValorTotal();
+    }
+
+    public void recalcularValorTotal() {
+        this.valorTotal = this.servicos.stream()
+                .map(AgendamentoServico::getPreco)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void limparServicos() {
         this.servicos.clear();
-        this.valorTotal = 0.0;
+        this.valorTotal = BigDecimal.ZERO;
     }
 
     public void atualizarDados(DTOAgendamentoRequest agendamento, Funcionario funcionario) {
@@ -96,6 +115,12 @@ public class Agendamento {
         this.dataHorario = agendamento.dataHorario();
         this.observacao = agendamento.observacao();
         this.funcionario = funcionario;
+    }
+
+    public void calcularDuracaoTotal(){
+        this.duracaoTotal = this.servicos.stream()
+                .map(AgendamentoServico::getDuracao)
+                .reduce(0, Integer::sum);
     }
 
 }

@@ -3,6 +3,7 @@ package com.barberbross.BarberBross.model;
 import com.barberbross.BarberBross.dto.request.DTOAvaliacaoRequest;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,16 +22,16 @@ public class Avaliacao {
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
 
-    @ManyToOne
-    @JoinColumn(name = "servico_id", nullable = false)
-    private Servico servico;
+    @OneToOne
+    @JoinColumn(name = "agendamento_id", nullable = false, unique = true)
+    private Agendamento agendamento;
 
     @ManyToOne
     @JoinColumn(name = "funcionario_id", nullable = false)
     private Funcionario funcionario;
 
     @Column(nullable = false)
-    private Integer avaliacao;
+    private BigDecimal nota;
 
     private String comentario;
 
@@ -39,11 +40,11 @@ public class Avaliacao {
 
     public Avaliacao() {}
 
-    public Avaliacao(DTOAvaliacaoRequest dto, Cliente c, Empresa e, Servico s) {
+    public Avaliacao(DTOAvaliacaoRequest dto, Cliente c, Empresa e, Agendamento a) {
         this.cliente = c;
         this.empresa = e;
-        this.servico = s;
-        this.avaliacao = dto.avaliacao();
+        this.agendamento = a;
+        this.nota = dto.avaliacao();
         this.comentario = dto.comentario();
         this.data = LocalDateTime.now();
     }
@@ -54,16 +55,18 @@ public class Avaliacao {
 
     public Empresa getEmpresa() { return empresa; }
 
-    public Servico getServico() { return servico;}
+    public Agendamento getAgendamento() { return agendamento; }
 
-    public Integer getAvaliacao() { return avaliacao; }
+    public Funcionario getFuncionario() { return funcionario; }
+
+    public BigDecimal getNota() { return nota; }
 
     public String getComentario() { return comentario; }
 
     public LocalDateTime getData() { return data; }
 
     public void atualizarDados(DTOAvaliacaoRequest dto) {
-        this.avaliacao = dto.avaliacao();
+        this.nota = dto.avaliacao();
         this.comentario = dto.comentario();
     }
 }

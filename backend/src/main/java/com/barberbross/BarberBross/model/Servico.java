@@ -3,6 +3,7 @@ package com.barberbross.BarberBross.model;
 import com.barberbross.BarberBross.dto.request.DTOServicoRequest;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +26,13 @@ public class Servico {
     private Categoria categoria;
 
     @Column(nullable = false)
-    private double preco;
+    private BigDecimal preco;
 
     @Column(nullable = false)
     private int duracao;
 
-    @ManyToMany(mappedBy = "servicos", fetch = FetchType.LAZY)
-    private List<Agendamento> agendamentos = new ArrayList<>();
+    @OneToMany(mappedBy = "servico", fetch = FetchType.LAZY)
+    private List<AgendamentoServico> agendamentoServicos;
 
     public Servico(DTOServicoRequest dto, Categoria c) {
         this.nome = dto.nome();
@@ -39,7 +40,7 @@ public class Servico {
         this.categoria = c;
         this.preco = dto.preco();
         this.duracao = dto.duracao();
-        this.agendamentos = new ArrayList<>();
+        this.agendamentoServicos = new ArrayList<>();
     }
 
     public Servico() {}
@@ -52,10 +53,10 @@ public class Servico {
 
     public Categoria getCategoria() { return categoria; }
 
-    public double getPreco() { return preco; }
+    public BigDecimal getPreco() { return preco; }
 
-    public List<Agendamento> getAgendamentos() { return agendamentos; }
-    public void setAgendamentos(List<Agendamento> agendamentos) { this.agendamentos = agendamentos; }
+    public List<AgendamentoServico> getAgendamentoServicos() { return agendamentoServicos; }
+    public void setAgendamentoServicos(List<AgendamentoServico> agendamentoServicos) { this.agendamentoServicos = agendamentoServicos; }
 
     public int getDuracao() { return duracao; }
 
@@ -65,6 +66,6 @@ public class Servico {
         this.categoria = c;
         this.preco = dto.preco();
         this.duracao = dto.duracao();
-        this.agendamentos = new ArrayList<>();
+        this.agendamentoServicos = new ArrayList<>();
     }
 }
