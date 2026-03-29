@@ -199,4 +199,10 @@ Após testes: desenvolvimento → producao
 - Manter commits pequenos e descritivos
 - Testar antes de abrir Pull Request
 
-> ***QUER TUTORIAL PARA GITHUB DESKTOP, FALA DAI.***
+# 🧩 Tarefas do mesmo escopo podem compartilhar a branch
+
+Além de refatorações e ajustes técnicos, é permitido que mais de uma tarefa do Jira seja desenvolvida na mesma branch quando elas pertencem ao mesmo contexto funcional da aplicação.
+
+### Como nomear a branch nesse caso?
+
+Use o ID da tarefa principal ou a que iniciou o desenvolvimento.

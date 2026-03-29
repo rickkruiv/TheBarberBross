@@ -8,6 +8,8 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useRef } from 'react';
 import Scheduling from "../components/Scheduling";
 import Professionals from "../components/Professionals";
+import Products from "../components/Products";
+import LoyaltyCard from "../components/LoyaltyCard";
 
 const data = {
   id: "2",
@@ -140,7 +142,8 @@ export default function BarberShop() {
           </ScrollView>
 
           <YStack padding="$4">
-            {active === "Services" && 
+            {
+              active === "Services" &&
               <Services
                 onSelectService={(service) => {
                   setSelectedService(service);
@@ -148,16 +151,25 @@ export default function BarberShop() {
                 }}
               />
             }
-            {active === "Details" && <Details />}
-            {active === "Professionals" && 
-              <Professionals
-                onSelectProfessional={(professional) => {
-                  setSelectedService(professional);
-                }}
-              />
+            {
+              active === "Details" &&
+              <Details />
             }
-            {active === "Products" && <Text>Products content</Text>}
-            {active === "Loyalty" && <Text>Loyalty content</Text>}
+            {
+              active === "Professionals" &&
+              <Professionals onSelectProfessional={(professional) => { }} />
+            }
+            {
+              active === "Products" &&
+              <Products onSelectProduct={(product) => { }} />
+            }
+            {
+              active === "Loyalty" && (
+                <YStack gap="$4">
+                  <LoyaltyCard pontos={7} />
+                </YStack>
+              )
+            }
           </YStack>
         </YStack>
 
@@ -169,7 +181,7 @@ export default function BarberShop() {
         snapPoints={['50%', '80%']}
         backgroundStyle={{ backgroundColor: theme.surface.val }}
         enablePanDownToClose
-        enableContentPanningGesture={false} 
+        enableContentPanningGesture={false}
       >
         <BottomSheetView style={{ flex: 1, padding: 8 }}>
           <Scheduling service={selectedService} onClose={() => bottomSheetRef.current?.close()} />
