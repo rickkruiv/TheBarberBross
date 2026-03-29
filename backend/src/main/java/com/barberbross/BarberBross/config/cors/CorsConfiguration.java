@@ -1,4 +1,4 @@
-package com.barberbross.BarberBross.config;
+package com.barberbross.BarberBross.config.cors;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

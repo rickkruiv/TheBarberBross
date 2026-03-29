@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.barberbross.BarberBross.model.AgendamentoServico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class DashboardService {
         return agendamentos.stream()
                            .filter(agendamento -> agendamento.getStatus() == Status.CONCLUIDO || 
                                                   agendamento.getStatus() == Status.EM_ANDAMENTO)
-                           .mapToDouble(Agendamento::getValorTotal)
+                           .mapToDouble(a -> a.getValorTotal().doubleValue())
                            .sum(); 
     }
 
@@ -50,11 +51,12 @@ public class DashboardService {
         );
 
         long minutosTrabalhados = agendamentos.stream()
-                                              .map(Agendamento::getServicos) 
-                                              .filter(Objects::nonNull)
-                                              .flatMap(List::stream)
-                                              .mapToLong(s -> (long) s.getDuracao())
-                                              .sum();
+                .map(Agendamento::getServicos)
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .map(AgendamentoServico::getServico)
+                .mapToLong(s -> (long) s.getDuracao())
+                .sum();
 
         long minutosFuncionamento = Duration.between(LocalTime.of(9, 0), LocalTime.of(19, 0)).toMinutes();
         if (minutosFuncionamento == 0) return 0.0;

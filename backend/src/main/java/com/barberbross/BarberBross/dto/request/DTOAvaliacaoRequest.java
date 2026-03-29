@@ -3,18 +3,14 @@ package com.barberbross.BarberBross.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
+
 public record DTOAvaliacaoRequest(
         @NotNull
-        Long clienteId,
+        Long agendamentoId,
 
         @NotNull
-        Long empresaId,
-
-        @NotNull
-        Long servicoId,
-
-        @NotNull
-        Integer avaliacao,
+        BigDecimal nota,
 
         @NotBlank
         String comentario) {}

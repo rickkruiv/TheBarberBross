@@ -30,6 +30,9 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Agendamento> agendamentos;
 
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Avaliacao> avaliacoes;
+
     public Cliente() {}
 
     public Cliente(DTOClienteRequest c, Usuario u) {

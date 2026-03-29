@@ -1,11 +1,11 @@
-package com.barberbross.BarberBross.service;
+package com.barberbross.BarberBross.notification.channel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class NotificationService {
+@Component
+public class WebSocketNotificationChannel {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -17,6 +17,5 @@ public class NotificationService {
     public <T> void notificarFuncionario(Long funcionarioId, String contexto, T payload){
         messagingTemplate.convertAndSend("/queue/"+ contexto + "/" + funcionarioId, payload);
     }
-
 
 }

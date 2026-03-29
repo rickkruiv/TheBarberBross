@@ -13,6 +13,11 @@ public class WebSocketPayload<T>{
         this.dto = dto;
     }
 
+    public WebSocketPayload(String tipoDoPayload) {
+        this.tipoDoPayload = tipoDoPayload;
+        this.dto = null;
+    }
+
     public String getTipoDoPayload() { return tipoDoPayload; }
 
     public T getDto() { return dto; }

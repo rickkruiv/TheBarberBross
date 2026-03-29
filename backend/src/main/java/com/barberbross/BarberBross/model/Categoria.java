@@ -23,10 +23,13 @@ public class Categoria {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoProdServ tipo;
+    private TipoProdServ tipo; //se pa isso n faz mais sentido existir (ou faz sla)
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Servico> servicos; //sera q precisa disso aqui?
+    private List<Servico> servicos;
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Produto> produtos;
 
     public Categoria() {}
 

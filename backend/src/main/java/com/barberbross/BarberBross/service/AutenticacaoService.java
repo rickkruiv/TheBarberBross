@@ -8,8 +8,6 @@ import com.barberbross.BarberBross.dto.response.DTOClienteResponse;
 import com.barberbross.BarberBross.dto.response.DTOFuncionarioSimplesResponse;
 import com.barberbross.BarberBross.dto.response.DTOLoginResponse;
 import com.barberbross.BarberBross.enums.NivelAcesso;
-import com.barberbross.BarberBross.exceptions.BadRequestException;
-import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.Funcionario;
 import com.barberbross.BarberBross.model.Usuario;
 import jakarta.validation.Valid;

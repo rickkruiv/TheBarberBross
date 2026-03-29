@@ -15,12 +15,11 @@ public record DTOFuncionarioResponse(
         LocalDate dataContratacao,
         BigDecimal salarioBase,
         BigDecimal percentualComissao,
-        Long usuarioId,
-        Long enderecoId) {
+        Long usuarioId) {
 
     public DTOFuncionarioResponse(Funcionario f) {
         this(f.getFuncionarioId(), f.getNome(), f.getCpf()
                 , f.getTelefone(), f.getEmail(), f.getNascimento(), f.getDataContratacao(), f.getSalarioBase(), f.getPercentualComissao()
-                , f.getUsuario().getUsuarioId(), f.getEndereco().getEnderecoId());
+                , f.getUsuario().getUsuarioId());
     }
 }

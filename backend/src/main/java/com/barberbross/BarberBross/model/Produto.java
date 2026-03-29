@@ -3,6 +3,8 @@ package com.barberbross.BarberBross.model;
 import com.barberbross.BarberBross.dto.request.DTOProdutoRequest;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "produtos")
 public class Produto {
@@ -19,6 +21,15 @@ public class Produto {
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
+
+    @OneToMany(mappedBy = "produto")
+    private List<ItemPedido> itensPedido;
+
+    @OneToMany(mappedBy = "produto")
+    private List<ItemFornecedor> itensFornecedor;
+
+    @OneToMany(mappedBy = "produto")
+    private List<ItemEstoque> itensEstoque;
 
     public Produto(DTOProdutoRequest dto, Categoria c) {
         this.nome = dto.nome();
