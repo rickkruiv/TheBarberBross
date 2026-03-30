@@ -17,11 +17,11 @@ import CurrencyField from "../../components/CurrencyField/CurrencyField";
 import ActionBar from "../../components/ActionBar/ActionBar";
 import { toastSuccess, toastError } from "../../services/toast";
 import {
-  createService,
-  updateService,
-  fetchServiceById
+  useCreateService,
+  useUpdateService,
+  useService
 } from "../../services/services";
-import { fetchCategories } from "../../services/categories";
+import { useCategories } from "../../services/categories";
 
 function isValidCurrencyBRL(value) {
   if (!value) return false;
@@ -64,16 +64,11 @@ const ServiceCreate = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ["categories"],
-    queryFn: fetchCategories
-  });
+  const { data: categories = [] } = useCategories();
 
-  const { data: serviceData } = useQuery({
-    queryKey: ["service", id],
-    queryFn: () => fetchServiceById(id),
-    enabled: isEdit
-  });
+  const { data: serviceData } = useService(id);
+  const createMutation = useCreateService();
+  const updateMutation = useUpdateService();
 
   const initialValues = useMemo(() => {
     if (!isEdit || !serviceData) return defaultInitialValues;
@@ -101,10 +96,10 @@ const ServiceCreate = () => {
   const handleFormSubmit = async (values, { setSubmitting }) => {
     try {
       if (isEdit) {
-        await updateService(id, values);
+        await updateMutation.mutateAsync({ id, values });
         toastSuccess("Serviço atualizado com sucesso");
       } else {
-        await createService(values);
+        await createMutation.mutateAsync(values);
         toastSuccess("Serviço criado com sucesso");
       }
       navigate("/servicos/visualizar");

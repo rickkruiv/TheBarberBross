@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useMemo, useState, Fragment } from "react"
 import {
   Box,
   Container,
@@ -21,9 +21,9 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import { useNavigate } from "react-router-dom"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { listProdutos, deleteProduto } from "../../services/produto"
-import { fetchCategories } from "../../services/categories"
+import { useQuery } from "@tanstack/react-query"
+import { useProdutos, useDeleteProduto } from "../../services/produto"
+import { useCategories } from "../../services/categories"
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import { TableVirtuoso } from "react-virtuoso"
@@ -31,27 +31,19 @@ import { TableVirtuoso } from "react-virtuoso"
 export default function ProdutoList() {
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
-  const { data: produtosData, isLoading } = useQuery({
-    queryKey: ["produtos"],
-    queryFn: listProdutos
-  })
+  const { data: produtosData, isLoading } = useProdutos()
 
-  const { data: categoriasData } = useQuery({
-    queryKey: ["categorias"],
-    queryFn: fetchCategories,
-    staleTime: 300000
-  })
+  const { data: categoriasData } = useCategories()
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteProduto,
-    onSuccess: () => {
-      toastSuccess("Produto removido com sucesso")
-      queryClient.invalidateQueries({ queryKey: ["produtos"] })
-    },
-    onError: () => toastError("Erro ao remover produto")
-  })
+  const deleteMutation = useDeleteProduto()
+
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => toastSuccess("Produto removido com sucesso"),
+      onError: () => toastError("Erro ao remover produto")
+    })
+  }
 
   const produtos = Array.isArray(produtosData)
     ? produtosData
@@ -98,11 +90,6 @@ export default function ProdutoList() {
     return { label: "Estoque OK", color: "#063A2D", textColor: "#32D583" }
   }
 
-  const handleDelete = produto => {
-    if (!window.confirm(`Excluir o produto "${produto.nome}"?`)) return
-    deleteMutation.mutate(produto.produtoId || produto.id)
-  }
-
   return (
     <Container maxWidth="xl" sx={{ py: 3, display: "flex", justifyContent: "center" }}>
       <Box width="100%" maxWidth={1100}>
@@ -118,7 +105,7 @@ export default function ProdutoList() {
             placeholder="Buscar produtos..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            sx={{ maxWidth: 520, flex: 1, mr: 2 }}
+            sx={{ maxWidth: 920, flex: 1, mr: 2 }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -264,7 +251,7 @@ export default function ProdutoList() {
           }}
         >
           {isLoading ? (
-            <DefaultLoading loadMessage="Carregando produtos..."/>
+            <DefaultLoading loadMessage="Carregando produtos..." />
           ) : filtrados.length === 0 ? (
             <Box sx={{ p: 3 }}>
               <Typography color="text.secondary">
@@ -301,7 +288,7 @@ export default function ProdutoList() {
                 const custo = p.custoCompra || 0
                 const preco = p.precoVenda || 0
                 return (
-                  <React.Fragment>
+                  <Fragment>
                     <TableCell>{p.nome}</TableCell>
                     <TableCell>{p.marca || "-"}</TableCell>
                     <TableCell>{categoria?.nome || "-"}</TableCell>
@@ -342,7 +329,7 @@ export default function ProdutoList() {
                         <DeleteOutlineIcon />
                       </IconButton>
                     </TableCell>
-                  </React.Fragment>
+                  </Fragment>
                 )
               }}
             />

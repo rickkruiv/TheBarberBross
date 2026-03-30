@@ -1,4 +1,5 @@
 import api from "./api"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 function buildDateTime(dateStr, timeStr) {
   if (!dateStr || !timeStr) return null
@@ -55,4 +56,63 @@ export async function deleteAgendamento(agendaemntoId, empresaId) {
 export async function updateStatusAgendamento(agendaemntoId, empresaId, novoStatus) {
   const { data } = await api.put(`/agendamentos/status?agendamentoId=${agendaemntoId}&empresaId=${empresaId}&status=${novoStatus}`, null)
   return data
+}
+
+export const useAgendamentos = (params) => {
+  return useQuery({
+    queryKey: ["agendamentos", params],
+    queryFn: () => fetchAgendamentos(params),
+    staleTime: 30000
+  })
+}
+
+export const useAgendamento = (agendamentoId, empresaId = 7) => {
+  return useQuery({
+    queryKey: ["agendamento", agendamentoId, empresaId],
+    queryFn: () => fetchAgendamentoById(agendamentoId, empresaId),
+    enabled: !!agendamentoId,
+    staleTime: 30000
+  })
+}
+
+export const useCreateAgendamento = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createAgendamento,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["agendamentos"] })
+    }
+  })
+}
+
+export const useUpdateAgendamento = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ agendamentoId, values }) => updateAgendamento(agendamentoId, values),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["agendamentos"] })
+      queryClient.invalidateQueries({ queryKey: ["agendamento", variables.agendamentoId] })
+    }
+  })
+}
+
+export const useDeleteAgendamento = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ agendamentoId, empresaId }) => deleteAgendamento(agendamentoId, empresaId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["agendamentos"] })
+    }
+  })
+}
+
+export const useUpdateStatusAgendamento = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ agendamentoId, empresaId, novoStatus }) => updateStatusAgendamento(agendamentoId, empresaId, novoStatus),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["agendamentos"] })
+      queryClient.invalidateQueries({ queryKey: ["agendamento", variables.agendamentoId] })
+    }
+  })
 }
