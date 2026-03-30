@@ -36,6 +36,7 @@ import AgendamentoModal from "../../components/Modals/ApointmentDetailModal"
 import StatusSelect from "../../components/StatusSelect/statusSelect"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import { TableSortLabel } from "@mui/material"
+import { TableVirtuoso } from "react-virtuoso"
 
 function formatDate(value) {
   if (!value) return "-"
@@ -66,8 +67,6 @@ export default function AgendamentosList() {
   const [agendamentoSelecionado, setAgendamentoSelecionado] = React.useState(null)
   const [order, setOrder] = React.useState("asc")
   const [orderBy, setOrderBy] = React.useState("cliente.nome")
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
   const handleRequestSort = (_, property) => {
     const isAsc = orderBy === property && order === "asc"
@@ -294,13 +293,37 @@ export default function AgendamentosList() {
             </Box>
           </Box>
         ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
+          <TableVirtuoso
+            style={{ height: 500 }}
+            data={filtered.sort(getComparator(order, orderBy))}
+            components={{
+              Scroller: React.forwardRef((props, ref) => <div {...props} ref={ref} />),
+              Table: (props) => <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />,
+              TableHead: React.forwardRef((props, ref) => <TableHead {...props} ref={ref} />),
+              TableRow: (props) => {
+                const { item, ...rest } = props;
+                return (
+                  <TableRow
+                    {...rest}
+                    hover
+                    onClick={() => {
+                      if (item) {
+                        setAgendamentoSelecionado(item);
+                        setModalOpen(true);
+                      }
+                    }}
+                    style={{ cursor: "pointer" }}
+                  />
+                );
+              },
+              TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
+            }}
+            fixedHeaderContent={() => (
+              <TableRow sx={{ bgcolor: "#0C1116", boxShadow: "0px 2px 4px rgba(0,0,0,0.5)" }}>
                 {headCells.map(column => (
                   <TableCell
                     key={column.id}
-                    sx={{ width: column.width, maxWidth: column.width }}
+                    sx={{ width: column.width, maxWidth: column.width, bgcolor: "#0C1116", zIndex: 1 }}
                   >
                     <TableSortLabel
                       active={orderBy === column.id}
@@ -311,87 +334,45 @@ export default function AgendamentosList() {
                     </TableSortLabel>
                   </TableCell>
                 ))}
-                <TableCell align="right" width={"10%"}>Ações</TableCell>
+                <TableCell align="right" width={"10%"} sx={{ bgcolor: "#0C1116", zIndex: 1 }}>Ações</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {filtered
-                .sort(getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(row => (
-                  <TableRow
-                    key={row.agendamentoId}
-                    onClick={() => {
-                      setAgendamentoSelecionado(row)
-                      setModalOpen(true)
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <TableCell>{row.cliente?.nome || "-"}</TableCell>
-                    <TableCell>
-                      {row.servicos && row.servicos.length > 0
-                        ? `${row.servicos[0].nome}${row.servicos.length > 1 ? " + ..." : ""}`
-                        : "-"}
-                    </TableCell>
-                    <TableCell>{row.funcionario?.nome || "-"}</TableCell>
-                    <TableCell>{formatDate(row.dataHorario)}</TableCell>
-                    <TableCell>{formatTime(row.dataHorario)}</TableCell>
-                    <TableCell
-                      onClick={(e) => {
-                        e.stopPropagation()
-                      }}
-                    >
-                      <StatusSelect
-                        status={row.status}
-                        onChange={(novoStatus) => atualizarStatus(row.agendamentoId, novoStatus)}
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      {formatBRL(row.valorTotal)}
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                      }}
-                    >
-                      <Tooltip title="Editar">
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            navigate(`/agenda/${row.agendamentoId}/editar`)
-                          }
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Excluir">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(row.agendamentoId)}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
+            )}
+            itemContent={(_index, row) => (
+              <React.Fragment>
+                <TableCell>{row.cliente?.nome || "-"}</TableCell>
+                <TableCell>
+                  {row.servicos && row.servicos.length > 0
+                    ? `${row.servicos[0].nome}${row.servicos.length > 1 ? " + ..." : ""}`
+                    : "-"}
+                </TableCell>
+                <TableCell>{row.funcionario?.nome || "-"}</TableCell>
+                <TableCell>{formatDate(row.dataHorario)}</TableCell>
+                <TableCell>{formatTime(row.dataHorario)}</TableCell>
+                <TableCell onClick={(e) => e.stopPropagation()}>
+                  <StatusSelect
+                    status={row.status}
+                    onChange={(novoStatus) => atualizarStatus(row.agendamentoId, novoStatus)}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  {formatBRL(row.valorTotal)}
+                </TableCell>
+                <TableCell align="right" onClick={(e) => e.stopPropagation()}>
+                  <Tooltip title="Editar">
+                    <IconButton size="small" onClick={() => navigate(`/agenda/${row.agendamentoId}/editar`)}>
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Excluir">
+                    <IconButton size="small" onClick={() => handleDelete(row.agendamentoId)}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </React.Fragment>
+            )}
+          />
         )}
-
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filtered.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={(_, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(e) => {
-            setRowsPerPage(parseInt(e.target.value, 10))
-            setPage(0)
-          }}
-        />
       </Paper>
 
       <AgendamentoModal

@@ -24,6 +24,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchServices, deleteService } from "../../services/services";
 import { toastError, toastSuccess } from "../../services/toast";
 import DefaultLoading from "../../shared/Loading/DefaultLoading";
+import { TableVirtuoso } from "react-virtuoso"
 
 const formatCurrency = (value) => {
   if (value == null) return "-";
@@ -130,78 +131,74 @@ const ServicesList = () => {
                 <DefaultLoading loadMessage="Carregando serviços"/>
           ) : (
             <>
-              <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Serviço</TableCell>
-                  <TableCell>Categoria</TableCell>
-                  <TableCell>Preço</TableCell>
-                  <TableCell>Duração</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell align="center">Ações</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {!isLoading && filteredServices.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={6}>
-                      <Typography variant="body2">
-                        Nenhum serviço encontrado.
-                      </Typography>
-                    </TableCell>
+              <TableVirtuoso
+                style={{ height: 500 }}
+                data={filteredServices}
+                components={{
+                  Scroller: React.forwardRef((props, ref) => <div {...props} ref={ref} />),
+                  Table: (props) => <Table {...props} size="small" sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />,
+                  TableHead: React.forwardRef((props, ref) => <TableHead {...props} ref={ref} />),
+                  TableRow: (props) => <TableRow {...props} hover />,
+                  TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
+                }}
+                fixedHeaderContent={() => (
+                  <TableRow sx={{ bgcolor: "background.paper", boxShadow: "0px 2px 4px rgba(0,0,0,0.5)" }}>
+                    <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "30%" }}>Serviço</TableCell>
+                    <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "20%" }}>Categoria</TableCell>
+                    <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Preço</TableCell>
+                    <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Duração</TableCell>
+                    <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "10%" }}>Status</TableCell>
+                    <TableCell align="center" sx={{ bgcolor: "background.paper", zIndex: 1, width: "10%" }}>Ações</TableCell>
                   </TableRow>
                 )}
-
-                {!isLoading &&
-                  filteredServices.map((servico) => (
-                    <TableRow key={servico.servicoId}>
-                      <TableCell>{servico.nome}</TableCell>
-                      <TableCell>{servico.categoria?.nome || "-"}</TableCell>
-                      <TableCell>{formatCurrency(servico.preco)}</TableCell>
-                      <TableCell>{formatDuration(servico.duracao)}</TableCell>
-                      <TableCell>
-                        <Chip
-                          label={servico.status === "INATIVO" ? "Inativo" : "Ativo"}
+                itemContent={(_index, servico) => (
+                  <React.Fragment>
+                    <TableCell>{servico.nome}</TableCell>
+                    <TableCell>{servico.categoria?.nome || "-"}</TableCell>
+                    <TableCell>{formatCurrency(servico.preco)}</TableCell>
+                    <TableCell>{formatDuration(servico.duracao)}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={servico.status === "INATIVO" ? "Inativo" : "Ativo"}
+                        size="small"
+                        sx={{
+                          borderRadius: 999,
+                          px: 1.5,
+                          fontSize: 12,
+                          backgroundColor:
+                            servico.status === "INATIVO"
+                              ? "error.main"
+                              : "success.main",
+                          color: "common.white"
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box display="flex" justifyContent="center" gap={1}>
+                        <IconButton
                           size="small"
-                          sx={{
-                            borderRadius: 999,
-                            px: 1.5,
-                            fontSize: 12,
-                            backgroundColor:
-                              servico.status === "INATIVO"
-                                ? "error.main"
-                                : "success.main",
-                            color: "common.white"
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Box display="flex" justifyContent="center" gap={1}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleView(servico.servicoId)}
-                          >
-                            <VisibilityIcon fontSize="small" />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleEdit(servico.servicoId)}
-                          >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleDelete(servico.servicoId)}
-                            sx={{ color: "error.main" }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
+                          onClick={() => handleView(servico.servicoId)}
+                        >
+                          <VisibilityIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleEdit(servico.servicoId)}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDelete(servico.servicoId)}
+                          sx={{ color: "error.main" }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </React.Fragment>
+                )}
+              />
             </>
           )}
         </Paper>

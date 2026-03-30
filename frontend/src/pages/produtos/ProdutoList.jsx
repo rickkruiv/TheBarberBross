@@ -26,6 +26,7 @@ import { listProdutos, deleteProduto } from "../../services/produto"
 import { fetchCategories } from "../../services/categories"
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
+import { TableVirtuoso } from "react-virtuoso"
 
 export default function ProdutoList() {
   const [search, setSearch] = useState("")
@@ -271,73 +272,80 @@ export default function ProdutoList() {
               </Typography>
             </Box>
           ) : (
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Produto</TableCell>
-                  <TableCell>Marca</TableCell>
-                  <TableCell>Categoria</TableCell>
-                  <TableCell>Estoque</TableCell>
-                  <TableCell>Custo</TableCell>
-                  <TableCell>Preço</TableCell>
-                  <TableCell align="right">Ações</TableCell>
+            <TableVirtuoso
+              style={{ height: 500 }}
+              data={filtrados}
+              components={{
+                Scroller: React.forwardRef((props, ref) => <div {...props} ref={ref} />),
+                Table: (props) => <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />,
+                TableHead: React.forwardRef((props, ref) => <TableHead {...props} ref={ref} />),
+                TableRow: (props) => <TableRow {...props} hover />,
+                TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
+              }}
+              fixedHeaderContent={() => (
+                <TableRow sx={{ bgcolor: "#0C1116", boxShadow: "0px 2px 4px rgba(0,0,0,0.5)" }}>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "20%" }}>Produto</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Marca</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Categoria</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Estoque</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "10%" }}>Custo</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "10%" }}>Preço</TableCell>
+                  <TableCell align="right" sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Ações</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {filtrados.map(p => {
-                  const id = p.produtoId || p.id
-                  const categoria = categoriasMap[p.categoriaId]
-                  const estoqueInfo = getEstoqueInfo(p)
-                  const qtd = Number(p.quantidadeEstoque ?? 0)
-                  const custo = p.custoCompra || 0
-                  const preco = p.precoVenda || 0
-                  return (
-                    <TableRow key={id}>
-                      <TableCell>{p.nome}</TableCell>
-                      <TableCell>{p.marca || "-"}</TableCell>
-                      <TableCell>{categoria?.nome || "-"}</TableCell>
-                      <TableCell>
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Typography>{qtd}</Typography>
-                          <Box
-                            sx={{
-                              px: 1.5,
-                              py: 0.25,
-                              borderRadius: 999,
-                              bgcolor: estoqueInfo.color
-                            }}
+              )}
+              itemContent={(_index, p) => {
+                const id = p.produtoId || p.id
+                const categoria = categoriasMap[p.categoriaId]
+                const estoqueInfo = getEstoqueInfo(p)
+                const qtd = Number(p.quantidadeEstoque ?? 0)
+                const custo = p.custoCompra || 0
+                const preco = p.precoVenda || 0
+                return (
+                  <React.Fragment>
+                    <TableCell>{p.nome}</TableCell>
+                    <TableCell>{p.marca || "-"}</TableCell>
+                    <TableCell>{categoria?.nome || "-"}</TableCell>
+                    <TableCell>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography>{qtd}</Typography>
+                        <Box
+                          sx={{
+                            px: 1.5,
+                            py: 0.25,
+                            borderRadius: 999,
+                            bgcolor: estoqueInfo.color
+                          }}
+                        >
+                          <Typography
+                            variant="caption"
+                            sx={{ color: estoqueInfo.textColor, fontWeight: 500 }}
                           >
-                            <Typography
-                              variant="caption"
-                              sx={{ color: estoqueInfo.textColor, fontWeight: 500 }}
-                            >
-                              {estoqueInfo.label}
-                            </Typography>
-                          </Box>
+                            {estoqueInfo.label}
+                          </Typography>
                         </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>R$ {Number(custo).toFixed(2)}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>R$ {Number(preco).toFixed(2)}</Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <IconButton onClick={() => navigate(`/produtos/${id}`)}>
-                          <VisibilityOutlinedIcon />
-                        </IconButton>
-                        <IconButton onClick={() => navigate(`/produtos/${id}/editar`)}>
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton onClick={() => handleDelete(p)} sx={{ color: "#ff4d4f" }}>
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>R$ {Number(custo).toFixed(2)}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>R$ {Number(preco).toFixed(2)}</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton onClick={() => navigate(`/produtos/${id}`)}>
+                        <VisibilityOutlinedIcon />
+                      </IconButton>
+                      <IconButton onClick={() => navigate(`/produtos/${id}/editar`)}>
+                        <EditOutlinedIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDelete(p)} sx={{ color: "#ff4d4f" }}>
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </TableCell>
+                  </React.Fragment>
+                )
+              }}
+            />
           )}
         </Paper>
       </Box>
