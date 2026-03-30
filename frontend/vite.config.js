@@ -11,4 +11,8 @@ export default defineConfig({
       "/clientes": "http://localhost:8181",
     },
   },
+  test: {
+    globals: true,
+    environment: "jsdom",
+  },
 });
