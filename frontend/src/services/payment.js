@@ -1,4 +1,5 @@
 import api from "./api"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 export const fetchPayments = async () => {
   const { data } = await api.get("/pagamentos")
@@ -51,4 +52,36 @@ export const updatePayment = async (id, { code, fee, status }) => {
 
 export const deletePayment = async id => {
   await api.delete(`/pagamentos/${id}`)
+}
+
+export const usePayments = () => {
+  return useQuery({
+    queryKey: ["payments"],
+    queryFn: fetchPayments,
+    staleTime: 300000
+  })
+}
+
+export const useCreatePayment = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createPayment,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["payments"] })
+  })
+}
+
+export const useUpdatePayment = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, payload }) => updatePayment(id, payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["payments"] })
+  })
+}
+
+export const useDeletePayment = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: deletePayment,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["payments"] })
+  })
 }

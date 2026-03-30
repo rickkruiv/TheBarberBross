@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import {
   Box,
   TextField,
@@ -81,19 +81,19 @@ const campoPequeno = { flex: "0 0 120px" }
 const horaBox = { flex: "1 1 180px" }
 
 export default function Company() {
-  const [initialValues, setInitialValues] = React.useState(defaultValues)
-  const [loading, setLoading] = React.useState(true)
-  const [logoName, setLogoName] = React.useState("")
+  const [initialValues, setInitialValues] = useState(defaultValues)
+  const [loading, setLoading] = useState(true)
+  const [logoName, setLogoName] = useState("")
 
 
-  const [socialIds, setSocialIds] = React.useState({
+  const [socialIds, setSocialIds] = useState({
     instagram: null,
     facebook: null,
     tiktok: null,
     whatsappBusiness: null
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     let active = true
     ;(async () => {
       try {

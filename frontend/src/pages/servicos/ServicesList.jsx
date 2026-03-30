@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, Fragment } from "react";
 import {
   Box,
   Button,
@@ -20,8 +20,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchServices, deleteService } from "../../services/services";
+import { useServices, useDeleteService } from "../../services/services";
 import { toastError, toastSuccess } from "../../services/toast";
 import DefaultLoading from "../../shared/Loading/DefaultLoading";
 import { TableVirtuoso } from "react-virtuoso"
@@ -45,22 +44,11 @@ const formatDuration = (minutes) => {
 
 const ServicesList = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
 
-  const { data: services = [], isLoading } = useQuery({
-    queryKey: ["services"],
-    queryFn: fetchServices
-  });
+  const { data: services = [], isLoading } = useServices();
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteService,
-    onSuccess: () => {
-      toastSuccess("Serviço excluído com sucesso");
-      queryClient.invalidateQueries({ queryKey: ["services"] });
-    },
-    onError: toastError
-  });
+  const deleteMutation = useDeleteService();
 
   const filteredServices = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -78,7 +66,10 @@ const ServicesList = () => {
   const handleDelete = (servicoId) => {
     const confirmDelete = window.confirm("Deseja realmente excluir este serviço?");
     if (!confirmDelete) return;
-    deleteMutation.mutate(servicoId);
+    deleteMutation.mutate(servicoId, {
+      onSuccess: () => toastSuccess("Serviço excluído com sucesso"),
+      onError: toastError
+    });
   };
 
   const handleEdit = (servicoId) => {
@@ -152,7 +143,7 @@ const ServicesList = () => {
                   </TableRow>
                 )}
                 itemContent={(_index, servico) => (
-                  <React.Fragment>
+                  <Fragment>
                     <TableCell>{servico.nome}</TableCell>
                     <TableCell>{servico.categoria?.nome || "-"}</TableCell>
                     <TableCell>{formatCurrency(servico.preco)}</TableCell>
@@ -196,7 +187,7 @@ const ServicesList = () => {
                         </IconButton>
                       </Box>
                     </TableCell>
-                  </React.Fragment>
+                  </Fragment>
                 )}
               />
             </>

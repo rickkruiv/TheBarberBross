@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react"
 import { Box, Typography, FormControl, Select, MenuItem } from "@mui/material"
 import { useQuery } from "@tanstack/react-query"
 import { fetchAgendamentos } from "../../services/agendamentos"
-import { fetchDashboard } from "../../services/dashboard"
+import { useDashboard } from "../../services/dashboard"
 import SummaryCards from "../../components/SummaryCards/SummaryCards"
 import WeeklyChart from "../../components/WeeklyChart/WeeklyChart"
 import RevenueChart from "../../components/RevenueChart/RevenueChart"
@@ -17,10 +17,7 @@ export default function Dashboard() {
     queryFn: () => fetchAgendamentos()
   })
 
-  const { data: dashboardData } = useQuery({
-    queryKey: ["dashboard-summary"],
-    queryFn: () => fetchDashboard()
-  })
+  const { data: dashboardData } = useDashboard()
 
   const filteredAgendamentos = useMemo(() => {
     const list = Array.isArray(agendamentosData)

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect, useMemo, Fragment } from "react"
 import {
   Box,
   Button,
@@ -28,8 +28,7 @@ import Refresh from "@mui/icons-material/Refresh"
 import EditIcon from "@mui/icons-material/EditOutlined"
 import DeleteIcon from "@mui/icons-material/DeleteOutline"
 import { useNavigate } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
-import { fetchAgendamentos, deleteAgendamento, updateStatusAgendamento } from "../../services/agendamentos"
+import { useAgendamentos, useDeleteAgendamento, useUpdateStatusAgendamento } from "../../services/agendamentos"
 import StatCard from "../../components/StatCard/StatCard"
 import { toastError, toastSuccess } from "../../services/toast"
 import AgendamentoModal from "../../components/Modals/ApointmentDetailModal"
@@ -62,11 +61,11 @@ function formatBRL(value) {
 
 export default function AgendamentosList() {
   const navigate = useNavigate()
-  const [q, setQ] = React.useState("")
-  const [modalOpen, setModalOpen] = React.useState(false)
-  const [agendamentoSelecionado, setAgendamentoSelecionado] = React.useState(null)
-  const [order, setOrder] = React.useState("asc")
-  const [orderBy, setOrderBy] = React.useState("cliente.nome")
+  const [q, setQ] = useState("")
+  const [modalOpen, setModalOpen] = useState(false)
+  const [agendamentoSelecionado, setAgendamentoSelecionado] = useState(null)
+  const [order, setOrder] = useState("asc")
+  const [orderBy, setOrderBy] = useState("cliente.nome")
 
   const handleRequestSort = (_, property) => {
     const isAsc = orderBy === property && order === "asc"
@@ -98,29 +97,24 @@ export default function AgendamentosList() {
     }
   }
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["agendamentos/empresaId=7"],
-    queryFn: () => fetchAgendamentos(),
-    staleTime: 30000
-  })
+  const { data, isLoading, isError } = useAgendamentos()
+  const updateStatusMutation = useUpdateStatusAgendamento()
+  const deleteMutation = useDeleteAgendamento()
 
-  async function atualizarStatus(agendamentoId, novoStatus) {
-    try {
-      await updateStatusAgendamento(agendamentoId, 7, novoStatus)
-      toastSuccess("Status atualizado com sucesso")
-      refetch()
-    } catch {
-      toastError("Erro ao atualizar status")
-    }
+  function atualizarStatus(agendamentoId, novoStatus) {
+    updateStatusMutation.mutate({ agendamentoId, empresaId: 7, novoStatus }, {
+      onSuccess: () => toastSuccess("Status atualizado com sucesso"),
+      onError: () => toastError("Erro ao atualizar status")
+    })
   }
 
   const list = Array.isArray(data) ? data : data?.data || []
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isError) toastError("Falha ao carregar agendamentos")
   }, [isError])
 
-  const filtered = React.useMemo(() => {
+  const filtered = useMemo(() => {
     const term = q.trim().toLowerCase()
     if (!term) return list
     return list.filter(a => {
@@ -142,16 +136,13 @@ export default function AgendamentosList() {
   const confirmados = list.filter(a => a.status === "EM_ANDAMENTO").length
   const concluidos = list.filter(a => a.status === "CONCLUIDO").length
 
-  async function handleDelete(agendamentoId) {
+  function handleDelete(agendamentoId) {
     const ok = window.confirm("Deseja realmente excluir este agendamento?")
     if (!ok) return
-    try {
-      await deleteAgendamento(agendamentoId, 7)
-      toastSuccess("Agendamento excluído com sucesso")
-      refetch()
-    } catch {
-      toastError("Falha ao excluir agendamento")
-    }
+    deleteMutation.mutate({ agendamentoId, empresaId: 7 }, {
+      onSuccess: () => toastSuccess("Agendamento excluído com sucesso"),
+      onError: () => toastError("Falha ao excluir agendamento")
+    })
   }
 
   function descendingComparator(a, b, orderBy) {
@@ -338,7 +329,7 @@ export default function AgendamentosList() {
               </TableRow>
             )}
             itemContent={(_index, row) => (
-              <React.Fragment>
+              <Fragment>
                 <TableCell>{row.cliente?.nome || "-"}</TableCell>
                 <TableCell>
                   {row.servicos && row.servicos.length > 0
@@ -369,7 +360,7 @@ export default function AgendamentosList() {
                     </IconButton>
                   </Tooltip>
                 </TableCell>
-              </React.Fragment>
+              </Fragment>
             )}
           />
         )}

@@ -18,9 +18,9 @@ import ClearIcon from "@mui/icons-material/Clear"
 import EditIcon from "@mui/icons-material/Edit"
 import { useQuery } from "@tanstack/react-query"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
-import { createProduto, getProduto, updateProduto } from "../../services/produto"
-import { fetchCategories } from "../../services/categories"
-import { listFornecedores } from "../../services/fornecedores"
+import { useCreateProduto, useProduto, useUpdateProduto } from "../../services/produto"
+import { useCategories } from "../../services/categories"
+import { useFornecedores } from "../../services/fornecedores"
 import { toastError, toastSuccess } from "../../services/toast"
 
 const UNIDADES_MEDIDA = ["Unidade", "Pacote", "Caixa", "Litro", "Quilo"]
@@ -53,23 +53,14 @@ export default function ProdutoCreate() {
   const isEdit = Boolean(id) && location.pathname.includes("/editar")
   const isView = Boolean(id) && !location.pathname.includes("/editar")
 
-  const { data: categoriasData } = useQuery({
-    queryKey: ["categorias"],
-    queryFn: fetchCategories,
-    staleTime: 300000
-  })
+  const { data: categoriasData } = useCategories()
 
-  const { data: fornecedoresData } = useQuery({
-    queryKey: ["fornecedores"],
-    queryFn: listFornecedores,
-    staleTime: 300000
-  })
+  const { data: fornecedoresData } = useFornecedores()
 
-  const { data: produtoData } = useQuery({
-    queryKey: ["produto", id],
-    queryFn: () => getProduto(id),
-    enabled: !!id
-  })
+  const { data: produtoData } = useProduto(id)
+  
+  const createMutation = useCreateProduto()
+  const updateMutation = useUpdateProduto()
 
   const categoriasList = Array.isArray(categoriasData)
     ? categoriasData
@@ -130,10 +121,10 @@ export default function ProdutoCreate() {
     try {
       setSaving(true)
       if (isEdit) {
-        await updateProduto(id, payload)
+        await updateMutation.mutateAsync({ id, payload })
         toastSuccess("Produto atualizado com sucesso")
       } else {
-        await createProduto(payload)
+        await createMutation.mutateAsync(payload)
         toastSuccess("Produto salvo com sucesso")
         handleClear()
       }

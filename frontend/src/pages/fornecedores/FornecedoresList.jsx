@@ -20,8 +20,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility"
 import EditIcon from "@mui/icons-material/EditOutlined"
 import DeleteIcon from "@mui/icons-material/DeleteOutline"
 import { useNavigate } from "react-router-dom"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { listFornecedores, deleteFornecedor } from "../../services/fornecedores"
+import { useQueryClient } from "@tanstack/react-query"
+import { useFornecedores, useDeleteFornecedor } from "../../services/fornecedores"
 import { toastError, toastSuccess } from "../../services/toast"
 import StatCard from "../../components/StatCard/StatCard"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
@@ -35,11 +35,7 @@ export default function FornecedoresList() {
     data: dataFornecedores,
     isLoading,
     isError
-  } = useQuery({
-    queryKey: ["fornecedores"],
-    queryFn: listFornecedores,
-    staleTime: 300000
-  })
+  } = useFornecedores()
 
   if (isError) {
     toastError("Falha ao carregar fornecedores")
@@ -60,20 +56,16 @@ export default function FornecedoresList() {
   const ativos = list.filter(f => isAtivo(f.status)).length
   const inativos = total - ativos
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteFornecedor,
-    onSuccess: () => {
-      toastSuccess("Fornecedor excluído com sucesso")
-      queryClient.invalidateQueries({ queryKey: ["fornecedores"] })
-    },
-    onError: () => toastError("Erro ao excluir fornecedor")
-  })
+  const deleteMutation = useDeleteFornecedor()
 
   const handleDelete = row => {
     const id = row.fornecedorId || row.id
     if (!id) return
     if (window.confirm(`Deseja realmente excluir o fornecedor "${row.razaoSocial || row.nome}"?`)) {
-      deleteMutation.mutate(id)
+      deleteMutation.mutate(id, {
+        onSuccess: () => toastSuccess("Fornecedor excluído com sucesso"),
+        onError: () => toastError("Erro ao excluir fornecedor")
+      })
     }
   }
 

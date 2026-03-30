@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import {
   Box,
   Button,
@@ -14,10 +14,9 @@ import ChevronRight from "@mui/icons-material/ChevronRight"
 import Today from "@mui/icons-material/Today"
 import AccessTime from "@mui/icons-material/AccessTime"
 import CalendarMonth from "@mui/icons-material/CalendarMonth"
-import { useQuery } from "@tanstack/react-query"
-import { fetchAgendamentos } from "../../services/agendamentos"
-import { fetchServices } from "../../services/services"
-import { fetchEmployees } from "../../services/employees"
+import { useAgendamentos } from "../../services/agendamentos"
+import { useServices } from "../../services/services"
+import { useEmployees } from "../../services/employees"
 import { toastError } from "../../services/toast"
 import AgendamentoModal from "../../components/Modals/ApointmentDetailModal";
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
@@ -165,42 +164,32 @@ function getTimeFromIso(iso) {
 }
 
 export default function AgendaSemanal() {
-  const [weekStart, setWeekStart] = React.useState(startOfWeek(new Date()))
-  const [barbeiroId, setBarbeiroId] = React.useState("")
-  const [servicosId, setservicosId] = React.useState("")
-  const [selectedDayIndex, setSelectedDayIndex] = React.useState(0)
-  const [modalOpen, setModalOpen] = React.useState(false)
-  const [agendamentoSelecionado, setAgendamentoSelecionado] = React.useState(null)
+  const [weekStart, setWeekStart] = useState(startOfWeek(new Date()))
+  const [barbeiroId, setBarbeiroId] = useState("")
+  const [servicosId, setservicosId] = useState("")
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [agendamentoSelecionado, setAgendamentoSelecionado] = useState(null)
 
   const {
     data: agendaData,
     isLoading: loadingAgenda,
     isError: errorAgenda
-  } = useQuery({
-    queryKey: [`agendamentos/empresaId=7`], // fazer por passagem de parametros dps
-    queryFn: () => fetchAgendamentos(),
-    staleTime: 30000
-  })
+  } = useAgendamentos()
 
   const {
     data: servicesData,
     isLoading: loadingServices,
     isError: errorServices
-  } = useQuery({
-    queryKey: ["services-all"],
-    queryFn: () => fetchServices()
-  })
+  } = useServices()
 
   const {
     data: employeesData,
     isLoading: loadingEmployees,
     isError: errorEmployees
-  } = useQuery({
-    queryKey: ["employees-all"],
-    queryFn: () => fetchEmployees()
-  })
+  } = useEmployees()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (errorAgenda || errorServices || errorEmployees) {
       toastError("Falha ao carregar dados da agenda")
     }
@@ -212,17 +201,17 @@ export default function AgendaSemanal() {
 
   const isLoading = loadingAgenda || loadingServices || loadingEmployees
 
-  const weekDates = React.useMemo(
+  const weekDates = useMemo(
     () => Array.from({ length: 7 }).map((_, i) => addDays(weekStart, i)),
     [weekStart]
   )
 
-  const weekKeys = React.useMemo(
+  const weekKeys = useMemo(
     () => weekDates.map(d => getDateKeyFromDate(d)),
     [weekDates]
   )
 
-  const filteredAgendamentos = React.useMemo(() => {
+  const filteredAgendamentos = useMemo(() => {
     return agendamentos.filter(a => {
       const dayKey = getDateKeyFromIso(a.dataHorario)
       if (!dayKey) return false
@@ -234,7 +223,7 @@ export default function AgendaSemanal() {
     })
   }, [agendamentos, weekKeys, barbeiroId, servicosId])
 
-  const agendamentosPorDia = React.useMemo(() => {
+  const agendamentosPorDia = useMemo(() => {
     const map = {}
     filteredAgendamentos.forEach(a => {
       const dayKey = getDateKeyFromIso(a.dataHorario)
@@ -245,7 +234,7 @@ export default function AgendaSemanal() {
     return map
   }, [filteredAgendamentos])
 
-  const slotsMap = React.useMemo(() => {
+  const slotsMap = useMemo(() => {
     const map = {}
     filteredAgendamentos.forEach(a => {
       const dayKey = getDateKeyFromIso(a.dataHorario)
@@ -380,7 +369,11 @@ export default function AgendaSemanal() {
               display: "flex",
               gap: 2,
               overflowX: "auto",
-              pb: 1
+              pb: 1,
+              "&::-webkit-scrollbar": { height: "6px" },
+              "&::-webkit-scrollbar-track": { bgcolor: "transparent" },
+              "&::-webkit-scrollbar-thumb": { bgcolor: "rgba(255, 255, 255, 0.1)", borderRadius: "10px" },
+              "&::-webkit-scrollbar-thumb:hover": { bgcolor: "rgba(255, 255, 255, 0.2)" }
             }}
           >
             {weekDates.map((date, index) => {
@@ -393,7 +386,8 @@ export default function AgendaSemanal() {
                   key={key}
                   onClick={() => setSelectedDayIndex(index)}
                   sx={{
-                    flex: "0 0 120px",
+                    flex: 1,
+                    minWidth: 120,
                     borderRadius: 2,
                     p: 2,
                     cursor: "pointer",
@@ -527,9 +521,16 @@ export default function AgendaSemanal() {
                       </Box>
                     )
                   })}
+                  <Box sx={{ width: "8px", flexShrink: 0 }} />
                 </Box>
 
-                <Box sx={{ height: 480 }}>
+                <Box sx={{ 
+                  height: 480,
+                  "& *::-webkit-scrollbar": { width: "8px", height: "8px" },
+                  "& *::-webkit-scrollbar-track": { bgcolor: "transparent" },
+                  "& *::-webkit-scrollbar-thumb": { bgcolor: "rgba(255, 255, 255, 0.1)", borderRadius: "10px" },
+                  "& *::-webkit-scrollbar-thumb:hover": { bgcolor: "rgba(255, 255, 255, 0.2)" }
+                }}>
                   <Virtuoso
                     data={TIME_SLOTS}
                     itemContent={(_index, slot) => (

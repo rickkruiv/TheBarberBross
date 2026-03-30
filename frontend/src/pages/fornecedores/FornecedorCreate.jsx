@@ -17,11 +17,11 @@ import ClearIcon from "@mui/icons-material/Clear"
 import { useQuery } from "@tanstack/react-query"
 import { useParams, useLocation, useNavigate } from "react-router-dom"
 import {
-  createFornecedor,
-  getFornecedor,
-  updateFornecedor
+  useCreateFornecedor,
+  useFornecedor,
+  useUpdateFornecedor
 } from "../../services/fornecedores"
-import { fetchCategories } from "../../services/categories"
+import { useCategories } from "../../services/categories"
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
@@ -98,20 +98,15 @@ export default function FornecedorCreate() {
   const {
     data: categoriasData,
     isLoading: categoriasLoading
-  } = useQuery({
-    queryKey: ["categorias"],
-    queryFn: fetchCategories,
-    staleTime: 300000
-  })
+  } = useCategories()
 
   const {
     data: fornecedorData,
     isLoading: fornecedorLoading
-  } = useQuery({
-    queryKey: ["fornecedor", id],
-    queryFn: () => getFornecedor(id),
-    enabled: !!id
-  })
+  } = useFornecedor(id)
+
+  const createMutation = useCreateFornecedor()
+  const updateMutation = useUpdateFornecedor()
 
   useEffect(() => {
     if (fornecedorData) {
@@ -233,11 +228,11 @@ export default function FornecedorCreate() {
     try {
       setSaving(true)
       if (isNew) {
-        await createFornecedor(payload)
+        await createMutation.mutateAsync(payload)
         toastSuccess("Fornecedor salvo com sucesso")
         setForm(initialForm)
       } else {
-        await updateFornecedor(id, payload)
+        await updateMutation.mutateAsync({ id, payload })
         toastSuccess("Fornecedor atualizado com sucesso")
       }
     } catch (e) {

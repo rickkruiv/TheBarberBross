@@ -1,4 +1,5 @@
 import api from "./api"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 function generateRandomPassword(length = 10) {
   const chars =
@@ -21,4 +22,12 @@ export async function createClientFromAppointment(values) {
 
   const { data } = await api.post("/clientes", payload)
   return data
+}
+
+export const useCreateClienteFromAppointment = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createClientFromAppointment,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["clientes"] })
+  })
 }
