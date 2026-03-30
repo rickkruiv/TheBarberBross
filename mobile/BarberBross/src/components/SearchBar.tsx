@@ -16,7 +16,7 @@ const SearchBar = forwardRef<any, Props>(({ onFocus, autoFocus }, ref) => {
       width="100%"
       paddingHorizontal="$4"
       paddingVertical="$1"
-      borderRadius="$10"
+      borderRadius="$6"
       borderWidth={1}
       borderColor="$border"
       alignItems="center"
@@ -38,6 +38,8 @@ const SearchBar = forwardRef<any, Props>(({ onFocus, autoFocus }, ref) => {
         onFocus={onFocus}
         autoFocus={autoFocus}
         fontSize={"$2"}
+        outlineColor="transparent"
+        focusStyle={{ outlineColor: "transparent" }}
       />
     </XStack>
   )

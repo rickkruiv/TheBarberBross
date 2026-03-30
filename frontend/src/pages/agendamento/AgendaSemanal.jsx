@@ -111,7 +111,7 @@ function formatTime(value) {
   return d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
 }
 
-function formatBRL(value) {
+function formatarBRL(value) {
   if (value == null) return "R$ 0,00"
   return Number(value).toLocaleString("pt-BR", {
     style: "currency",
@@ -152,13 +152,11 @@ function getDateKeyFromDate(date) {
 }
 
 function getDateKeyFromIso(iso) {
-  if (!iso) return ""
   const m = iso.match(/^(\d{4}-\d{2}-\d{2})/)
   return m ? m[1] : ""
 }
 
 function getTimeFromIso(iso) {
-  if (!iso) return ""
   const m = iso.match(/T(\d{2}):(\d{2})/)
   return m ? `${m[1]}:${m[2]}` : ""
 }
@@ -524,7 +522,7 @@ export default function AgendaSemanal() {
                   <Box sx={{ width: "8px", flexShrink: 0 }} />
                 </Box>
 
-                <Box sx={{ 
+                <Box sx={{
                   height: 480,
                   "& *::-webkit-scrollbar": { width: "8px", height: "8px" },
                   "& *::-webkit-scrollbar-track": { bgcolor: "transparent" },
@@ -747,7 +745,7 @@ export default function AgendaSemanal() {
             open={modalOpen}
             onClose={() => setModalOpen(false)}
             agendamentoSelecionado={agendamentoSelecionado}
-            formatBRL={formatBRL}
+            formatBRL={formatarBRL}
             formatDate={formatDate}
             formatTime={formatTime}
           />
