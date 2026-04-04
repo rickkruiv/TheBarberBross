@@ -1,5 +1,5 @@
 import { Button, Text, YStack, Image, XStack } from "tamagui";
-import Calendar from "../components/Calendar";
+import Calendar from "./Calendar";
 import SelectProfessional from "./SelectProfessional";
 import { useEffect, useState } from "react";
 
@@ -11,11 +11,11 @@ type Service = {
   image: any;
 };
 
-type Professionals = {
+export type Professional = {
   id: string;
   nome: string;
   desc: string;
-  social: any,
+  social: any;
   image: any;
 };
 
@@ -27,11 +27,11 @@ type Props = {
 export default function Scheduling({ service, onClose }: Props) {
   if (!service) return null;
 
-  const [selectedProfessional, setSelectedProfessional] = useState<any>(null);
+  const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [times, setTimes] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const canConfirm = selectedProfessional && selectedDate && selectedTime;
+  const canConfirm: boolean = !!selectedProfessional && !!selectedDate && !!selectedTime;
 
   function loadTimes(professionalId: string, date: Date) {
     const horarios = [
@@ -44,9 +44,8 @@ export default function Scheduling({ service, onClose }: Props) {
   }
 
   useEffect(() => {
-    if (selectedProfessional && selectedDate) {
-      loadTimes(selectedProfessional.id, selectedDate);
-    }
+    if (!selectedProfessional || !selectedDate) return;
+    loadTimes(selectedProfessional.id, selectedDate);
   }, [selectedProfessional, selectedDate]);
 
   return (

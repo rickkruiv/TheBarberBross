@@ -3,8 +3,8 @@ import { useState, useRef } from "react"
 import { YStack, XStack, Text } from "tamagui"
 import { ArrowLeft } from "@tamagui/lucide-icons-2"
 
-import FilterButton from "../components/FilterButton"
-import SearchBar from "../components/SearchBar"
+import FilterButton from "../components/Search/FilterButton"
+import SearchBar from "../components/Search/SearchBar"
 
 export default function Search() {
   const [selectedFilter, setSelectedFilter] = useState("Name")

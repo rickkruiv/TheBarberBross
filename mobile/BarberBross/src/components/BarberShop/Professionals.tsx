@@ -6,42 +6,44 @@ type Professionals = {
   id: string;
   nome: string;
   desc: string;
-  socials: (keyof typeof Ionicons.glyphMap)[];
+  socials: Social[];
   image: any;
 };
 
-const socialIconsMap = {
+type Social = "instagram" | "facebook" | "youtube" | "tiktok";
+
+const socialIconsMap: Record<Social, keyof typeof Ionicons.glyphMap> = {
   instagram: "logo-instagram",
   facebook: "logo-facebook",
   youtube: "logo-youtube",
   tiktok: "logo-tiktok",
 };
 
-const professionals = [
+const professionals: Professionals[] = [
   {
     id: "1",
-    image: require("../assets/icons/barbeiro.png"),
+    image: require("../../assets/icons/barbeiro.png"),
     nome: "Adriano",
     desc: "No description",
     socials: ["instagram", "facebook", "youtube", "tiktok"],
   },
   {
     id: "2",
-    image: require("../assets/icons/barbeiro.png"),
+    image: require("../../assets/icons/barbeiro.png"),
     nome: "Matheus",
     desc: "No description",
     socials: ["instagram", "tiktok"],
   },
   {
     id: "3",
-    image: require("../assets/icons/barbeiro.png"),
+    image: require("../../assets/icons/barbeiro.png"),
     nome: "Ithalo",
     desc: "Se quiser melhorar a autoestima, é só chamar! 😉",
     socials: ["instagram", "facebook", "tiktok"],
   },
 ];
 
-export default function Professionals({ onSelectProfessional }) {
+export default function Professionals({}) {
   const theme = useTheme();
 
   return (
@@ -85,7 +87,7 @@ export default function Professionals({ onSelectProfessional }) {
                           transform: [{ scale: pressed ? 0.99 : 1 }],
                         })}
                       >
-                        <Ionicons name={socialIconsMap[social]} size={18} color={theme.textSecondary.val} />
+                        <Ionicons name={socialIconsMap[social]} size={18} color={theme.textSecondary?.val} />
                       </Pressable>
                     );
                   })}

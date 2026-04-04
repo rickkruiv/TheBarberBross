@@ -9,21 +9,21 @@ type Props = {
 const professionals = [
   {
     id: "1",
-    image: require("../assets/icons/barbeiro.png"),
+    image: require("../../assets/icons/barbeiro.png"),
     nome: "Adriano",
     desc: "No description",
     socials: ["instagram", "facebook", "youtube", "tiktok"],
   },
   {
     id: "2",
-    image: require("../assets/icons/barbeiro.png"),
+    image: require("../../assets/icons/barbeiro.png"),
     nome: "Matheus",
     desc: "No description",
     socials: ["instagram", "tiktok"],
   },
   {
     id: "3",
-    image: require("../assets/icons/barbeiro.png"),
+    image: require("../../assets/icons/barbeiro.png"),
     nome: "Ithalo",
     desc: "Se quiser melhorar a autoestima, é só chamar! 😉",
     socials: ["instagram", "facebook", "tiktok"],

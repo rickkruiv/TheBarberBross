@@ -1,11 +1,11 @@
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { YStack, Text, ScrollView } from 'tamagui'
-import SearchBar from '../../components/SearchBar';
+import SearchBar from '../../components/Search/SearchBar';
 import { getFormattedToday } from '../../utils/format';
-import HomeSection from '../../components/HomeSection';
-import LatestVisitCard from '../../components/LatestVisitCard'
-import DiscoverCard from '../../components/DiscoverCard';
+import HomeSection from '../../components/Home/HomeSection';
+import LatestVisitCard from '../../components/Home/LatestVisitCard'
+import DiscoverCard from '../../components/Home/DiscoverCard';
 
 export default function Home() {
   const dateFormated = getFormattedToday();

@@ -41,7 +41,7 @@ export default function LoyaltyCard({ pontos = 2, total = 10 }: Props) {
             >
               {filled && (
                 <Image
-                  src={require("../assets/icons/carimbo.png")}
+                  src={require("../../assets/icons/carimbo.png")}
                   width={30}
                   height={30}
                 />
