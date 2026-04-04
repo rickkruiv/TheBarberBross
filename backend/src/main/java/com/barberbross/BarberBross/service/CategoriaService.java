@@ -49,7 +49,7 @@ public class CategoriaService {
         }
 
         DTOCategoriaResponse response = new DTOCategoriaResponse(c);
-        notifcationService.notificarNovaCategoria(response);
+        notifcationService.notificarNovaCategoria(response, authUser.get().getEmpresaId());
         return response;
     }
 
@@ -72,7 +72,7 @@ public class CategoriaService {
     public List<DTOCategoriaResponse> listarCategorias() {
         if (authUser.isAdmin()){
             List<DTOCategoriaResponse> lista = listarCategoriasEmpresa(authUser.get().getEmpresaId());
-            notifcationService.notificarListaCategorias(lista);
+            notifcationService.notificarListaCategorias(lista, authUser.get().getEmpresaId());
            return lista;
         } else {
             Fornecedor fornecedor = fornecedorService.buscarFornecedorPorUsuario(authUser.get().getUserId());
@@ -119,7 +119,7 @@ public class CategoriaService {
         categoriaRepository.save(c);
 
         DTOCategoriaResponse response = new DTOCategoriaResponse(c);
-        notifcationService.notificarCategoriaEditada(response);
+        notifcationService.notificarCategoriaEditada(response, authUser.get().getEmpresaId());
 
         return response;
     }

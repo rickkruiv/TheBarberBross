@@ -14,18 +14,18 @@ public class CategoriaNotifcationService {
     @Autowired
     private WebSocketNotificationChannel webSocketChannel;
 
-    public void notificarNovaCategoria(DTOCategoriaResponse response){
+    public void notificarNovaCategoria(DTOCategoriaResponse response, Long empresaId){
         WebSocketPayload<DTOCategoriaResponse> payload = new WebSocketPayload<>("CATEGORIA CRIADA", response);
-        webSocketChannel.notificarEmpresa(response.empresaId(), "categorias", payload);
+        webSocketChannel.notificarEmpresa(empresaId, "categorias", payload);
     }
 
-    public void notificarListaCategorias(List<DTOCategoriaResponse> response){
+    public void notificarListaCategorias(List<DTOCategoriaResponse> response, Long empresaId){
         WebSocketPayload<List<DTOCategoriaResponse>> payload = new WebSocketPayload<>("LISTA DE CATEGORIAS", response);
-        webSocketChannel.notificarEmpresa(response.getFirst().empresaId(), "categorias", payload);
+        webSocketChannel.notificarEmpresa(empresaId, "categorias", payload);
     }
 
-    public void notificarCategoriaEditada(DTOCategoriaResponse response){
+    public void notificarCategoriaEditada(DTOCategoriaResponse response, Long empresaId){
         WebSocketPayload<DTOCategoriaResponse> payload = new WebSocketPayload<>("CATEGORIA EDITADA", response);
-        webSocketChannel.notificarEmpresa(response.empresaId(), "categorias", payload);
+        webSocketChannel.notificarEmpresa(empresaId, "categorias", payload);
     }
 }
