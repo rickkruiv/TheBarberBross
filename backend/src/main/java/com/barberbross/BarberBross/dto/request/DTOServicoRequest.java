@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public record DTOServicoRequest(
         @NotBlank
         String nome,
+
         String descricao,
 
         @NotNull

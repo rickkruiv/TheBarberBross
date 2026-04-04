@@ -7,9 +7,11 @@ public record DTOCategoriaResponse(
         Long categoriaId,
         String nome,
         String descricao,
-        TipoProdServ tipo) {
+        TipoProdServ tipo,
+        Long empresaId,
+        Long fornecdorId) {
 
     public DTOCategoriaResponse(Categoria c){
-        this(c.getCategoriaId(), c.getNome(), c.getDescricao(), c.getTipo());
+        this(c.getCategoriaId(), c.getNome(), c.getDescricao(), c.getTipo(), c.getEmpresa().getEmpresaId(), c.getFornecedor().getFornecedorId());
     }
 }

@@ -23,7 +23,7 @@ public class Categoria {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoProdServ tipo; //se pa isso n faz mais sentido existir (ou faz sla)
+    private TipoProdServ tipo;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Servico> servicos;
@@ -31,13 +31,30 @@ public class Categoria {
     @OneToMany(mappedBy = "categoria")
     private List<Produto> produtos;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
+
+    @ManyToOne
+    @JoinColumn(name = "fornecedor_id")
+    private Fornecedor fornecedor;
+
     public Categoria() {}
 
-    public Categoria(DTOCategoriaRequest dto) {
+    public Categoria(DTOCategoriaRequest dto, Empresa empresa) {
         this.nome = dto.nome();
         this.descricao = dto.descricao();
         this.tipo = dto.tipo();
-        this.servicos = new ArrayList<>();
+        this.empresa = empresa;
+        this.fornecedor = null;
+    }
+
+    public Categoria(DTOCategoriaRequest dto, Fornecedor fornecedor) {
+        this.nome = dto.nome();
+        this.descricao = dto.descricao();
+        this.tipo = dto.tipo();
+        this.fornecedor = fornecedor;
+        this.empresa = null;
     }
 
     public Long getCategoriaId() { return categoriaId; }
@@ -47,6 +64,10 @@ public class Categoria {
     public String getDescricao() { return descricao; }
 
     public TipoProdServ getTipo() { return tipo; }
+
+    public Empresa getEmpresa() { return empresa; }
+
+    public Fornecedor getFornecedor() { return fornecedor; }
 
     public void atualizarDado(DTOCategoriaRequest dto) {
         this.nome = dto.nome();

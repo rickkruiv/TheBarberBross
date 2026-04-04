@@ -43,6 +43,9 @@ public class Fornecedor implements TemEndereco {
     @OneToMany(mappedBy = "fornecedor")
     private List<ItemFornecedor> itensFornecedor;
 
+    @OneToMany(mappedBy = "fornecedor")
+    private List<Categoria> categorias;
+
     //ARRUMAR OS MÉTODOS DESSA CLASSE DPS
 
     public Fornecedor(DTOFornecedorRequest dto) {

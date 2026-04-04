@@ -34,6 +34,10 @@ public class Servico {
     @OneToMany(mappedBy = "servico", fetch = FetchType.LAZY)
     private List<AgendamentoServico> agendamentoServicos;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
+
     public Servico(DTOServicoRequest dto, Categoria c) {
         this.nome = dto.nome();
         this.descricao = dto.descricao();

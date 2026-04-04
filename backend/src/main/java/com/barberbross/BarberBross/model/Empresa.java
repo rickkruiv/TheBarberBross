@@ -57,6 +57,12 @@ public class Empresa implements TemEndereco {
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Avaliacao> avaliacoes;
 
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Servico> servicos;
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Categoria> categorias;
+
     public Empresa(DTOEmpresaRequest dto) {
         this.razaoSocial = dto.razaoSocial();
         this.nomeFantasia = dto.nomeFantasia();
