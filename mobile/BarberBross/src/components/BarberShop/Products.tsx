@@ -1,7 +1,7 @@
 import { Text, Image, YStack, XStack, useTheme, Button } from "tamagui";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Pressable } from "react-native";
-import { formatCurrency } from '../utils/format';
+import { formatCurrency } from '../../utils/format';
 
 type Products = {
   id: string;
@@ -12,25 +12,25 @@ type Products = {
 const products = [
   {
     id: "1",
-    image: require("../assets/icons/pomada.png"),
+    image: require("../../assets/icons/pomada.png"),
     desc: "Pomada",
     price: 25,
   },
   {
     id: "2",
-    image: require("../assets/icons/creme-barbear.png"),
+    image: require("../../assets/icons/creme-barbear.png"),
     desc: "Creme de barbear",
     price: 34.69,
   },
   {
     id: "3",
-    image: require("../assets/icons/hidratante.png"),
+    image: require("../../assets/icons/hidratante.png"),
     desc: "Hidratante capilar",
     price: 16.59,
   },
 ];
 
-export default function Products({ onSelectProduct }) {
+export default function Products({ }) {
   const theme = useTheme();
 
   return (

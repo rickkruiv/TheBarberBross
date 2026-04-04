@@ -1,61 +1,73 @@
 import { Text, Image, YStack, XStack, useTheme, Button } from "tamagui";
 import { Clock } from "@tamagui/lucide-icons-2";
 import { Pressable } from "react-native";
-import { formatCurrency, formatDuration } from '../utils/format';
+import { formatCurrency, formatDuration } from '../../utils/format';
+
+export type Service = {
+  id: string
+  image: any
+  desc: string
+  duracao: number
+  valor: number
+};
 
 const services = [
   {
     id: "1",
-    image: require("../assets/icons/tesoura.png"),
+    image: require("../../assets/icons/tesoura.png"),
     desc: "Corte de cabelo",
     duracao: 30,
     valor: 50.00,
   },
   {
     id: "2",
-    image: require("../assets/icons/barba.png"),
+    image: require("../../assets/icons/barba.png"),
     desc: "Barba",
     duracao: 30,
     valor: 50.00,
   },
   {
     id: "3",
-    image: require("../assets/icons/barba-cabelo.png"),
+    image: require("../../assets/icons/barba-cabelo.png"),
     desc: "Barba e cabelo",
     duracao: 60,
     valor: 95.00,
   },
   {
     id: "4",
-    image: require("../assets/icons/navalha.png"),
+    image: require("../../assets/icons/navalha.png"),
     desc: "Sobrancelha",
     duracao: 15,
     valor: 30.00,
   },
   {
     id: "5",
-    image: require("../assets/icons/creme-de-barbear.png"),
+    image: require("../../assets/icons/creme-de-barbear.png"),
     desc: "Hidratação",
     duracao: 45,
     valor: 60.00,
   },
   {
     id: "6",
-    image: require("../assets/icons/gotas.png"),
+    image: require("../../assets/icons/gotas.png"),
     desc: "Tintura",
     duracao: 90,
     valor: 120.00,
   },
   {
     id: "7",
-    image: require("../assets/icons/escova-de-barbear.png"),
+    image: require("../../assets/icons/escova-de-barbear.png"),
     desc: "Barboterapia",
     duracao: 120,
     valor: 150.00,
   },
 ];
 
-export default function Services({ onSelectService }) {
+type Props = {
+  onSelectService: (service: Service) => void
+}
+
+export default function Services({ onSelectService }: Props) {
   const theme = useTheme();
 
   return (
@@ -102,7 +114,7 @@ export default function Services({ onSelectService }) {
 
                     <XStack alignItems="center" gap={"$1"}>
                       <Text fontSize={"$3"} color={"$textSecundary"}>{formatDuration(service.duracao)}</Text>
-                      <Clock size={14} color={theme.textSecondary.val} />
+                      <Clock size={14} color={theme.textSecondary?.val} />
                     </XStack>
                   </XStack>
 

@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import { MapPin } from '@tamagui/lucide-icons-2';
 import { XStack, YStack, Text } from 'tamagui';
 import { useTheme } from 'tamagui';
-import { formatDistance } from '../utils/format';
+import { formatDistance } from '../../utils/format';
 
 const data = [
   {
@@ -90,7 +90,7 @@ export default function DiscoverCard() {
               <Text fontSize="$4" fontWeight="700" color="$text">{item.name}</Text>
 
               <XStack alignItems="center" gap="$2">
-                <MapPin size={12} color={theme.textSecondary.val} />
+                <MapPin size={12} color={theme.textSecondary?.val} />
                 <Text fontSize="$3" color="$textSecondary">{formatDistance(item.distance)}</Text>
               </XStack>
             </YStack>

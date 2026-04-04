@@ -2,14 +2,15 @@ import { YStack, XStack, ScrollView, Text, Image, useTheme } from "tamagui";
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { StarFull } from '@tamagui/lucide-icons-2';
 import { useState } from "react";
-import Details from "../components/Details";
-import Services from "../components/Services";
+import Details from "../components/BarberShop/Details";
+import Services from "../components/BarberShop/Services";
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useRef } from 'react';
-import Scheduling from "../components/Scheduling";
-import Professionals from "../components/Professionals";
-import Products from "../components/Products";
-import LoyaltyCard from "../components/LoyaltyCard";
+import Scheduling from "../components/BarberShop/Scheduling";
+import Professionals from "../components/BarberShop/Professionals";
+import Products from "../components/BarberShop/Products";
+import LoyaltyCard from "../components/BarberShop/LoyaltyCard";
+import type { Service } from "../components/BarberShop/Services";
 
 const data = {
   id: "2",
@@ -27,9 +28,8 @@ const tabs = ["Services", "Details", "Professionals", "Products", "Loyalty"];
 export default function BarberShop() {
   const theme = useTheme();
   const [active, setActive] = useState("Services");
-  const [selectedService, setSelectedService] = useState(null);
-
-  const bottomSheetRef = useRef(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   return (
     <>
@@ -157,11 +157,11 @@ export default function BarberShop() {
             }
             {
               active === "Professionals" &&
-              <Professionals onSelectProfessional={(professional) => { }} />
+              <Professionals />
             }
             {
               active === "Products" &&
-              <Products onSelectProduct={(product) => { }} />
+              <Products />
             }
             {
               active === "Loyalty" && (
@@ -179,7 +179,7 @@ export default function BarberShop() {
         ref={bottomSheetRef}
         index={-1}
         snapPoints={['50%', '80%']}
-        backgroundStyle={{ backgroundColor: theme.surface.val }}
+        backgroundStyle={{ backgroundColor: theme.surface?.val }}
         enablePanDownToClose
         enableContentPanningGesture={false}
       >
