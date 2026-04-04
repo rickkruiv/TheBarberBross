@@ -1,11 +1,13 @@
+import 'react-native-reanimated';
+
+import '@tamagui/native/setup-expo-linear-gradient'
 import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TamaguiProvider, useTheme } from "tamagui";
-import { tamaguiConfig } from "../../tamagui.config";
+import tamaguiConfig from "../../tamagui.config";
 import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import 'react-native-reanimated';
 
 function AppContent() {
   const theme = useTheme();
@@ -14,7 +16,7 @@ function AppContent() {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: theme.background.val,
+        backgroundColor: theme.background?.val,
       }}
     >
       <Stack screenOptions={{ headerShown: false }} />
