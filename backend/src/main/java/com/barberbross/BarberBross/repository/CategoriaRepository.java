@@ -15,11 +15,9 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
     @Query("""
             SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END
             FROM Categoria c
-            WHERE(c.nome = :nome
-            OR c.descricao = :descricao)
+            WHERE c.nome = :nome
             AND c.id <> :id""")
     boolean existeDuplicado(@Param("nome") String nome,
-                            @Param("descricao") String descricao,
                             @Param("id") Long id);
 
     List<Categoria> findAllByEmpresaEmpresaId(Long empresaId);

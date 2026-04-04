@@ -4,6 +4,7 @@ import com.barberbross.BarberBross.exceptions.AccessDeniedException;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.*;
 import com.barberbross.BarberBross.repository.AvaliacaoRepository;
+import com.barberbross.BarberBross.repository.CategoriaRepository;
 import com.barberbross.BarberBross.service.ClienteService;
 import com.barberbross.BarberBross.service.EmpresaService;
 import com.barberbross.BarberBross.service.FuncionarioService;
@@ -24,6 +25,9 @@ public class AuthorizationValidator {
 
     @Autowired
     private AvaliacaoRepository avaliacaoRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     public void validarAcessoEmpresa(CustomUserPrincipal user, Long empresaId){
         if (!user.getEmpresaId().equals(empresaId)){
@@ -57,6 +61,14 @@ public class AuthorizationValidator {
                 .orElseThrow(() -> new NotFoundException("Nenhuma Avaliação encontrada"));
         if(!a.getCliente().getClienteId().equals(c.getClienteId())){
             throw new AccessDeniedException("Acesso negado: usuário não possui permissão para alterar esta avaliação.");
+        }
+    }
+
+    public void validarCategoriaEmpresa(CustomUserPrincipal user, Long categoriaId){
+        Categoria c = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new NotFoundException("Nenhuma Categoria encontrada"));
+        if (!c.getEmpresa().getEmpresaId().equals(user.getEmpresaId())){
+            throw new AccessDeniedException("Acesso negado: usuário não possui permissão para alterar esta categoria.");
         }
     }
 

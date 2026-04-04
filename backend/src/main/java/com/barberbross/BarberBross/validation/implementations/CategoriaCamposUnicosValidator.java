@@ -36,7 +36,7 @@ public class CategoriaCamposUnicosValidator implements Validator<DTOCategoriaReq
     }
 
     public void validarCategoriaEditada(DTOCategoriaRequest dto, Long id) {
-        boolean jaExiste = repository.existeDuplicado(dto.nome(), dto.descricao(), id);
+        boolean jaExiste = repository.existeDuplicado(dto.nome(), id);
 
         if (jaExiste){
             throw new ConflictException("Dados já cadastrados para outra Categoria.");

@@ -133,7 +133,7 @@ public class CategoriaService {
         categoriaRepository.delete(c);
     }
 
-    protected Categoria buscarCategoria(Long id){
+    public Categoria buscarCategoria(Long id){
         return categoriaRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Nenhum Categoria encontrada com id: " + id));
     }

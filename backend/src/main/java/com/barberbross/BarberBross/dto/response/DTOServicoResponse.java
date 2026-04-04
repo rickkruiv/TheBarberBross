@@ -10,10 +10,11 @@ public record DTOServicoResponse(
         String descricao,
         Long categoriaId,
         BigDecimal preco,
-        int duracao) {
+        int duracao,
+        Long empresaId) {
 
     public DTOServicoResponse(Servico s) {
         this(s.getServicoId(), s.getNome(), s.getDescricao()
-        , s.getCategoria().getCategoriaId(), s.getPreco(), s.getDuracao());
+        , s.getCategoria().getCategoriaId(), s.getPreco(), s.getDuracao(), s.getEmpresa().getEmpresaId());
     }
 }

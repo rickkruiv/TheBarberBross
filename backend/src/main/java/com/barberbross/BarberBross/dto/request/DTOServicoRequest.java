@@ -18,4 +18,7 @@ public record DTOServicoRequest(
         BigDecimal preco,
 
         @NotNull
-        int duracao) {}
+        int duracao,
+
+        @NotNull
+        Long empresaId) {}
