@@ -37,6 +37,7 @@
         }
       ],
       "expo-font"
-    ]
+    ],
+    "scheme": "barberbross"
   }
 }

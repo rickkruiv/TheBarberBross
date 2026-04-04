@@ -2,7 +2,7 @@ import { YStack, Text } from "tamagui"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { useTheme } from "tamagui"
 
-export default function TabItem({ label, icon, active }: any) {
+export default function TabItem({ label, icon, active, onPress }: any) {
   const theme = useTheme()
 
   return (
@@ -14,12 +14,12 @@ export default function TabItem({ label, icon, active }: any) {
       padding="$1"
       borderRadius="$4"
       pressStyle={{ scale: 0.95 }}
-      backgroundColor={active ? "$primarySoft" : "transparent"}
+      onPress={onPress}
     >
       <Ionicons
         name={icon}
         size={22}
-        color={active ? theme.primary.val : theme.text.val}
+        color={active ? theme.primary?.val : theme.text?.val}
       />
 
       <Text
