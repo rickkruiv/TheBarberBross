@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import {
   Box,
   Button,
@@ -17,17 +17,15 @@ import AccessTime from "@mui/icons-material/AccessTime"
 import { Formik, Form } from "formik"
 import * as Yup from "yup"
 import { useNavigate, useParams, useLocation } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
 import SectionCard from "../../shared/SectionCard/SectionCard"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
-import { fetchServices } from "../../services/services"
-import { fetchEmployees } from "../../services/employees"
+import { useServices } from "../../services/services"
+import { useEmployees } from "../../services/employees"
 import {
-  createAgendamento,
-  fetchAgendamentoById,
-  updateAgendamento
+  useCreateAgendamento,
+  useAgendamento,
+  useUpdateAgendamento
 } from "../../services/agendamentos"
-import { createClientFromAppointment } from "../../services/cliente"
 import { toastError, toastSuccess } from "../../services/toast"
 
 const schema = Yup.object({
@@ -106,63 +104,57 @@ export default function AgendamentoCreate() {
   const location = useLocation()
   const isEdit = !!id && location.pathname.endsWith("/editar")
 
-  const [initial, setInitial] = React.useState(initialValues)
-  const [loading, setLoading] = React.useState(false)
+  const [initial, setInitial] = useState(initialValues)
+  const [loading, setLoading] = useState(false)
 
-  const { data: servicesData } = useQuery({
-    queryKey: ["services-all"],
-    queryFn: () => fetchServices()
-  })
+  const { data: servicesData } = useServices()
+  const { data: employeesData } = useEmployees()
 
-  const { data: employeesData } = useQuery({
-    queryKey: ["employees-all"],
-    queryFn: () => fetchEmployees()
-  })
+  const { data: agendamentoData } = useAgendamento(id, 7)
+  const createMutation = useCreateAgendamento()
+  const updateMutation = useUpdateAgendamento()
 
-  React.useEffect(() => {
-    if (!isEdit || !id) return
-    setLoading(true)
-    fetchAgendamentoById(id, 7) // add para receber empresaId dinamicamente
-      .then(ag => {
-        let data = ""
-        let hora = ""
-        if (ag.dataHorario) {
-          const d = new Date(ag.dataHorario)
-          if (!Number.isNaN(d.getTime())) {
-            data = formatDateInput(d)
-            hora = formatTimeInput(d)
-          }
-        }
-        setInitial({
-          ...initialValues,
-          servicoIds: ag.servicos ? ag.servicos.map(servico => String(servico.servicoId)) : [],
-          funcionarioId: ag.funcionario
-            ? String(ag.funcionario.funcionarioId ?? ag.funcionario.funcionarioId)
-            : "",
-          nomeCliente: ag.cliente?.nome || "",
-          telefoneCliente: ag.cliente?.telefone || "",
-          emailCliente: ag.cliente?.email || "",
-          data,
-          hora,
-          observacao: ag.observacao || "",
-          clienteId: ag.cliente?.clienteId || null,
-          empresaId: ag.empresa?.empresaId || 1,
-          status: ag.status || "PENDENTE",
-          valorTotal: ag.valorTotal ?? 0
-        })
-      })
-      .catch(() => {
-        toastError("Falha ao carregar agendamento")
-      })
-      .finally(() => setLoading(false))
-  }, [id, isEdit])
+  useEffect(() => {
+    if (!isEdit || !id || !agendamentoData) {
+      setLoading(false)
+      return
+    }
+
+    let data = ""
+    let hora = ""
+    if (agendamentoData.dataHorario) {
+      const d = new Date(agendamentoData.dataHorario)
+      if (!Number.isNaN(d.getTime())) {
+        data = formatDateInput(d)
+        hora = formatTimeInput(d)
+      }
+    }
+    setInitial({
+      ...initialValues,
+      servicoIds: agendamentoData.servicos ? agendamentoData.servicos.map(servico => String(servico.servicoId)) : [],
+      funcionarioId: agendamentoData.funcionario
+        ? String(agendamentoData.funcionario.funcionarioId ?? agendamentoData.funcionario.funcionarioId)
+        : "",
+      nomeCliente: agendamentoData.cliente?.nome || "",
+      telefoneCliente: agendamentoData.cliente?.telefone || "",
+      emailCliente: agendamentoData.cliente?.email || "",
+      data,
+      hora,
+      observacao: agendamentoData.observacao || "",
+      clienteId: agendamentoData.cliente?.clienteId || null,
+      empresaId: agendamentoData.empresa?.empresaId || 1,
+      status: agendamentoData.status || "PENDENTE",
+      valorTotal: agendamentoData.valorTotal ?? 0
+    })
+    setLoading(false)
+  }, [id, isEdit, agendamentoData])
 
   const services = Array.isArray(servicesData) ? servicesData : servicesData?.data || []
   const employees = Array.isArray(employeesData) ? employeesData : employeesData?.data || []
 
   if (loading) {
     return (
-      <DefaultLoading loadMessage="Carregando agendamento..."/>
+      <DefaultLoading loadMessage="Carregando agendamento..." />
     )
   }
 
@@ -179,21 +171,23 @@ export default function AgendamentoCreate() {
             )
             const valorTotal = selectedServices.reduce((sum, s) => sum + (s.preco ?? 0), 0)
 
-            let clienteId = values.clienteId
             if (!clienteId) {
-              const novoCliente = await createClientFromAppointment(values)
+              const novoCliente = await createClienteMutation.mutateAsync(values)
               clienteId = novoCliente.clienteId
             }
 
             if (isEdit && id) {
-              await updateAgendamento(id, {
-                ...values,
-                valorTotal,
-                clienteId
+              await updateMutation.mutateAsync({
+                agendamentoId: id,
+                values: {
+                  ...values,
+                  valorTotal,
+                  clienteId
+                }
               })
               toastSuccess("Agendamento atualizado com sucesso")
             } else {
-              await createAgendamento({
+              await createMutation.mutateAsync({
                 ...values,
                 valorTotal,
                 clienteId
@@ -253,9 +247,9 @@ export default function AgendamentoCreate() {
                                   onClick={() =>
                                     selected
                                       ? setFieldValue(
-                                          "servicoIds",
-                                          values.servicoIds.filter(id => id !== String(service.servicoId))
-                                        )
+                                        "servicoIds",
+                                        values.servicoIds.filter(id => id !== String(service.servicoId))
+                                      )
                                       : setFieldValue("servicoIds", [...values.servicoIds, String(service.servicoId)])
                                   }
                                   sx={{
@@ -414,10 +408,10 @@ export default function AgendamentoCreate() {
                   {/* FIM COLUNA ESQUERDA */}
 
                   {/* COLUNA DIREITA */}
-                  <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 3 }}>
+                  <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 3, position: "sticky", top: 80, height: "fit-content" }}>
                     {/* PROFISSIONAL */}
                     <SectionCard icon={<PersonOutline fontSize="small" />} title="Profissional">
-                      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, }}>
                         <TextField
                           select
                           fullWidth
@@ -458,12 +452,10 @@ export default function AgendamentoCreate() {
                     </SectionCard>
 
                     {/* RESUMO */}
-                    <Box sx={{position: "sticky",
-                              top: 80,
-                              height: "fit-content"
-                            }}
+                    <Box sx={{
+                      height: "fit-content"
+                    }}
                     >
-
                       <SectionCard icon={<CollectionsBookmarkIcon fontSize="small" />} title="Resumo do Agendamento">
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                           <Paper sx={{ p: 2, borderRadius: 2, bgcolor: "#141B24", display: "flex", flexDirection: "column", gap: 0.5 }}>

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import {
   Box,
   Typography,
@@ -28,7 +28,7 @@ import SectionCard from "../../shared/SectionCard/SectionCard"
 import { BenefitSwitchRow, BenefitCheckRow } from "../../components/BenefitRow/BenefitRow"
 import AvatarUpload from "../../components/AvatarUpload/AvatarUpload"
 import ActionBar from "../../components/ActionBar/ActionBar"
-import { createEmployee, updateEmployee, fetchEmployeeById, mapEstadoCivilEnumToLabel } from "../../services/employees"
+import { useCreateEmployee, useUpdateEmployee, useEmployee, mapEstadoCivilEnumToLabel } from "../../services/employees"
 import { toastSuccess, toastError } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
@@ -100,42 +100,37 @@ function formatDateFromApi(iso) {
 }
 
 export default function EmployeesCreate() {
-  const [showPass, setShowPass] = React.useState(false)
-  const [showPass2, setShowPass2] = React.useState(false)
+  const [showPass, setShowPass] = useState(false)
+  const [showPass2, setShowPass2] = useState(false)
 
   const { id } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
   const isEdit = !!id && location.pathname.endsWith("/editar")
 
-  const [initialValues, setInitialValues] = React.useState(defaultInitialValues)
-  const [loading, setLoading] = React.useState(false)
+  const [initialValues, setInitialValues] = useState(defaultInitialValues)
 
-  React.useEffect(() => {
-    if (!id) return
-    setLoading(true)
-    fetchEmployeeById(id)
-      .then(emp => {
-        setInitialValues({
-          ...defaultInitialValues,
-          nome: emp.nome || "",
-          cpf: emp.cpf || "",
-          rg: emp.rg || "",
-          nascimento: emp.nascimento ? formatDateFromApi(emp.nascimento) : "",
-          estadoCivil: mapEstadoCivilEnumToLabel(emp.estadoCivil),
-          telefone: emp.telefone || "",
-          email: emp.email || ""
-        })
-      })
-      .catch(() => {
-        toastError("Falha ao carregar funcionário")
-      })
-      .finally(() => setLoading(false))
-  }, [id])
+  const { data: emp, isLoading: loadingEmp } = useEmployee(id)
+  const createMutation = useCreateEmployee()
+  const updateMutation = useUpdateEmployee()
 
-  if (loading) {
+  useEffect(() => {
+    if (emp) {
+      setInitialValues({
+        ...defaultInitialValues,
+        nome: emp.nome || "",
+        cpf: emp.cpf || "",
+        rg: emp.rg || "",
+        nascimento: emp.nascimento ? formatDateFromApi(emp.nascimento) : "",
+        estadoCivil: mapEstadoCivilEnumToLabel(emp.estadoCivil),
+        telefone: emp.telefone || "",
+        email: emp.email || ""
+      })
+    }
+  }, [emp])
+
+  if (loadingEmp) {
     return (
-      
       <DefaultLoading loadMessage="Carregando funcionário..."/>
     )
   }
@@ -149,11 +144,11 @@ export default function EmployeesCreate() {
         onSubmit={async (values, { resetForm }) => {
           try {
             if (isEdit) {
-              await updateEmployee(id, values)
+              await updateMutation.mutateAsync({ id, values })
               toastSuccess("Funcionário atualizado com sucesso")
               navigate("/funcionarios/visualizar")
             } else {
-              await createEmployee(values)
+              await createMutation.mutateAsync(values)
               toastSuccess("Funcionário salvo com sucesso")
               resetForm()
             }

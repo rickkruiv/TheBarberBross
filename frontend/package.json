@@ -18,17 +18,14 @@
         "@stomp/stompjs": "^7.3.0",
         "@tanstack/react-query": "^5.52.0",
         "axios": "^1.7.7",
-        "express": "^5.2.1",
         "formik": "^2.4.6",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "react-router-dom": "^7.0.0",
         "react-toastify": "^10.0.5",
+        "react-virtuoso": "^4.18.3",
         "recharts": "^3.4.1",
-        "socket.io": "^4.8.3",
-        "socket.io-client": "^4.8.3",
         "sockjs-client": "^1.6.1",
-        "ws": "^8.19.0",
         "yup": "^1.7.0"
     },
     "devDependencies": {

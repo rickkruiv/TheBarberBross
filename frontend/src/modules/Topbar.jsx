@@ -15,38 +15,44 @@ import { useAuth } from "../contexts/AuthContext";
 
 const NAVBAR_ITEMS = [
   { path: "/", id: "dashboard", label: "Dashboard", icon: <DashboardIcon /> },
-  { path: "/agenda", id: "agenda", label: "Agenda", icon: <EventAvailableIcon />,
+  {
+    path: "/agenda", id: "agenda", label: "Agenda", icon: <EventAvailableIcon />,
     subCategories: [
       { path: "/agenda/novo", label: "Novo Agendamento" },
       { path: "/agenda/visualizar", label: "Visualizar Agendamentos" },
       { path: "/agenda/semanal", label: "Agenda Semanal" },
     ]
   },
-  { path: "/funcionarios", id: "funcionarios", label: "Funcionários", icon: <PeopleIcon />,
+  {
+    path: "/funcionarios", id: "funcionarios", label: "Funcionários", icon: <PeopleIcon />,
     subCategories: [
       { path: "/funcionarios/cadastrar", label: "Cadastrar" },
       { path: "/funcionarios/visualizar", label: "Visualizar" },
     ]
   },
-  { path: "/servicos", id: "servicos", label: "Serviços", icon: <WorkIcon />,
+  {
+    path: "/servicos", id: "servicos", label: "Serviços", icon: <WorkIcon />,
     subCategories: [
       { path: "/servicos/cadastrar", label: "Cadastrar" },
       { path: "/servicos/visualizar", label: "Visualizar" },
     ]
   },
-  { path: "/produtos", id: "produtos", label: "Produtos", icon: <Inventory2Icon />,
+  {
+    path: "/produtos", id: "produtos", label: "Produtos", icon: <Inventory2Icon />,
     subCategories: [
       { path: "/produtos/cadastrar", label: "Cadastrar" },
       { path: "/produtos/visualizar", label: "Visualizar" },
     ]
   },
-  { path: "/fornecedores", id: "fornecedores", label: "Fornecedores", icon: <LocalShippingIcon />,
+  {
+    path: "/fornecedores", id: "fornecedores", label: "Fornecedores", icon: <LocalShippingIcon />,
     subCategories: [
       { path: "/fornecedores/cadastrar", label: "Cadastrar" },
       { path: "/fornecedores/visualizar", label: "Visualizar" },
     ]
   },
-  { path: "/configuracoes", id: "configuracoes", label: "Configurações", icon: <SettingsIcon />,
+  {
+    path: "/configuracoes", id: "configuracoes", label: "Configurações", icon: <SettingsIcon />,
     subCategories: [
       { path: "/configuracoes/dados-barbearia", label: "Dados da Barbearia" },
       { path: "/configuracoes/categorias", label: "Categorias" },
@@ -118,7 +124,7 @@ export default function Topbar() {
           backdropFilter: "blur(12px)",
           border: "1px solid rgba(255, 255, 255, 0.08)",
           boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
-          
+
           maxWidth: "95vw",
           overflowX: "auto",
           "&::-webkit-scrollbar": { display: "none" },
@@ -236,7 +242,10 @@ export default function Topbar() {
         transformOrigin={{ horizontal: "center", vertical: "top" }}
         anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => { setUserAnchorEl(null); navigate("/configuracoes/dados-barbearia"); }}>
+        <MenuItem onClick={() => {
+          setUserAnchorEl(null);
+          navigate("/configuracoes/dados-barbearia");
+        }}>
           Minha Barbearia
         </MenuItem>
         <MenuItem onClick={handleLogout} sx={{ color: "#ef4444" }}>

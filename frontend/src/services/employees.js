@@ -1,4 +1,5 @@
 import api from "./api"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 function mapEstadoCivilToEnum(label) {
   switch (label) {
@@ -145,4 +146,42 @@ export async function exportEmployees(params) {
   a.click()
   a.remove()
   window.URL.revokeObjectURL(url)
+}
+
+export const useEmployees = (params) => {
+  return useQuery({
+    queryKey: ["employees", params],
+    queryFn: () => fetchEmployees(params),
+    staleTime: 30000
+  })
+}
+
+export const useEmployee = (id) => {
+  return useQuery({
+    queryKey: ["employee", id],
+    queryFn: () => fetchEmployeeById(id),
+    enabled: !!id,
+    staleTime: 30000
+  })
+}
+
+export const useCreateEmployee = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] })
+    }
+  })
+}
+
+export const useUpdateEmployee = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, values }) => updateEmployee(id, values),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] })
+      queryClient.invalidateQueries({ queryKey: ["employee", variables.id] })
+    }
+  })
 }

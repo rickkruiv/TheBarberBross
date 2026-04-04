@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useMemo, useState, Fragment } from "react"
 import {
   Box,
   Container,
@@ -21,36 +21,29 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import { useNavigate } from "react-router-dom"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { listProdutos, deleteProduto } from "../../services/produto"
-import { fetchCategories } from "../../services/categories"
+import { useQuery } from "@tanstack/react-query"
+import { useProdutos, useDeleteProduto } from "../../services/produto"
+import { useCategories } from "../../services/categories"
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
+import { TableVirtuoso } from "react-virtuoso"
 
 export default function ProdutoList() {
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
-  const { data: produtosData, isLoading } = useQuery({
-    queryKey: ["produtos"],
-    queryFn: listProdutos
-  })
+  const { data: produtosData, isLoading } = useProdutos()
 
-  const { data: categoriasData } = useQuery({
-    queryKey: ["categorias"],
-    queryFn: fetchCategories,
-    staleTime: 300000
-  })
+  const { data: categoriasData } = useCategories()
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteProduto,
-    onSuccess: () => {
-      toastSuccess("Produto removido com sucesso")
-      queryClient.invalidateQueries({ queryKey: ["produtos"] })
-    },
-    onError: () => toastError("Erro ao remover produto")
-  })
+  const deleteMutation = useDeleteProduto()
+
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => toastSuccess("Produto removido com sucesso"),
+      onError: () => toastError("Erro ao remover produto")
+    })
+  }
 
   const produtos = Array.isArray(produtosData)
     ? produtosData
@@ -97,11 +90,6 @@ export default function ProdutoList() {
     return { label: "Estoque OK", color: "#063A2D", textColor: "#32D583" }
   }
 
-  const handleDelete = produto => {
-    if (!window.confirm(`Excluir o produto "${produto.nome}"?`)) return
-    deleteMutation.mutate(produto.produtoId || produto.id)
-  }
-
   return (
     <Container maxWidth="xl" sx={{ py: 3, display: "flex", justifyContent: "center" }}>
       <Box width="100%" maxWidth={1100}>
@@ -117,7 +105,7 @@ export default function ProdutoList() {
             placeholder="Buscar produtos..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            sx={{ maxWidth: 520, flex: 1, mr: 2 }}
+            sx={{ maxWidth: 920, flex: 1, mr: 2 }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -263,7 +251,7 @@ export default function ProdutoList() {
           }}
         >
           {isLoading ? (
-            <DefaultLoading loadMessage="Carregando produtos..."/>
+            <DefaultLoading loadMessage="Carregando produtos..." />
           ) : filtrados.length === 0 ? (
             <Box sx={{ p: 3 }}>
               <Typography color="text.secondary">
@@ -271,73 +259,80 @@ export default function ProdutoList() {
               </Typography>
             </Box>
           ) : (
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Produto</TableCell>
-                  <TableCell>Marca</TableCell>
-                  <TableCell>Categoria</TableCell>
-                  <TableCell>Estoque</TableCell>
-                  <TableCell>Custo</TableCell>
-                  <TableCell>Preço</TableCell>
-                  <TableCell align="right">Ações</TableCell>
+            <TableVirtuoso
+              style={{ height: 500 }}
+              data={filtrados}
+              components={{
+                Scroller: React.forwardRef((props, ref) => <div {...props} ref={ref} />),
+                Table: (props) => <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />,
+                TableHead: React.forwardRef((props, ref) => <TableHead {...props} ref={ref} />),
+                TableRow: (props) => <TableRow {...props} hover />,
+                TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
+              }}
+              fixedHeaderContent={() => (
+                <TableRow sx={{ bgcolor: "#0C1116", boxShadow: "0px 2px 4px rgba(0,0,0,0.5)" }}>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "20%" }}>Produto</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Marca</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Categoria</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Estoque</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "10%" }}>Custo</TableCell>
+                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "10%" }}>Preço</TableCell>
+                  <TableCell align="right" sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Ações</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {filtrados.map(p => {
-                  const id = p.produtoId || p.id
-                  const categoria = categoriasMap[p.categoriaId]
-                  const estoqueInfo = getEstoqueInfo(p)
-                  const qtd = Number(p.quantidadeEstoque ?? 0)
-                  const custo = p.custoCompra || 0
-                  const preco = p.precoVenda || 0
-                  return (
-                    <TableRow key={id}>
-                      <TableCell>{p.nome}</TableCell>
-                      <TableCell>{p.marca || "-"}</TableCell>
-                      <TableCell>{categoria?.nome || "-"}</TableCell>
-                      <TableCell>
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Typography>{qtd}</Typography>
-                          <Box
-                            sx={{
-                              px: 1.5,
-                              py: 0.25,
-                              borderRadius: 999,
-                              bgcolor: estoqueInfo.color
-                            }}
+              )}
+              itemContent={(_index, p) => {
+                const id = p.produtoId || p.id
+                const categoria = categoriasMap[p.categoriaId]
+                const estoqueInfo = getEstoqueInfo(p)
+                const qtd = Number(p.quantidadeEstoque ?? 0)
+                const custo = p.custoCompra || 0
+                const preco = p.precoVenda || 0
+                return (
+                  <Fragment>
+                    <TableCell>{p.nome}</TableCell>
+                    <TableCell>{p.marca || "-"}</TableCell>
+                    <TableCell>{categoria?.nome || "-"}</TableCell>
+                    <TableCell>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography>{qtd}</Typography>
+                        <Box
+                          sx={{
+                            px: 1.5,
+                            py: 0.25,
+                            borderRadius: 999,
+                            bgcolor: estoqueInfo.color
+                          }}
+                        >
+                          <Typography
+                            variant="caption"
+                            sx={{ color: estoqueInfo.textColor, fontWeight: 500 }}
                           >
-                            <Typography
-                              variant="caption"
-                              sx={{ color: estoqueInfo.textColor, fontWeight: 500 }}
-                            >
-                              {estoqueInfo.label}
-                            </Typography>
-                          </Box>
+                            {estoqueInfo.label}
+                          </Typography>
                         </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>R$ {Number(custo).toFixed(2)}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>R$ {Number(preco).toFixed(2)}</Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <IconButton onClick={() => navigate(`/produtos/${id}`)}>
-                          <VisibilityOutlinedIcon />
-                        </IconButton>
-                        <IconButton onClick={() => navigate(`/produtos/${id}/editar`)}>
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton onClick={() => handleDelete(p)} sx={{ color: "#ff4d4f" }}>
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>R$ {Number(custo).toFixed(2)}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>R$ {Number(preco).toFixed(2)}</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton onClick={() => navigate(`/produtos/${id}`)}>
+                        <VisibilityOutlinedIcon />
+                      </IconButton>
+                      <IconButton onClick={() => navigate(`/produtos/${id}/editar`)}>
+                        <EditOutlinedIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDelete(p)} sx={{ color: "#ff4d4f" }}>
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </TableCell>
+                  </Fragment>
+                )
+              }}
+            />
           )}
         </Paper>
       </Box>

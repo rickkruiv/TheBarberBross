@@ -1,4 +1,5 @@
 import api from "./api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 function parseCurrencyBRL(value) {
   if (!value) return 0;
@@ -47,3 +48,51 @@ export async function updateService(id, values) {
 export async function deleteService(id) {
   await api.delete(`/servicos/${id}`);
 }
+
+export const useServices = (params) => {
+  return useQuery({
+    queryKey: ["services", params],
+    queryFn: () => fetchServices(params),
+    staleTime: 30000
+  });
+};
+
+export const useService = (id) => {
+  return useQuery({
+    queryKey: ["service", id],
+    queryFn: () => fetchServiceById(id),
+    enabled: !!id,
+    staleTime: 30000
+  });
+};
+
+export const useCreateService = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["services"] });
+    }
+  });
+};
+
+export const useUpdateService = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, values }) => updateService(id, values),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["services"] });
+      queryClient.invalidateQueries({ queryKey: ["service", variables.id] });
+    }
+  });
+};
+
+export const useDeleteService = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["services"] });
+    }
+  });
+};

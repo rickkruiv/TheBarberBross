@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import {
   Box,
   Button,
@@ -17,34 +17,29 @@ import {
 import Search from "@mui/icons-material/Search"
 import GetApp from "@mui/icons-material/FileDownloadOutlined"
 import PersonAdd from "@mui/icons-material/PersonAddAlt"
+import StatCard from "../../components/StatCard/StatCard"
+import useDebounce from "../../hooks/useDebounce"
 import GroupAdd from "@mui/icons-material/GroupAddOutlined"
 import Visibility from "@mui/icons-material/VisibilityOutlined"
 import Edit from "@mui/icons-material/EditOutlined"
 import { useNavigate } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
-import StatCard from "../../components/StatCard/StatCard"
-import useDebounce from "../../hooks/useDebounce"
-import { fetchEmployees, exportEmployees } from "../../services/employees"
+import { useEmployees, exportEmployees } from "../../services/employees"
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 export default function EmployeesList() {
   const navigate = useNavigate()
-  const [q, setQ] = React.useState("")
+  const [q, setQ] = useState("")
   const dq = useDebounce(q, 400)
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["employees", dq],
-    queryFn: () => fetchEmployees({ q: dq }),
-    staleTime: 30000
-  })
+  const { data, isLoading, isError } = useEmployees({ q: dq })
 
   const list = Array.isArray(data) ? data : data?.data || []
   const total = list.length
   const ativos = total
   const inativos = 0
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isError) toastError("Falha ao carregar funcionários")
   }, [isError])
 
@@ -98,13 +93,13 @@ export default function EmployeesList() {
           mb: 2
         }}
       >
-        <Box>
+        <Box sx={{ flex: 1, minWidth: 200 }}>
           <StatCard title="Total de Funcionários" value={total} icon={<GroupAdd />} />
         </Box>
-        <Box>
+        <Box sx={{ flex: 1, minWidth: 200 }}>
           <StatCard title="Ativos" value={ativos} dot />
         </Box>
-        <Box>
+        <Box sx={{ flex: 1, minWidth: 200 }}>
           <StatCard title="Inativos" value={inativos} dot />
         </Box>
       </Box>
@@ -118,7 +113,7 @@ export default function EmployeesList() {
         }}
       >
         {isLoading ? (
-          <DefaultLoading loadMessage="Carregando funcionários..."/>
+          <DefaultLoading loadMessage="Carregando funcionários..." />
         ) : total === 0 ? (
           <Box sx={{ height: 360, display: "grid", placeItems: "center" }}>
             <Box sx={{ textAlign: "center" }}>

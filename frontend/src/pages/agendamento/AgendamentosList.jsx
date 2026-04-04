@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect, useMemo, Fragment } from "react"
 import {
   Box,
   Button,
@@ -28,14 +28,14 @@ import Refresh from "@mui/icons-material/Refresh"
 import EditIcon from "@mui/icons-material/EditOutlined"
 import DeleteIcon from "@mui/icons-material/DeleteOutline"
 import { useNavigate } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
-import { fetchAgendamentos, deleteAgendamento, updateStatusAgendamento } from "../../services/agendamentos"
+import { useAgendamentos, useDeleteAgendamento, useUpdateStatusAgendamento } from "../../services/agendamentos"
 import StatCard from "../../components/StatCard/StatCard"
 import { toastError, toastSuccess } from "../../services/toast"
 import AgendamentoModal from "../../components/Modals/ApointmentDetailModal"
 import StatusSelect from "../../components/StatusSelect/statusSelect"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import { TableSortLabel } from "@mui/material"
+import { TableVirtuoso } from "react-virtuoso"
 
 function formatDate(value) {
   if (!value) return "-"
@@ -61,13 +61,11 @@ function formatBRL(value) {
 
 export default function AgendamentosList() {
   const navigate = useNavigate()
-  const [q, setQ] = React.useState("")
-  const [modalOpen, setModalOpen] = React.useState(false)
-  const [agendamentoSelecionado, setAgendamentoSelecionado] = React.useState(null)
-  const [order, setOrder] = React.useState("asc")
-  const [orderBy, setOrderBy] = React.useState("cliente.nome")
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [q, setQ] = useState("")
+  const [modalOpen, setModalOpen] = useState(false)
+  const [agendamentoSelecionado, setAgendamentoSelecionado] = useState(null)
+  const [order, setOrder] = useState("asc")
+  const [orderBy, setOrderBy] = useState("cliente.nome")
 
   const handleRequestSort = (_, property) => {
     const isAsc = orderBy === property && order === "asc"
@@ -99,29 +97,24 @@ export default function AgendamentosList() {
     }
   }
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["agendamentos/empresaId=7"],
-    queryFn: () => fetchAgendamentos(),
-    staleTime: 30000
-  })
+  const { data, isLoading, isError } = useAgendamentos()
+  const updateStatusMutation = useUpdateStatusAgendamento()
+  const deleteMutation = useDeleteAgendamento()
 
-  async function atualizarStatus(agendamentoId, novoStatus) {
-    try {
-      await updateStatusAgendamento(agendamentoId, 7, novoStatus)
-      toastSuccess("Status atualizado com sucesso")
-      refetch()
-    } catch {
-      toastError("Erro ao atualizar status")
-    }
+  function atualizarStatus(agendamentoId, novoStatus) {
+    updateStatusMutation.mutate({ agendamentoId, empresaId: 7, novoStatus }, {
+      onSuccess: () => toastSuccess("Status atualizado com sucesso"),
+      onError: () => toastError("Erro ao atualizar status")
+    })
   }
 
   const list = Array.isArray(data) ? data : data?.data || []
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isError) toastError("Falha ao carregar agendamentos")
   }, [isError])
 
-  const filtered = React.useMemo(() => {
+  const filtered = useMemo(() => {
     const term = q.trim().toLowerCase()
     if (!term) return list
     return list.filter(a => {
@@ -143,16 +136,13 @@ export default function AgendamentosList() {
   const confirmados = list.filter(a => a.status === "EM_ANDAMENTO").length
   const concluidos = list.filter(a => a.status === "CONCLUIDO").length
 
-  async function handleDelete(agendamentoId) {
+  function handleDelete(agendamentoId) {
     const ok = window.confirm("Deseja realmente excluir este agendamento?")
     if (!ok) return
-    try {
-      await deleteAgendamento(agendamentoId, 7)
-      toastSuccess("Agendamento excluído com sucesso")
-      refetch()
-    } catch {
-      toastError("Falha ao excluir agendamento")
-    }
+    deleteMutation.mutate({ agendamentoId, empresaId: 7 }, {
+      onSuccess: () => toastSuccess("Agendamento excluído com sucesso"),
+      onError: () => toastError("Falha ao excluir agendamento")
+    })
   }
 
   function descendingComparator(a, b, orderBy) {
@@ -294,13 +284,37 @@ export default function AgendamentosList() {
             </Box>
           </Box>
         ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
+          <TableVirtuoso
+            style={{ height: 500 }}
+            data={filtered.sort(getComparator(order, orderBy))}
+            components={{
+              Scroller: React.forwardRef((props, ref) => <div {...props} ref={ref} />),
+              Table: (props) => <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />,
+              TableHead: React.forwardRef((props, ref) => <TableHead {...props} ref={ref} />),
+              TableRow: (props) => {
+                const { item, ...rest } = props;
+                return (
+                  <TableRow
+                    {...rest}
+                    hover
+                    onClick={() => {
+                      if (item) {
+                        setAgendamentoSelecionado(item);
+                        setModalOpen(true);
+                      }
+                    }}
+                    style={{ cursor: "pointer" }}
+                  />
+                );
+              },
+              TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
+            }}
+            fixedHeaderContent={() => (
+              <TableRow sx={{ bgcolor: "#0C1116", boxShadow: "0px 2px 4px rgba(0,0,0,0.5)" }}>
                 {headCells.map(column => (
                   <TableCell
                     key={column.id}
-                    sx={{ width: column.width, maxWidth: column.width }}
+                    sx={{ width: column.width, maxWidth: column.width, bgcolor: "#0C1116", zIndex: 1 }}
                   >
                     <TableSortLabel
                       active={orderBy === column.id}
@@ -311,87 +325,45 @@ export default function AgendamentosList() {
                     </TableSortLabel>
                   </TableCell>
                 ))}
-                <TableCell align="right" width={"10%"}>Ações</TableCell>
+                <TableCell align="right" width={"10%"} sx={{ bgcolor: "#0C1116", zIndex: 1 }}>Ações</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {filtered
-                .sort(getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(row => (
-                  <TableRow
-                    key={row.agendamentoId}
-                    onClick={() => {
-                      setAgendamentoSelecionado(row)
-                      setModalOpen(true)
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <TableCell>{row.cliente?.nome || "-"}</TableCell>
-                    <TableCell>
-                      {row.servicos && row.servicos.length > 0
-                        ? `${row.servicos[0].nome}${row.servicos.length > 1 ? " + ..." : ""}`
-                        : "-"}
-                    </TableCell>
-                    <TableCell>{row.funcionario?.nome || "-"}</TableCell>
-                    <TableCell>{formatDate(row.dataHorario)}</TableCell>
-                    <TableCell>{formatTime(row.dataHorario)}</TableCell>
-                    <TableCell
-                      onClick={(e) => {
-                        e.stopPropagation()
-                      }}
-                    >
-                      <StatusSelect
-                        status={row.status}
-                        onChange={(novoStatus) => atualizarStatus(row.agendamentoId, novoStatus)}
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      {formatBRL(row.valorTotal)}
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                      }}
-                    >
-                      <Tooltip title="Editar">
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            navigate(`/agenda/${row.agendamentoId}/editar`)
-                          }
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Excluir">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(row.agendamentoId)}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
+            )}
+            itemContent={(_index, row) => (
+              <Fragment>
+                <TableCell>{row.cliente?.nome || "-"}</TableCell>
+                <TableCell>
+                  {row.servicos && row.servicos.length > 0
+                    ? `${row.servicos[0].nome}${row.servicos.length > 1 ? " + ..." : ""}`
+                    : "-"}
+                </TableCell>
+                <TableCell>{row.funcionario?.nome || "-"}</TableCell>
+                <TableCell>{formatDate(row.dataHorario)}</TableCell>
+                <TableCell>{formatTime(row.dataHorario)}</TableCell>
+                <TableCell onClick={(e) => e.stopPropagation()}>
+                  <StatusSelect
+                    status={row.status}
+                    onChange={(novoStatus) => atualizarStatus(row.agendamentoId, novoStatus)}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  {formatBRL(row.valorTotal)}
+                </TableCell>
+                <TableCell align="right" onClick={(e) => e.stopPropagation()}>
+                  <Tooltip title="Editar">
+                    <IconButton size="small" onClick={() => navigate(`/agenda/${row.agendamentoId}/editar`)}>
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Excluir">
+                    <IconButton size="small" onClick={() => handleDelete(row.agendamentoId)}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </Fragment>
+            )}
+          />
         )}
-
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filtered.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={(_, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(e) => {
-            setRowsPerPage(parseInt(e.target.value, 10))
-            setPage(0)
-          }}
-        />
       </Paper>
 
       <AgendamentoModal

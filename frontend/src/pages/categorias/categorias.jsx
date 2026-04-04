@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import {
   Box,
   Button,
@@ -26,14 +26,13 @@ import Add from "@mui/icons-material/Add"
 import Edit from "@mui/icons-material/EditOutlined"
 import Delete from "@mui/icons-material/DeleteOutline"
 import LocalOffer from "@mui/icons-material/LocalOffer"
-import { useQuery } from "@tanstack/react-query"
 import StatCard from "../../components/StatCard/StatCard"
 import useDebounce from "../../hooks/useDebounce"
 import {
-  fetchCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
+  useCategories,
+  useCreateCategory,
+  useUpdateCategory,
+  useDeleteCategory,
   TIPO_OPTIONS,
   tipoToLabel
 } from "../../services/categories"
@@ -42,11 +41,13 @@ import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
 function CategoryModal({ open, onClose, category, onSaved }) {
   const isEdit = !!category
-  const [nome, setNome] = React.useState("")
-  const [tipo, setTipo] = React.useState(TIPO_OPTIONS[0].value)
-  const [saving, setSaving] = React.useState(false)
+  const createMutation = useCreateCategory()
+  const updateMutation = useUpdateCategory()
+  const [nome, setNome] = useState("")
+  const [tipo, setTipo] = useState(TIPO_OPTIONS[0].value)
+  const [saving, setSaving] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (category) {
       setNome(category.nome || "")
       setTipo(category.tipo || TIPO_OPTIONS[0].value)
@@ -65,10 +66,10 @@ function CategoryModal({ open, onClose, category, onSaved }) {
       setSaving(true)
       const payload = { nome: nome.trim(), tipo, descricao: "" }
       if (isEdit) {
-        await updateCategory(category.categoriaId || category.id, payload)
+        await updateMutation.mutateAsync({ id: category.categoriaId || category.id, values: payload })
         toastSuccess("Categoria atualizada com sucesso")
       } else {
-        await createCategory(payload)
+        await createMutation.mutateAsync(payload)
         toastSuccess("Categoria criada com sucesso")
       }
       onSaved()
@@ -123,18 +124,15 @@ function CategoryModal({ open, onClose, category, onSaved }) {
 }
 
 export default function SettingsCategories() {
-  const [q, setQ] = React.useState("")
+  const [q, setQ] = useState("")
   const dq = useDebounce(q, 300)
-  const [modalOpen, setModalOpen] = React.useState(false)
-  const [editing, setEditing] = React.useState(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editing, setEditing] = useState(null)
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["categorias"],
-    queryFn: fetchCategories,
-    staleTime: 300000
-  })
+  const { data, isLoading, isError } = useCategories()
+  const deleteMutation = useDeleteCategory()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isError) toastError("Falha ao carregar categorias")
   }, [isError])
 
@@ -162,13 +160,10 @@ export default function SettingsCategories() {
 
   const handleDelete = async row => {
     if (!window.confirm(`Excluir a categoria "${row.nome}"?`)) return
-    try {
-      await deleteCategory(row.categoriaId || row.id)
-      toastSuccess("Categoria excluída com sucesso")
-      refetch()
-    } catch (e) {
-      toastError(e, "Falha ao excluir categoria")
-    }
+    deleteMutation.mutate(row.categoriaId || row.id, {
+      onSuccess: () => toastSuccess("Categoria excluída com sucesso"),
+      onError: (e) => toastError(e, "Falha ao excluir categoria")
+    })
   }
 
   return (
@@ -204,7 +199,7 @@ export default function SettingsCategories() {
         </Button>
       </Paper>
 
- 
+
       <Box
         sx={{
           mb: 2,
@@ -237,7 +232,7 @@ export default function SettingsCategories() {
         </Box>
 
         {isLoading ? (
-          <DefaultLoading/>
+          <DefaultLoading />
         ) : filtered.length === 0 ? (
           <Box sx={{ height: 240, display: "grid", placeItems: "center" }}>
             <Typography color="text.secondary">Nenhuma categoria encontrada</Typography>
@@ -290,7 +285,7 @@ export default function SettingsCategories() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         category={editing}
-        onSaved={refetch}
+        onSaved={() => { }}
       />
     </Container>
   )

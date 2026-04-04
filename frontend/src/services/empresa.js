@@ -1,4 +1,5 @@
 import api from "./api"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 export async function fetchEmpresaAtual() {
   const { data } = await api.get("/empresas")
@@ -38,4 +39,22 @@ export async function salvarEmpresa(values) {
 
   const { data } = await api.post("/empresas", payload)
   return data
+}
+
+export const useEmpresa = () => {
+  return useQuery({
+    queryKey: ["empresa"],
+    queryFn: fetchEmpresaAtual,
+    staleTime: 300000
+  })
+}
+
+export const useUpdateEmpresa = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: salvarEmpresa,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["empresa"] })
+    }
+  })
 }

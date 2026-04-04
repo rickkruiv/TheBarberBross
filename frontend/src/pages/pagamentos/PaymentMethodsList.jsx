@@ -27,8 +27,8 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import CloseIcon from "@mui/icons-material/Close"
 import PaymentsIcon from "@mui/icons-material/Payments"
 import SearchIcon from "@mui/icons-material/Search"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { fetchPayments, createPayment, updatePayment, deletePayment } from "../../services/payment"
+import { useQueryClient } from "@tanstack/react-query"
+import { usePayments, useCreatePayment, useUpdatePayment, useDeletePayment } from "../../services/payment"
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 
@@ -56,11 +56,7 @@ const PaymentMethodsList = () => {
   const {
     data: methods = [],
     isPending
-  } = useQuery({
-    queryKey: ["payments"],
-    queryFn: fetchPayments,
-    onError: () => toastError("Erro ao carregar métodos de pagamento")
-  })
+  } = usePayments()
 
   const filteredMethods = methods.filter(method =>
     getMethodLabel(method.code).toLowerCase().includes(search.toLowerCase())
@@ -70,34 +66,9 @@ const PaymentMethodsList = () => {
   const activeMethods = methods.filter(m => m.status === ACTIVE_STATUS).length
   const inactiveMethods = methods.filter(m => m.status === INACTIVE_STATUS).length
 
-  const createMutation = useMutation({
-    mutationFn: createPayment,
-    onSuccess: () => {
-      toastSuccess("Método criado com sucesso")
-      queryClient.invalidateQueries({ queryKey: ["payments"] })
-      setOpenModal(false)
-    },
-    onError: () => toastError("Erro ao criar método de pagamento")
-  })
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => updatePayment(id, data),
-    onSuccess: () => {
-      toastSuccess("Método atualizado com sucesso")
-      queryClient.invalidateQueries({ queryKey: ["payments"] })
-      setOpenModal(false)
-    },
-    onError: () => toastError("Erro ao atualizar método de pagamento")
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: deletePayment,
-    onSuccess: () => {
-      toastSuccess("Método removido com sucesso")
-      queryClient.invalidateQueries({ queryKey: ["payments"] })
-    },
-    onError: () => toastError("Erro ao remover método de pagamento")
-  })
+  const createMutation = useCreatePayment()
+  const updateMutation = useUpdatePayment()
+  const deleteMutation = useDeletePayment()
 
   const handleOpenNew = () => {
     setEditingMethod(null)
@@ -129,9 +100,21 @@ const PaymentMethodsList = () => {
     }
 
     if (editingMethod) {
-      updateMutation.mutate({ id: editingMethod.id, data: payload })
+      updateMutation.mutate({ id: editingMethod.id, data: payload }, {
+        onSuccess: () => {
+          toastSuccess("Método atualizado com sucesso")
+          setOpenModal(false)
+        },
+        onError: () => toastError("Erro ao atualizar método de pagamento")
+      })
     } else {
-      createMutation.mutate(payload)
+      createMutation.mutate(payload, {
+        onSuccess: () => {
+          toastSuccess("Método criado com sucesso")
+          setOpenModal(false)
+        },
+        onError: () => toastError("Erro ao criar método de pagamento")
+      })
     }
   }
 
@@ -147,7 +130,10 @@ const PaymentMethodsList = () => {
 
   const handleDelete = method => {
     if (window.confirm("Deseja realmente excluir este método de pagamento?")) {
-      deleteMutation.mutate(method.id)
+      deleteMutation.mutate(method.id, {
+        onSuccess: () => toastSuccess("Método removido com sucesso"),
+        onError: () => toastError("Erro ao remover método de pagamento")
+      })
     }
   }
 
