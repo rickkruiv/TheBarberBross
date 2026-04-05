@@ -93,4 +93,9 @@ public class FornecedorService {
                 .orElseThrow(() -> new NotFoundException("Nenhum Fornecedor encontrado com id: " + id));
     }
 
+    protected Fornecedor buscarFornecedorPorUsuario(Long usuarioId){
+        return fornecedorRepository.findByUsuarioUsuarioId(usuarioId)
+                .orElseThrow(() -> new NotFoundException("Nenhum Fornecedor encontrado com id: " + usuarioId));
+    }
+
 }

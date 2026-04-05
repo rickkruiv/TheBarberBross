@@ -6,8 +6,11 @@ import com.barberbross.BarberBross.dto.request.DTOServicoRequest;
 import com.barberbross.BarberBross.dto.response.DTOServicoResponse;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.Categoria;
+import com.barberbross.BarberBross.model.Empresa;
 import com.barberbross.BarberBross.model.Servico;
+import com.barberbross.BarberBross.notification.service.ServicosNotificationService;
 import com.barberbross.BarberBross.repository.ServicoRepository;
+import com.barberbross.BarberBross.validation.implementations.AuthorizationValidator;
 import com.barberbross.BarberBross.validation.implementations.ServicoCamposUnicosValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,12 @@ import java.util.List;
 public class ServicoService {
 
     @Autowired
+    private AuthenticatedUserService authUser;
+
+    @Autowired
+    private AuthorizationValidator authValidation;
+
+    @Autowired
     private CategoriaService categoriaService;
 
     @Autowired
@@ -26,16 +35,31 @@ public class ServicoService {
     @Autowired
     private ServicoCamposUnicosValidator validator;
 
+    @Autowired
+    private EmpresaService empresaService;
+
+    @Autowired
+    private ServicosNotificationService notificationService;
+
     public DTOServicoResponse salvarServico(DTOServicoRequest dto) {
-        validator.validar(dto);
+        if (authUser.isAdmin()){
+            authValidation.validarAcessoEmpresa(authUser.get(), dto.empresaId());
+            validator.validar(dto);
+        }
+
         Categoria c = categoriaService.buscarCategoria(dto.categoriaId());
-        Servico s = new Servico(dto, c);
+        Empresa e = empresaService.buscarEmpresa(dto.empresaId());
+        Servico s = new Servico(dto, c, e);
+
         servicoRepository.save(s);
-        return new DTOServicoResponse(s);
+        DTOServicoResponse response = new DTOServicoResponse(s);
+        notificationService.notificarNovoServico(response);
+
+        return response;
     }
 
-    public List<DTOServicoResponse> listarServicos() {
-        return servicoRepository.findAll()
+    public List<DTOServicoResponse> listarServicos(Long empresaId) {
+        return servicoRepository.findAllByEmpresaEmpresaId(empresaId)
                 .stream()
                 .map(DTOServicoResponse::new)
                 .toList();
@@ -48,19 +72,28 @@ public class ServicoService {
 
     public DTOServicoResponse editarServico(Long id, DTOServicoRequest dto) {
         Servico servicoAtual = buscarServico(id);
-
-        if (!servicoAtual.getNome().equals(dto.nome())) {
-            validator.validar(dto);
+        if (authUser.isAdmin()){
+            authValidation.validarAcessoEmpresa(authUser.get(), servicoAtual.getEmpresa().getEmpresaId());
+            validator.validar(dto, id);
         }
 
         Categoria c = categoriaService.buscarCategoria(dto.categoriaId());
+        authValidation.validarCategoriaEmpresa(authUser.get(), c.getCategoriaId());
+
         servicoAtual.atualizarDados(dto, c);
         servicoRepository.save(servicoAtual);
-        return new DTOServicoResponse(servicoAtual);
+
+        DTOServicoResponse response = new DTOServicoResponse(servicoAtual);
+        notificationService.notificarServicoEditado(response);
+
+        return response;
     }
 
     public void deletarServico(Long id) {
         Servico s = buscarServico(id);
+        if (authUser.isAdmin()){
+            authValidation.validarAcessoEmpresa(authUser.get(), s.getEmpresa().getEmpresaId());
+        }
         servicoRepository.delete(s);
     }
 

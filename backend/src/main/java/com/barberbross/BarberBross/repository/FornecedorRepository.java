@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
     boolean existsByCnpjOrTelefoneOrEmail(String cnpj, String telefone, String email);
 
@@ -20,4 +22,6 @@ public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
                             @Param("telefone") String telefone,
                             @Param("email") String email,
                             @Param("id") Long id);
+
+    Optional<Fornecedor> findByUsuarioUsuarioId(Long usuarioId);
 }

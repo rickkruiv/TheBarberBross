@@ -55,7 +55,7 @@ public class Usuario implements UserDetails {
     public Usuario(DTOFuncionarioRequest dto, String senha) {
         this.username = dto.email();
         this.senha = senha;
-        this.nivelAcesso = NivelAcesso.COLABORADOR;
+        this.nivelAcesso = dto.nivelAcesso();
     }
 
     public Usuario() {
@@ -88,8 +88,9 @@ public class Usuario implements UserDetails {
 
         } else if (this.nivelAcesso == NivelAcesso.COLABORADOR) {
             return List.of(new SimpleGrantedAuthority("ROLE_COLABORADOR"), new SimpleGrantedAuthority("ROLE_CLIENTE"));
-
-        } else return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        } else if (this.nivelAcesso == NivelAcesso.CLIENTE) {
+            return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        } else return List.of(new SimpleGrantedAuthority("ROLE_FORNECEDOR"));
     }
 
     @Override

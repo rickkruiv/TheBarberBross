@@ -34,12 +34,17 @@ public class Servico {
     @OneToMany(mappedBy = "servico", fetch = FetchType.LAZY)
     private List<AgendamentoServico> agendamentoServicos;
 
-    public Servico(DTOServicoRequest dto, Categoria c) {
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
+
+    public Servico(DTOServicoRequest dto, Categoria c, Empresa e) {
         this.nome = dto.nome();
         this.descricao = dto.descricao();
         this.categoria = c;
         this.preco = dto.preco();
         this.duracao = dto.duracao();
+        this.empresa = e;
         this.agendamentoServicos = new ArrayList<>();
     }
 
@@ -60,12 +65,13 @@ public class Servico {
 
     public int getDuracao() { return duracao; }
 
+    public Empresa getEmpresa() { return empresa; }
+
     public void atualizarDados(DTOServicoRequest dto, Categoria c) {
         this.nome = dto.nome();
         this.descricao = dto.descricao();
         this.categoria = c;
         this.preco = dto.preco();
         this.duracao = dto.duracao();
-        this.agendamentoServicos = new ArrayList<>();
     }
 }

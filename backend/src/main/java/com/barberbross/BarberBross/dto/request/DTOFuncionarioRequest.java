@@ -1,5 +1,6 @@
 package com.barberbross.BarberBross.dto.request;
 
+import com.barberbross.BarberBross.enums.NivelAcesso;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,4 +38,7 @@ public record DTOFuncionarioRequest(
         BigDecimal salarioBase,
 
         @NotNull
-        BigDecimal percentualComissao) {}
+        BigDecimal percentualComissao,
+
+        @NotNull
+        NivelAcesso nivelAcesso) {}

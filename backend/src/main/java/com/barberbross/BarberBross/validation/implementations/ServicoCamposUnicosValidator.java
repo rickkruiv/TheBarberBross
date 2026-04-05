@@ -15,7 +15,15 @@ public class ServicoCamposUnicosValidator implements Validator<DTOServicoRequest
 
     @Override
     public void validar(DTOServicoRequest dto) {
-        boolean jaExiste = repository.existsByNome(dto.nome());
+        boolean jaExiste = repository.existsByNomeAndEmpresaEmpresaId(dto.nome(), dto.empresaId());
+
+        if (jaExiste){
+            throw new ConflictException("Nome já cadastrado para outro Serviço.");
+        }
+    }
+
+    public void validar(DTOServicoRequest dto, Long id) {
+        boolean jaExiste = repository.existeDuplicado(dto.nome(), dto.empresaId(), id);
 
         if (jaExiste){
             throw new ConflictException("Nome já cadastrado para outro Serviço.");

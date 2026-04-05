@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public record DTOServicoRequest(
         @NotBlank
         String nome,
+
         String descricao,
 
         @NotNull
@@ -17,4 +18,7 @@ public record DTOServicoRequest(
         BigDecimal preco,
 
         @NotNull
-        int duracao) {}
+        int duracao,
+
+        @NotNull
+        Long empresaId) {}

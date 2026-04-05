@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,28 +21,33 @@ public class ServicoController {
     private ServicoService servicoService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DTOServicoResponse> salvarServico(@RequestBody @Valid DTOServicoRequest novoServico) {
         return ResponseEntity.status(HttpStatus.CREATED).body(servicoService.salvarServico(novoServico));
     }
 
-    @GetMapping
-    public ResponseEntity<List<DTOServicoResponse>> listarServico() {
-        return ResponseEntity.ok(servicoService.listarServicos());
+    @GetMapping("/empresa/{empresaId}")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<List<DTOServicoResponse>> listarServico(@PathVariable Long empresaId) {
+        return ResponseEntity.ok(servicoService.listarServicos(empresaId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DTOServicoResponse> buscarServicoPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(servicoService.buscarServicoPorId(id));
+    @GetMapping("/{servicoId}")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<DTOServicoResponse> buscarServicoPorId(@PathVariable Long servicoId) {
+        return ResponseEntity.ok(servicoService.buscarServicoPorId(servicoId));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<DTOServicoResponse> editarServico(@PathVariable Long id, @RequestBody @Valid DTOServicoRequest servico) {
-        return  ResponseEntity.ok(servicoService.editarServico(id, servico));
+    @PatchMapping("/{servicoId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<DTOServicoResponse> editarServico(@PathVariable Long servicoId, @RequestBody @Valid DTOServicoRequest servico) {
+        return  ResponseEntity.ok(servicoService.editarServico(servicoId, servico));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deletarServico(@PathVariable Long id) {
-        servicoService.deletarServico(id);
+    @DeleteMapping("/{servicoId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<HttpStatus> deletarServico(@PathVariable Long servicoId) {
+        servicoService.deletarServico(servicoId);
         return ResponseEntity.noContent().build();
     }
 }
