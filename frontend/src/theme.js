@@ -13,18 +13,18 @@ const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        body: { backgroundColor: "#0B1117" }
+        body: { bgcolor: "background.default" }
       }
     },
     MuiPaper: {
       styleOverrides: {
-        root: { backgroundImage: "none", border: "1px solid #1E2733", backgroundColor: "#0C1116" }
+        root: { backgroundImage: "none", border: 1, borderColor: "divider", backgroundColor: "#0C1116" }
       }
     },
     MuiAppBar: {
       defaultProps: { color: "default" },
       styleOverrides: {
-        root: { backgroundColor: "#0B1117", borderBottom: "1px solid #1E2733" }
+        root: { bgcolor: "background.default", borderBottom: "1px solid #1E2733" }
       }
     },
     MuiOutlinedInput: {

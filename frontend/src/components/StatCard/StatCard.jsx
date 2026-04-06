@@ -9,8 +9,8 @@ export default function StatCard({ title, value, icon }) {
         height: "100%",
         p: 2.5,
         borderRadius: 2,
-        border: "1px solid #1E2733",
-        bgcolor: "#0C1116",
+        border: 1,
+        borderColor: "divider",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between"
@@ -32,7 +32,7 @@ export default function StatCard({ title, value, icon }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          bgcolor: "rgba(0,0,0,0.4)"
+          bgcolor: (theme) => theme.palette.mode === "dark" ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.05)"
         }}
       >
         {icon}

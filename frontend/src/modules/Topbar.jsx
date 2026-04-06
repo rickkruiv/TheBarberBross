@@ -12,6 +12,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import { useAuth } from "../contexts/AuthContext";
+import { useThemeContext } from "../contexts/ThemeContext";
 
 const NAVBAR_ITEMS = [
   { path: "/", id: "dashboard", label: "Dashboard", icon: <DashboardIcon /> },
@@ -65,6 +66,7 @@ export default function Topbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { mode, toggleTheme } = useThemeContext();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeMenuId, setActiveMenuId] = useState(null);
@@ -120,10 +122,10 @@ export default function Topbar() {
           px: 1,
           py: 1,
           borderRadius: 50,
-          backgroundColor: "rgba(12, 17, 22, 0.75)",
+          backgroundColor: mode === "dark" ? "rgba(12, 17, 22, 0.75)" : "rgba(255, 255, 255, 0.75)",
           backdropFilter: "blur(12px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
+          border: mode === "dark" ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(0, 0, 0, 0.08)",
+          boxShadow: mode === "dark" ? "0 8px 32px rgba(0, 0, 0, 0.5)" : "0 8px 32px rgba(0, 0, 0, 0.1)",
 
           maxWidth: "95vw",
           overflowX: "auto",
@@ -147,7 +149,7 @@ export default function Topbar() {
                   boxShadow: isActive ? "0 4px 10px rgba(255, 20, 87, 0.3)" : "none",
                   "&:hover": {
                     color: "text.primary",
-                    backgroundColor: isActive ? "primary.main" : "rgba(255,255,255,0.05)",
+                    backgroundColor: isActive ? "primary.main" : (mode === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"),
                   },
                 }}
               >
@@ -157,7 +159,7 @@ export default function Topbar() {
           );
         })}
 
-        <Box sx={{ width: 1, height: 24, bgcolor: "rgba(255,255,255,0.1)", mx: 1 }} />
+        <Box sx={{ width: 1, height: 24, bgcolor: mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)", mx: 1 }} />
 
         <Tooltip title="Perfil" TransitionComponent={Zoom} placement="bottom">
           <IconButton
@@ -187,9 +189,9 @@ export default function Topbar() {
         PaperProps={{
           sx: {
             mt: 1.5,
-            bgcolor: "#0C1116",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
+            bgcolor: "background.paper",
+            border: mode === "dark" ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(0, 0, 0, 0.08)",
+            boxShadow: mode === "dark" ? "0 8px 32px rgba(0, 0, 0, 0.5)" : "0 8px 32px rgba(0, 0, 0, 0.1)",
             backdropFilter: "blur(10px)",
             borderRadius: 3,
             minWidth: 200,
@@ -214,7 +216,7 @@ export default function Topbar() {
                 backgroundColor: isSubActive ? "rgba(255, 20, 87, 0.1)" : "transparent",
                 fontWeight: isSubActive ? 600 : 400,
                 "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.05)",
+                  backgroundColor: mode === "dark" ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
                 },
               }}
             >
@@ -231,9 +233,9 @@ export default function Topbar() {
         PaperProps={{
           sx: {
             mt: 1.5,
-            bgcolor: "#0C1116",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
+            bgcolor: "background.paper",
+            border: mode === "dark" ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(0, 0, 0, 0.08)",
+            boxShadow: mode === "dark" ? "0 8px 32px rgba(0, 0, 0, 0.5)" : "0 8px 32px rgba(0, 0, 0, 0.1)",
             backdropFilter: "blur(10px)",
             borderRadius: 3,
             minWidth: 150,
@@ -242,6 +244,9 @@ export default function Topbar() {
         transformOrigin={{ horizontal: "center", vertical: "top" }}
         anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
       >
+        <MenuItem onClick={toggleTheme}>
+          {mode === "dark" ? "Modo Claro" : "Modo Escuro"}
+        </MenuItem>
         <MenuItem onClick={() => {
           setUserAnchorEl(null);
           navigate("/configuracoes/dados-barbearia");

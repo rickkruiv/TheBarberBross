@@ -5,8 +5,8 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 
 const chartCardSx = {
   borderRadius: 3,
-  bgcolor: "#0C1116",
-  border: "1px solid #1E2733",
+  border: 1,
+  borderColor: "divider",
   p: 2.5,
   height: 320,
   display: "flex",
@@ -28,10 +28,10 @@ export default function WeeklyChart({ weeklyData }) {
         <Box sx={{ flex: 1 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={weeklyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-              <XAxis dataKey="dia" stroke="#9CA3AF" />
-              <YAxis stroke="#9CA3AF" allowDecimals={false} />
-              <Tooltip cursor={{fill: 'transparent'}} />
+              <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
+              <XAxis dataKey="dia" stroke={theme.palette.text.secondary} />
+              <YAxis stroke={theme.palette.text.secondary} allowDecimals={false} />
+              <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ backgroundColor: theme.palette.background.paper, borderColor: theme.palette.divider, color: theme.palette.text.primary }} />
               <Bar dataKey="qtd" radius={[4, 4, 0, 0]} fill={theme.palette.primary.main} />
             </BarChart>
           </ResponsiveContainer>

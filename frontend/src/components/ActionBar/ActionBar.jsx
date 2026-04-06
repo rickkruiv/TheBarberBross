@@ -12,8 +12,9 @@ export default function ActionBar({onSubmit,onPreview,onCancel})
           sx={{
                position:"sticky",
                bottom:0,
-               borderTop:"1px solid #1E2733",
-               bgcolor:"background.default",
+               borderTop: 1,
+               borderColor: "divider",
+               bgcolor:"background.paper",
                py:2,
                px:2
           }}

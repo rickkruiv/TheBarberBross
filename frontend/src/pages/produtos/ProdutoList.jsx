@@ -14,6 +14,7 @@ import {
   TableRow,
   IconButton
 } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import SearchIcon from "@mui/icons-material/Search"
 import AddIcon from "@mui/icons-material/Add"
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined"
@@ -32,6 +33,8 @@ export default function ProdutoList() {
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
 
+  const theme = useTheme()
+  const isDark = theme.palette.mode === "dark"
   const { data: produtosData, isLoading } = useProdutos()
 
   const { data: categoriasData } = useCategories()
@@ -81,13 +84,26 @@ export default function ProdutoList() {
   }, [produtos])
 
   const getEstoqueInfo = p => {
+    const isDark = theme.palette.mode === "dark"
     const qtd = Number(p.quantidadeEstoque ?? 0)
     const min = Number(p.estoqueMinimo ?? 0)
     if (qtd <= 0)
-      return { label: "Sem estoque", color: "#3B1618", textColor: "#F97066" }
+      return { 
+        label: "Sem estoque", 
+        color: isDark ? "#3B1618" : "#FEE4E2", 
+        textColor: isDark ? "#F97066" : "#B42318" 
+      }
     if (qtd > 0 && qtd <= min)
-      return { label: "Estoque baixo", color: "#422A09", textColor: "#FDB022" }
-    return { label: "Estoque OK", color: "#063A2D", textColor: "#32D583" }
+      return { 
+        label: "Estoque baixo", 
+        color: isDark ? "#422A09" : "#FEF0C7", 
+        textColor: isDark ? "#FDB022" : "#B54708" 
+      }
+    return { 
+      label: "Estoque OK", 
+      color: isDark ? "#063A2D" : "#D1FADF", 
+      textColor: isDark ? "#32D583" : "#027A48" 
+    }
   }
 
   return (
@@ -122,7 +138,7 @@ export default function ProdutoList() {
               borderRadius: 20,
               px: 3,
               bgcolor: "primary.main",
-              color: "#0B1117",
+              color: "background.default",
               "&:hover": { bgcolor: "text.tertiary" }
             }}
           >
@@ -142,8 +158,8 @@ export default function ProdutoList() {
               flex: 1,
               p: 2.5,
               borderRadius: 2,
-              border: "1px solid #1E2733",
-              bgcolor: "#0C1116",
+              border: 1, borderColor: "divider",
+              bgcolor: "background.paper",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between"
@@ -158,7 +174,7 @@ export default function ProdutoList() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  bgcolor: "#07161F"
+                  bgcolor: isDark ? "#07161F" : "rgba(124, 224, 195, 0.14)"
                 }}
               >
                 <Inventory2OutlinedIcon />
@@ -177,8 +193,8 @@ export default function ProdutoList() {
               flex: 1,
               p: 2.5,
               borderRadius: 2,
-              border: "1px solid #1E2733",
-              bgcolor: "#0C1116",
+              border: 1, borderColor: "divider",
+              bgcolor: "background.paper",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between"
@@ -193,7 +209,7 @@ export default function ProdutoList() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  bgcolor: "#20120A"
+                  bgcolor: isDark ? "#20120A" : "rgba(253, 176, 34, 0.14)"
                 }}
               >
                 <Typography>📦</Typography>
@@ -212,8 +228,8 @@ export default function ProdutoList() {
               flex: 1,
               p: 2.5,
               borderRadius: 2,
-              border: "1px solid #1E2733",
-              bgcolor: "#0C1116",
+              border: 1, borderColor: "divider",
+              bgcolor: "background.paper",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between"
@@ -228,7 +244,7 @@ export default function ProdutoList() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  bgcolor: "#2A1014"
+                  bgcolor: isDark ? "#2A1014" : "rgba(249, 112, 102, 0.14)"
                 }}
               >
                 <Typography>📦</Typography>
@@ -246,8 +262,8 @@ export default function ProdutoList() {
         <Paper
           sx={{
             borderRadius: 2,
-            border: "1px solid #1E2733",
-            bgcolor: "#0C1116"
+            border: 1, borderColor: "divider",
+            bgcolor: "background.paper"
           }}
         >
           {isLoading ? (
@@ -270,14 +286,14 @@ export default function ProdutoList() {
                 TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
               }}
               fixedHeaderContent={() => (
-                <TableRow sx={{ bgcolor: "#0C1116", boxShadow: "0px 2px 4px rgba(0,0,0,0.5)" }}>
-                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "20%" }}>Produto</TableCell>
-                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Marca</TableCell>
-                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Categoria</TableCell>
-                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Estoque</TableCell>
-                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "10%" }}>Custo</TableCell>
-                  <TableCell sx={{ bgcolor: "#0C1116", zIndex: 1, width: "10%" }}>Preço</TableCell>
-                  <TableCell align="right" sx={{ bgcolor: "#0C1116", zIndex: 1, width: "15%" }}>Ações</TableCell>
+                <TableRow sx={{ bgcolor: "background.paper", borderBottom: 1, borderColor: "divider" }}>
+                  <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "20%" }}>Produto</TableCell>
+                  <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Marca</TableCell>
+                  <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Categoria</TableCell>
+                  <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Estoque</TableCell>
+                  <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "10%" }}>Custo</TableCell>
+                  <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "10%" }}>Preço</TableCell>
+                  <TableCell align="right" sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Ações</TableCell>
                 </TableRow>
               )}
               itemContent={(_index, p) => {
@@ -325,7 +341,7 @@ export default function ProdutoList() {
                       <IconButton onClick={() => navigate(`/produtos/${id}/editar`)}>
                         <EditOutlinedIcon />
                       </IconButton>
-                      <IconButton onClick={() => handleDelete(p)} sx={{ color: "#ff4d4f" }}>
+                      <IconButton onClick={() => handleDelete(p)} color="error">
                         <DeleteOutlineIcon />
                       </IconButton>
                     </TableCell>

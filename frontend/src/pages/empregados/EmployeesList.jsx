@@ -77,7 +77,7 @@ export default function EmployeesList() {
           startIcon={<PersonAdd />}
           sx={{
             bgcolor: "primary.main",
-            color: "#0B1117",
+            color: "background.default",
             "&:hover": { bgcolor: "text.tertiary" }
           }}
         >
@@ -108,8 +108,8 @@ export default function EmployeesList() {
         sx={{
           p: 3,
           borderRadius: 2,
-          border: "1px solid #1E2733",
-          bgcolor: "#0C1116"
+          border: 1, borderColor: "divider",
+          bgcolor: "background.paper"
         }}
       >
         {isLoading ? (
@@ -122,7 +122,9 @@ export default function EmployeesList() {
                   width: 64,
                   height: 64,
                   borderRadius: "50%",
-                  border: "1px dashed #2b3544",
+                  border: 1,
+                  borderColor: "divider",
+                  borderStyle: "dashed",
                   display: "grid",
                   placeItems: "center",
                   mx: "auto",
@@ -143,7 +145,7 @@ export default function EmployeesList() {
                 startIcon={<PersonAdd />}
                 sx={{
                   bgcolor: "primary.main",
-                  color: "#0B1117",
+                  color: "background.default",
                   "&:hover": { bgcolor: "text.tertiary" }
                 }}
               >

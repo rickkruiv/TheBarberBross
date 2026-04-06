@@ -259,7 +259,7 @@ export default function Company() {
                             borderRadius: 3,
                             display: "grid",
                             placeItems: "center",
-                            bgcolor: "#0C1116"
+                            bgcolor: "background.paper"
                           }}
                         >
                           <CloudUpload fontSize="large" />
@@ -270,7 +270,7 @@ export default function Company() {
                             component="label"
                             sx={{
                               bgcolor: "primary.main",
-                              color: "#0B1117",
+                              color: "background.default",
                               alignSelf: "flex-start",
                               "&:hover": { bgcolor: "text.tertiary" }
                             }}
@@ -654,7 +654,7 @@ export default function Company() {
                   variant="contained"
                   sx={{
                     bgcolor: "primary.main",
-                    color: "#0B1117",
+                    color: "background.default",
                     px: 4,
                     "&:hover": { bgcolor: "text.tertiary" }
                   }}

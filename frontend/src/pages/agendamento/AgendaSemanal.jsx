@@ -9,6 +9,7 @@ import {
   Typography,
   Chip
 } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import ChevronLeft from "@mui/icons-material/ChevronLeft"
 import ChevronRight from "@mui/icons-material/ChevronRight"
 import Today from "@mui/icons-material/Today"
@@ -164,6 +165,8 @@ function getTimeFromIso(iso) {
 }
 
 export default function AgendaSemanal() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
   const [weekStart, setWeekStart] = useState(startOfWeek(new Date()))
   const [barbeiroId, setBarbeiroId] = useState("")
   const [servicosId, setservicosId] = useState("")
@@ -274,8 +277,8 @@ export default function AgendaSemanal() {
                 px: 2,
                 py: 1.5,
                 borderRadius: 2,
-                border: "1px solid #1E2733",
-                bgcolor: "#0C1116",
+                border: 1, borderColor: "divider",
+                bgcolor: "background.paper",
                 minWidth: 0
               }}
             >
@@ -317,7 +320,7 @@ export default function AgendaSemanal() {
                   ml: 1,
                   borderRadius: 999,
                   textTransform: "none",
-                  borderColor: "#1E2733"
+                  borderColor: "divider"
                 }}
                 variant="outlined"
               >
@@ -392,8 +395,8 @@ export default function AgendaSemanal() {
                     p: 2,
                     cursor: "pointer",
                     border: "1px solid",
-                    borderColor: isSelected ? "primary.main" : isToday ? "#374151" : "#1E2733",
-                    bgcolor: isSelected ? "#132022" : "#0C1116",
+                    borderColor: isSelected ? "primary.main" : isToday ? (isDark ? "#374151" : "#D1D5DB") : "divider",
+                    bgcolor: isSelected ? (isDark ? "#132022" : "#FFF1F5") : "background.paper",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "flex-start",
@@ -410,7 +413,7 @@ export default function AgendaSemanal() {
                   </Typography>
                   <Typography
                     variant="h5"
-                    sx={{ fontWeight: 800, color: "#E5E7EB" }}
+                    sx={{ fontWeight: 800, color: "text.primary" }}
                   >
                     {formatDayNumber(date)}
                   </Typography>
@@ -431,8 +434,8 @@ export default function AgendaSemanal() {
           <Paper
             sx={{
               borderRadius: 2,
-              border: "1px solid #1E2733",
-              bgcolor: "#05070B",
+              border: 1, borderColor: "divider",
+              bgcolor: "background.paper",
               overflow: "hidden",
               display: "flex",
               flexDirection: "column"
@@ -442,7 +445,8 @@ export default function AgendaSemanal() {
               sx={{
                 px: 3,
                 py: 2,
-                borderBottom: "1px solid #1E2733",
+                borderBottom: 1,
+                borderColor: "divider",
                 display: "flex",
                 alignItems: "center",
                 gap: 1
@@ -467,8 +471,9 @@ export default function AgendaSemanal() {
                 <Box
                   sx={{
                     display: "flex",
-                    borderBottom: "1px solid #1E2733",
-                    bgcolor: "#0B1117"
+                    borderBottom: 1,
+                    borderColor: "divider",
+                    bgcolor: "background.paper"
                   }}
                 >
                   <Box
@@ -476,7 +481,8 @@ export default function AgendaSemanal() {
                       width: 92,
                       px: 2,
                       py: 1.5,
-                      borderRight: "1px solid #1E2733",
+                      borderRight: 1,
+                      borderColor: "divider",
                       display: "flex",
                       alignItems: "center",
                       gap: 1
@@ -496,15 +502,15 @@ export default function AgendaSemanal() {
                           flex: 1,
                           px: 2,
                           py: 1.5,
-                          borderRight:
-                            index < 6 ? "1px solid #1E2733" : "1px solid transparent",
+                          borderRight: 1,
+                          borderColor: "divider",
                           display: "flex",
                           flexDirection: "column",
                           gap: 0.2,
                           bgcolor: isSelected
-                            ? "#111827"
+                            ? (isDark ? "#111827" : "#F8FAFC")
                             : isToday
-                              ? "#050816"
+                              ? (isDark ? "#050816" : "#FEF2F2")
                               : "transparent"
                         }}
                       >
@@ -538,7 +544,8 @@ export default function AgendaSemanal() {
                         key={slot}
                         sx={{
                           display: "flex",
-                          borderBottom: "1px solid #111827",
+                          borderBottom: 1,
+                          borderColor: "divider",
                           minHeight: 54
                         }}
                       >
@@ -547,7 +554,8 @@ export default function AgendaSemanal() {
                             width: 92,
                             px: 2,
                             py: 1.5,
-                            borderRight: "1px solid #1E2733",
+                            borderRight: 1,
+                            borderColor: "divider",
                             display: "flex",
                             alignItems: "center",
                             gap: 0.75
@@ -569,16 +577,14 @@ export default function AgendaSemanal() {
                               key={dayIndex}
                               sx={{
                                 flex: 1,
-                                borderRight:
-                                  dayIndex < 6
-                                    ? "1px solid #1E2733"
-                                    : "1px solid transparent",
+                                borderRight: 1,
+                                borderColor: "divider",
                                 display: "flex",
                                 alignItems: "stretch",
                                 justifyContent: "stretch",
                                 px: 0.5,
                                 py: 0.5,
-                                bgcolor: isSelected ? "#05070F" : "transparent"
+                                bgcolor: isSelected ? (isDark ? "#05070F" : "#F1F5F9") : "transparent"
                               }}
                             >
                               <Box
@@ -587,7 +593,7 @@ export default function AgendaSemanal() {
                                   borderRadius: 1,
                                   border: hasAny
                                     ? `1px solid ${getStatusBorder(first?.status)}`
-                                    : "1px dashed #111827",
+                                    : "1px dashed divider",
                                   bgcolor: hasAny ? getStatusBg(first?.status) : "transparent",
                                   display: "flex",
                                   alignItems: "flex-start",
@@ -687,13 +693,14 @@ export default function AgendaSemanal() {
 
             <Box
               sx={{
-                borderTop: "1px solid #111827",
+                borderTop: 1,
+                borderColor: "divider",
                 px: 3,
                 py: 2,
                 display: "flex",
                 justifyContent: "center",
                 gap: 4,
-                bgcolor: "#05070B"
+                bgcolor: "background.paper"
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

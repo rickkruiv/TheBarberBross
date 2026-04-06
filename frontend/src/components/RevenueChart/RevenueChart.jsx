@@ -1,12 +1,13 @@
 import React from "react"
 import { Box, Paper, Typography, Stack } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import ContentCutOutlinedIcon from "@mui/icons-material/ContentCutOutlined"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts"
 
 const chartCardSx = {
   borderRadius: 3,
-  bgcolor: "#0C1116",
-  border: "1px solid #1E2733",
+  border: 1,
+  borderColor: "divider",
   p: 2.5,
   height: 320,
   display: "flex",
@@ -19,6 +20,7 @@ const currencyFormatter = new Intl.NumberFormat("pt-BR", {
 })
 
 export default function RevenueChart({ serviceRevenueData }) {
+  const theme = useTheme();
   return (
     <Box sx={{ flex: 1 }}>
       <Paper sx={chartCardSx}>
@@ -31,10 +33,10 @@ export default function RevenueChart({ serviceRevenueData }) {
         <Box sx={{ flex: 1 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={serviceRevenueData} layout="vertical" margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-              <XAxis type="number" stroke="#9CA3AF" tickFormatter={v => currencyFormatter.format(v)} />
-              <YAxis dataKey="servico" type="category" stroke="#9CA3AF" width={80} />
-              <Tooltip cursor={{fill: 'transparent'}} formatter={value => currencyFormatter.format(value)} labelFormatter={label => `Serviço: ${label}`} />
+              <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
+              <XAxis type="number" stroke={theme.palette.text.secondary} tickFormatter={v => currencyFormatter.format(v)} />
+              <YAxis dataKey="servico" type="category" stroke={theme.palette.text.secondary} width={80} />
+              <Tooltip cursor={{fill: 'transparent'}} formatter={value => currencyFormatter.format(value)} labelFormatter={label => `Serviço: ${label}`} contentStyle={{ backgroundColor: theme.palette.background.paper, borderColor: theme.palette.divider, color: theme.palette.text.primary }} />
               <Bar dataKey="valor" radius={[0, 4, 4, 0]} fill="#38BDF8" />
             </BarChart>
           </ResponsiveContainer>

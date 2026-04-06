@@ -9,6 +9,7 @@ import {
   Button,
   InputAdornment
 } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined"
 import ViewWeekOutlinedIcon from "@mui/icons-material/ViewWeekOutlined"
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney"
@@ -43,6 +44,8 @@ const initialForm = {
 }
 
 export default function ProdutoCreate() {
+  const theme = useTheme()
+  const isDark = theme.palette.mode === "dark"
   const [form, setForm] = useState(initialForm)
   const [saving, setSaving] = useState(false)
 
@@ -144,8 +147,8 @@ export default function ProdutoCreate() {
           mb: 3,
           p: 3,
           borderRadius: 2,
-          border: "1px solid #1E2733",
-          bgcolor: "#0C1116"
+          border: 1, borderColor: "divider",
+          bgcolor: "background.paper"
         }}
       >
         <Box display="flex" alignItems="center" gap={1} mb={2}>
@@ -254,8 +257,8 @@ export default function ProdutoCreate() {
             flex: 1,
             p: 3,
             borderRadius: 2,
-            border: "1px solid #1E2733",
-            bgcolor: "#0C1116",
+            border: 1, borderColor: "divider",
+            bgcolor: "background.paper",
             mb: { xs: 3, md: 0 }
           }}
         >
@@ -305,8 +308,8 @@ export default function ProdutoCreate() {
             flex: 1,
             p: 3,
             borderRadius: 2,
-            border: "1px solid #1E2733",
-            bgcolor: "#0C1116"
+            border: 1, borderColor: "divider",
+            bgcolor: "background.paper"
           }}
         >
           <Box display="flex" alignItems="center" gap={1} mb={2}>
@@ -355,8 +358,8 @@ export default function ProdutoCreate() {
         sx={{
           p: 3,
           borderRadius: 2,
-          border: "1px solid #1E2733",
-          bgcolor: "#0C1116",
+          border: 1, borderColor: "divider",
+          bgcolor: "background.paper",
           mb: 8
         }}
       >
@@ -410,8 +413,9 @@ export default function ProdutoCreate() {
           bottom: 0,
           py: 2,
           mt: -6,
-          bgcolor: "rgba(3,7,12,0.96)",
-          borderTop: "1px solid #1E2733",
+          bgcolor: isDark ? "rgba(3,7,12,0.96)" : "background.paper",
+          borderTop: 1,
+          borderColor: "divider",
           display: "flex",
           justifyContent: "flex-end",
           gap: 2
@@ -424,7 +428,7 @@ export default function ProdutoCreate() {
             onClick={() => navigate(`/produtos/${id}/editar`)}
             sx={{
               bgcolor: "primary.main",
-              color: "#0B1117",
+              color: "background.default",
               "&:hover": { bgcolor: "text.tertiary" }
             }}
           >
@@ -448,7 +452,7 @@ export default function ProdutoCreate() {
               disabled={saving}
               sx={{
                 bgcolor: "primary.main",
-                color: "#0B1117",
+                color: "background.default",
                 "&:hover": { bgcolor: "text.tertiary" }
               }}
             >
