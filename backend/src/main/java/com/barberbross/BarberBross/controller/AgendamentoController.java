@@ -30,19 +30,19 @@ public class AgendamentoController {
     }
 
     @GetMapping("/{agendamentoId}")
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR', 'CLIENTE')")
     public ResponseEntity<DTOAgendamentoResponse> buscarAgendamento(@PathVariable Long agendamentoId) {
         return ResponseEntity.ok(agendamentoService.buscarAgendamentoPorId(agendamentoId));
     }
 
     @GetMapping("/empresa/{data}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR')")
     public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosPorEmpresaDia(@PathVariable LocalDate data) {
         return ResponseEntity.ok(agendamentoService.listarAgendamentosEmpresaPorDia(data));
     }
 
     @GetMapping("/barbeiro/{funcionarioId}/{data}")
-    @PreAuthorize("hasRole('COLABORADOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR')")
     public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosPorFuncionarioDia(@PathVariable Long funcionarioId,
                                                                                             @PathVariable LocalDate data){
         return ResponseEntity.ok(agendamentoService.listarAgendamentosBarbeiroPorDia(funcionarioId, data));
@@ -50,18 +50,23 @@ public class AgendamentoController {
     }
 
     @GetMapping("/empresa/")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosEmpresaPorPeriodo(@RequestParam LocalDate inicio,
-                                                                                @RequestParam LocalDate fim) {
-        return ResponseEntity.ok(agendamentoService.listarAgendamentosEmpresaPorPeriodo(inicio, fim));
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR')")
+    public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosEmpresaPorPeriodo(
+            @RequestParam(required = false) LocalDate inicio,
+            @RequestParam(required = false) LocalDate fim) {
+        LocalDate dataInicio = (inicio != null) ? inicio : LocalDate.of(2020, 1, 1);
+        LocalDate dataFim = (fim != null) ? fim : LocalDate.of(2050, 1, 1);
+        return ResponseEntity.ok(agendamentoService.listarAgendamentosEmpresaPorPeriodo(dataInicio, dataFim));
     }
 
     @GetMapping("/barbeiro/{funcionarioId}/")
-    @PreAuthorize("hasRole('COLABORADOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR')")
     public ResponseEntity<List<DTOAgendamentoResponse>> listarAgendamentosBarbeiroPorPeriodo(@PathVariable Long funcionarioId,
-                                                                                             @RequestParam LocalDate inicio,
-                                                                                             @RequestParam LocalDate fim){
-        return ResponseEntity.ok(agendamentoService.listarAgendamentosBarbeiroPorPeriodo(funcionarioId,inicio, fim));
+                                                                                             @RequestParam(required = false) LocalDate inicio,
+                                                                                             @RequestParam(required = false) LocalDate fim){
+        LocalDate dataInicio = (inicio != null) ? inicio : LocalDate.of(2020, 1, 1);
+        LocalDate dataFim = (fim != null) ? fim : LocalDate.of(2050, 1, 1);
+        return ResponseEntity.ok(agendamentoService.listarAgendamentosBarbeiroPorPeriodo(funcionarioId, dataInicio, dataFim));
     }
 
     @PatchMapping("/{agendamentoId}")

@@ -19,7 +19,7 @@ import { useAgendamentos } from "../../services/agendamentos"
 import { useServices } from "../../services/services"
 import { useEmployees } from "../../services/employees"
 import { toastError } from "../../services/toast"
-import AgendamentoModal from "../../components/Modals/ApointmentDetailModal";
+import AgendamentoModal from "../../components/AgendamentoModal/ApointmentDetailModal";
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import { Virtuoso } from "react-virtuoso"
 
@@ -176,7 +176,10 @@ export default function AgendaSemanal() {
     data: agendaData,
     isLoading: loadingAgenda,
     isError: errorAgenda
-  } = useAgendamentos()
+  } = useAgendamentos({
+    inicio: getDateKeyFromDate(weekStart),
+    fim: getDateKeyFromDate(addDays(weekStart, 6))
+  });
 
   const {
     data: servicesData,
@@ -652,7 +655,7 @@ export default function AgendaSemanal() {
                                         overflow: "hidden"
                                       }}
                                     >
-                                      {first.funcionario.nome}
+                                      {first.funcionario?.nome || "-"}
                                     </Typography>
                                     <Box
                                       sx={{

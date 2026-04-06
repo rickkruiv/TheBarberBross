@@ -27,13 +27,13 @@ public class ServicoController {
     }
 
     @GetMapping("/empresa/{empresaId}")
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR', 'CLIENTE')")
     public ResponseEntity<List<DTOServicoResponse>> listarServico(@PathVariable Long empresaId) {
         return ResponseEntity.ok(servicoService.listarServicos(empresaId));
     }
 
     @GetMapping("/{servicoId}")
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR', 'CLIENTE')")
     public ResponseEntity<DTOServicoResponse> buscarServicoPorId(@PathVariable Long servicoId) {
         return ResponseEntity.ok(servicoService.buscarServicoPorId(servicoId));
     }

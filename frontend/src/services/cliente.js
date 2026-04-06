@@ -16,7 +16,7 @@ export async function createClientFromAppointment(values) {
   const payload = {
     nome: values.nomeCliente,
     telefone: values.telefoneCliente,
-    email: values.emailCliente || "",
+    email: values.emailCliente || `convidado_${Date.now()}@barberbross.com`,
     senha: generateRandomPassword(10)
   }
 

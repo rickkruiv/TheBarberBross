@@ -31,7 +31,7 @@ import { useNavigate } from "react-router-dom"
 import { useAgendamentos, useDeleteAgendamento, useUpdateStatusAgendamento } from "../../services/agendamentos"
 import StatCard from "../../components/StatCard/StatCard"
 import { toastError, toastSuccess } from "../../services/toast"
-import AgendamentoModal from "../../components/Modals/ApointmentDetailModal"
+import AgendamentoModal from "../../components/AgendamentoModal/ApointmentDetailModal"
 import StatusSelect from "../../components/StatusSelect/statusSelect"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import { TableSortLabel } from "@mui/material"
@@ -315,8 +315,8 @@ export default function AgendamentosList() {
               <TableRow sx={{ bgcolor: "background.paper", borderBottom: 1, borderColor: "divider" }}>
                 {headCells.map(column => (
                   <TableCell
-                    key={column.id}
-                    sx={{ width: column.width, maxWidth: column.width, bgcolor: "background.paper", zIndex: 1 }}
+                    key={column.label}
+                    sx={{ width: column.width, maxWidth: column.width, bgcolor: "#0C1116", zIndex: 1 }}
                   >
                     <TableSortLabel
                       active={orderBy === column.id}

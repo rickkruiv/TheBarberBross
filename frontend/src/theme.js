@@ -13,7 +13,21 @@ const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        body: { bgcolor: "background.default" }
+        body: { backgroundColor: "#0B1117" },
+        "*::-webkit-scrollbar": {
+          width: "8px",
+          height: "8px"
+        },
+        "*::-webkit-scrollbar-track": {
+          backgroundColor: "transparent"
+        },
+        "*::-webkit-scrollbar-thumb": {
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          borderRadius: "10px"
+        },
+        "*::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "rgba(255, 255, 255, 0.2)"
+        }
       }
     },
     MuiPaper: {
