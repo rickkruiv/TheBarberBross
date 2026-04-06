@@ -27,6 +27,7 @@ import {
   useUpdateAgendamento
 } from "../../services/agendamentos"
 import { toastError, toastSuccess } from "../../services/toast"
+import { useCreateClienteFromAppointment } from "../../services/cliente"
 
 const schema = Yup.object({
   servicoIds: Yup.array().min(1, "Selecione pelo menos um serviço"),
@@ -113,6 +114,7 @@ export default function AgendamentoCreate() {
   const { data: agendamentoData } = useAgendamento(id, 7)
   const createMutation = useCreateAgendamento()
   const updateMutation = useUpdateAgendamento()
+  const createClienteMutation = useCreateClienteFromAppointment()
 
   useEffect(() => {
     if (!isEdit || !id || !agendamentoData) {
@@ -171,6 +173,7 @@ export default function AgendamentoCreate() {
             )
             const valorTotal = selectedServices.reduce((sum, s) => sum + (s.preco ?? 0), 0)
 
+            let clienteId = values.clienteId;
             if (!clienteId) {
               const novoCliente = await createClienteMutation.mutateAsync(values)
               clienteId = novoCliente.clienteId

@@ -30,7 +30,7 @@ export async function createService(values) {
 
 export async function fetchServices(params) {
   const config = params ? { params } : undefined;
-  const { data } = await api.get("/servicos", config);
+  const { data } = await api.get("/servicos/empresa/1", config);
   return data;
 }
 

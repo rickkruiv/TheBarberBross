@@ -6,33 +6,41 @@ function buildDateTime(dateStr, timeStr) {
   return `${dateStr}T${timeStr.padStart(5, "0")}:00`
 }
 
-const STATUS_DEFAULT = "PENDENTE"
-
 function buildPayload(values) {
   const dataHorario = buildDateTime(values.data, values.hora)
 
   return {
     dataHorario,
-    status: values.status || STATUS_DEFAULT,
     observacao: values.observacao || "",
-    valorTotal: values.valorTotal ?? 0,
-    servicos: values.servicoIds?.map(id => ({ servicoId: Number(id) })) || [],
-    funcionario: values.funcionarioId
-      ? { funcionarioId: Number(values.funcionarioId) }
-      : null,
-    cliente: values.clienteId ? { clienteId: Number(values.clienteId) } : null,
-    empresa: values.empresaId ? { empresaId: Number(values.empresaId) } : null
+    clienteId: values.clienteId ? Number(values.clienteId) : null,
+    empresaId: values.empresaId ? Number(values.empresaId) : null,
+    funcionarioId: values.funcionarioId ? Number(values.funcionarioId) : null,
+    listaDeServicosId: values.servicoIds?.map(id => Number(id)) || []
   }
 }
 
-export async function fetchAgendamentos(params) {
-  const config = params;
-  const { data } = await api.get(`/agendamentos?empresaId=7`, config) // fazer por passagem de parametros dps
-  return data
+export async function fetchAgendamentos(params = {}) {
+  const nivelAcesso = localStorage.getItem("@app:nivelAcesso");
+  const userId = localStorage.getItem("@app:userId");
+
+  let queryStr = "";
+  if (params.inicio && params.fim) {
+    queryStr = `?inicio=${params.inicio}&fim=${params.fim}`;
+  }
+
+  if (nivelAcesso === "ADMIN") {
+    const { data } = await api.get(`/agendamentos/empresa/${queryStr}`);
+    return data;
+  } else if (nivelAcesso === "COLABORADOR") {
+    const { data } = await api.get(`/agendamentos/barbeiro/${userId}/${queryStr}`);
+    return data;
+  }
+
+  return [];
 }
 
-export async function fetchAgendamentoById(agendaemntoId, empresaId) {
-  const { data } = await api.get(`/agendamentos?agendamentoId=${agendaemntoId}&empresaId=${empresaId}`)
+export async function fetchAgendamentoById(agendamentoId, empresaId) {
+  const { data } = await api.get(`/agendamentos/${agendamentoId}`)
   return data
 }
 
@@ -43,18 +51,22 @@ export async function createAgendamento(values) {
   return data
 }
 
-export async function updateAgendamento(agendaemntoId, values) {
-  const payload = buildPayload(values)
-  const { data } = await api.put(`/agendamentos?agendamentoId=${agendaemntoId}&empresaId=7`, payload)
+export async function updateAgendamento(agendamentoId, values) {
+  const payload = {
+    servicos: values.servicoIds?.map(id => Number(id)) || []
+  }
+  const { data } = await api.patch(`/agendamentos/${agendamentoId}`, payload)
   return data
 }
 
-export async function deleteAgendamento(agendaemntoId, empresaId) {
-  await api.delete(`/agendamentos?agendamentoId=${agendaemntoId}&empresaId=${empresaId}`)
+export async function deleteAgendamento(agendamentoId, empresaId) {
+  await api.delete(`/agendamentos/${agendamentoId}`)
 }
 
-export async function updateStatusAgendamento(agendaemntoId, empresaId, novoStatus) {
-  const { data } = await api.put(`/agendamentos/status?agendamentoId=${agendaemntoId}&empresaId=${empresaId}&status=${novoStatus}`, null)
+export async function updateStatusAgendamento(agendamentoId, empresaId, novoStatus) {
+  const { data } = await api.patch(`/agendamentos/${agendamentoId}/status`, `"${novoStatus}"`, {
+    headers: { "Content-Type": "application/json" }
+  })
   return data
 }
 
