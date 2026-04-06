@@ -181,7 +181,7 @@ export default function AgendamentosList() {
           onClick={() => navigate("/agenda/novo")}
           sx={{
             bgcolor: "primary.main",
-            color: "#0B1117",
+            color: "background.default",
             whiteSpace: "nowrap",
             "&:hover": { bgcolor: "text.tertiary" },
             width: "250px",
@@ -211,8 +211,8 @@ export default function AgendamentosList() {
         sx={{
           p: 3,
           borderRadius: 2,
-          border: "1px solid #1E2733",
-          bgcolor: "#0C1116"
+          border: 1, borderColor: "divider",
+          bgcolor: "background.paper"
         }}
       >
         <Box
@@ -253,7 +253,9 @@ export default function AgendamentosList() {
                   width: 72,
                   height: 72,
                   borderRadius: "50%",
-                  border: "1px dashed #2b3544",
+                  border: 1,
+                  borderColor: "divider",
+                  borderStyle: "dashed",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -261,7 +263,7 @@ export default function AgendamentosList() {
                   mb: 2
                 }}
               >
-                <EventAvailable sx={{ fontSize: 32, color: "#4b5565" }} />
+                <EventAvailable sx={{ fontSize: 32, color: "text.secondary" }} />
               </Box>
               <Typography variant="h6" fontWeight={800} sx={{ mb: 1 }}>
                 Nenhum agendamento cadastrado
@@ -275,7 +277,7 @@ export default function AgendamentosList() {
                 onClick={() => navigate("/agenda/novo")}
                 sx={{
                   bgcolor: "primary.main",
-                  color: "#0B1117",
+                  color: "background.default",
                   "&:hover": { bgcolor: "text.tertiary" }
                 }}
               >
@@ -310,11 +312,11 @@ export default function AgendamentosList() {
               TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
             }}
             fixedHeaderContent={() => (
-              <TableRow sx={{ bgcolor: "#0C1116", boxShadow: "0px 2px 4px rgba(0,0,0,0.5)" }}>
+              <TableRow sx={{ bgcolor: "background.paper", borderBottom: 1, borderColor: "divider" }}>
                 {headCells.map(column => (
                   <TableCell
                     key={column.id}
-                    sx={{ width: column.width, maxWidth: column.width, bgcolor: "#0C1116", zIndex: 1 }}
+                    sx={{ width: column.width, maxWidth: column.width, bgcolor: "background.paper", zIndex: 1 }}
                   >
                     <TableSortLabel
                       active={orderBy === column.id}
@@ -325,7 +327,7 @@ export default function AgendamentosList() {
                     </TableSortLabel>
                   </TableCell>
                 ))}
-                <TableCell align="right" width={"10%"} sx={{ bgcolor: "#0C1116", zIndex: 1 }}>Ações</TableCell>
+                <TableCell align="right" width={"10%"} sx={{ bgcolor: "background.paper", zIndex: 1 }}>Ações</TableCell>
               </TableRow>
             )}
             itemContent={(_index, row) => (

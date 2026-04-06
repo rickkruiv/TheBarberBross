@@ -9,8 +9,8 @@ export default function PerformanceCard() {
       <Paper
         sx={{
           borderRadius: 3,
-          bgcolor: "#0C1116",
-          border: "1px solid #1E2733",
+          border: 1,
+          borderColor: "divider",
           p: 2.5,
           height: 260,
           display: "flex",

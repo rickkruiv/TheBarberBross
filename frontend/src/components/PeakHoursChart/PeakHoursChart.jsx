@@ -1,12 +1,13 @@
 import React from "react"
 import { Box, Paper, Typography, Stack } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined"
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts"
 
 const chartCardSx = {
   borderRadius: 3,
-  bgcolor: "#0C1116",
-  border: "1px solid #1E2733",
+  border: 1,
+  borderColor: "divider",
   p: 2.5,
   height: 320,
   display: "flex",
@@ -14,6 +15,7 @@ const chartCardSx = {
 }
 
 export default function PeakHoursChart({ peakHoursData }) {
+  const theme = useTheme();
   return (
     <Box>
       <Paper sx={chartCardSx}>
@@ -26,10 +28,10 @@ export default function PeakHoursChart({ peakHoursData }) {
         <Box sx={{ flex: 1 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={peakHoursData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-              <XAxis dataKey="hora" stroke="#9CA3AF" />
-              <YAxis stroke="#9CA3AF" allowDecimals={false} />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
+              <XAxis dataKey="hora" stroke={theme.palette.text.secondary} />
+              <YAxis stroke={theme.palette.text.secondary} allowDecimals={false} />
+              <Tooltip contentStyle={{ backgroundColor: theme.palette.background.paper, borderColor: theme.palette.divider, color: theme.palette.text.primary }} />
               <Line type="monotone" dataKey="qtd" stroke="#22C55E" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>

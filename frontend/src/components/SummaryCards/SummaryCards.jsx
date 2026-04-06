@@ -7,8 +7,8 @@ import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined"
 
 const summaryCardSx = {
   borderRadius: 3,
-  bgcolor: "#0C1116",
-  border: "1px solid #1E2733",
+  border: 1,
+  borderColor: "divider",
   p: 2.5
 }
 
@@ -41,7 +41,7 @@ export default function SummaryCards({ serverSummary }) {
               </Typography>
               <Typography variant="caption" color="text.secondary">-</Typography>
             </Box>
-            <Box sx={{ ...headerIconBox, bgcolor: "#0F172A" }}>
+            <Box sx={{ ...headerIconBox, bgcolor: (theme) => theme.palette.mode === "dark" ? "#0F172A" : "rgba(15, 23, 42, 0.05)", color: (theme) => theme.palette.mode === "dark" ? "inherit" : "#0F172A" }}>
               <MonetizationOnOutlinedIcon />
             </Box>
           </Stack>
@@ -56,7 +56,7 @@ export default function SummaryCards({ serverSummary }) {
               <Typography variant="h5" sx={{ mt: 1 }}>{serverSummary.agendamentos}</Typography>
               <Typography variant="caption" color="text.secondary">-</Typography>
             </Box>
-            <Box sx={{ ...headerIconBox, bgcolor: "#0B1120" }}>
+            <Box sx={{ ...headerIconBox, bgcolor: (theme) => theme.palette.mode === "dark" ? "#0B1120" : "rgba(11, 17, 32, 0.05)", color: (theme) => theme.palette.mode === "dark" ? "inherit" : "#0B1120" }}>
               <EventAvailableOutlinedIcon />
             </Box>
           </Stack>
@@ -73,7 +73,7 @@ export default function SummaryCards({ serverSummary }) {
               </Typography>
               <Typography variant="caption" color="text.secondary">-</Typography>
             </Box>
-            <Box sx={{ ...headerIconBox, bgcolor: "#1E1B4B" }}>
+            <Box sx={{ ...headerIconBox, bgcolor: (theme) => theme.palette.mode === "dark" ? "#1E1B4B" : "rgba(30, 27, 75, 0.05)", color: (theme) => theme.palette.mode === "dark" ? "inherit" : "#1E1B4B" }}>
               <PaymentsOutlinedIcon />
             </Box>
           </Stack>
@@ -90,7 +90,7 @@ export default function SummaryCards({ serverSummary }) {
               </Typography>
               <Typography variant="caption" color="text.secondary">-</Typography>
             </Box>
-            <Box sx={{ ...headerIconBox, bgcolor: "#1D0033" }}>
+            <Box sx={{ ...headerIconBox, bgcolor: (theme) => theme.palette.mode === "dark" ? "#1D0033" : "rgba(29, 0, 51, 0.05)", color: (theme) => theme.palette.mode === "dark" ? "inherit" : "#1D0033" }}>
               <TrendingUpOutlinedIcon />
             </Box>
           </Stack>

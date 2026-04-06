@@ -14,6 +14,7 @@ import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 import EventIcon from "@mui/icons-material/Event"
 import ChatBubbleOutline from "@mui/icons-material/ChatBubbleOutline"
 import AccessTime from "@mui/icons-material/AccessTime"
+import { useTheme } from "@mui/material/styles"
 import { Formik, Form } from "formik"
 import * as Yup from "yup"
 import { useNavigate, useParams, useLocation } from "react-router-dom"
@@ -102,6 +103,8 @@ export default function AgendamentoCreate() {
   const navigate = useNavigate()
   const { id } = useParams()
   const location = useLocation()
+  const theme = useTheme()
+  const isDark = theme.palette.mode === "dark"
   const isEdit = !!id && location.pathname.endsWith("/editar")
 
   const [initial, setInitial] = useState(initialValues)
@@ -260,8 +263,8 @@ export default function AgendamentoCreate() {
                                     py: 1.5,
                                     borderRadius: 2,
                                     border: "1px solid",
-                                    borderColor: selected ? "primary.main" : "rgba(255,255,255,0.06)",
-                                    bgcolor: selected ? "#151F2A" : "#0C1116"
+                                    borderColor: selected ? "primary.main" : "divider",
+                                    bgcolor: selected ? (isDark ? "#151F2A" : "#FFF1F5") : "background.paper"
                                   }}
                                 >
                                   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
@@ -353,7 +356,7 @@ export default function AgendamentoCreate() {
                               gap: 1,
                               p: 1,
                               borderRadius: 2,
-                              bgcolor: "#0C1116"
+                              bgcolor: "background.paper"
                             }}
                           >
                             {horarios.map(h => {
@@ -368,9 +371,9 @@ export default function AgendamentoCreate() {
                                     flex: "1 1 110px",
                                     justifyContent: "flex-start",
                                     borderRadius: 999,
-                                    borderColor: selected ? "primary.main" : "rgba(255,255,255,0.12)",
+                                    borderColor: selected ? "primary.main" : "divider",
                                     bgcolor: selected ? "primary.main" : "transparent",
-                                    color: selected ? "#0B1117" : "inherit",
+                                    color: selected ? "background.default" : "inherit",
                                     "&:hover": {
                                       bgcolor: selected ? "text.tertiary" : "rgba(255,255,255,0.04)"
                                     }
@@ -434,9 +437,9 @@ export default function AgendamentoCreate() {
                           sx={{
                             mt: 1,
                             px: 2,
-                            py: 1,
+                            py: 1.1,
                             borderRadius: 2,
-                            bgcolor: "#141B24",
+                            bgcolor: isDark ? "#141B24" : "rgba(255, 20, 87, 0.05)",
                             fontSize: 13,
                             display: "flex",
                             gap: 1,
@@ -458,7 +461,7 @@ export default function AgendamentoCreate() {
                     >
                       <SectionCard icon={<CollectionsBookmarkIcon fontSize="small" />} title="Resumo do Agendamento">
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                          <Paper sx={{ p: 2, borderRadius: 2, bgcolor: "#141B24", display: "flex", flexDirection: "column", gap: 0.5 }}>
+                          <Paper sx={{ p: 2, borderRadius: 2, bgcolor: isDark ? "#141B24" : "#F8FAFC", display: "flex", flexDirection: "column", gap: 0.5 }}>
                             <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase" }}>
                               Serviço
                             </Typography>
@@ -484,7 +487,7 @@ export default function AgendamentoCreate() {
                             </Box>
                           </Paper>
 
-                          <Paper sx={{ p: 2, borderRadius: 2, bgcolor: "#141B24", display: "flex", flexDirection: "column", gap: 0.5 }}>
+                          <Paper sx={{ p: 2, borderRadius: 2, bgcolor: isDark ? "background.paper" : "background.default", display: "flex", flexDirection: "column", gap: 0.5 }}>
                             <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase" }}>
                               Profissional
                             </Typography>
@@ -493,7 +496,7 @@ export default function AgendamentoCreate() {
                             </Typography>
                           </Paper>
 
-                          <Paper sx={{ p: 2, borderRadius: 2, bgcolor: "#141B24", display: "flex", flexDirection: "column", gap: 0.5 }}>
+                          <Paper sx={{ p: 2, borderRadius: 2, bgcolor: isDark ? "background.paper" : "background.default", display: "flex", flexDirection: "column", gap: 0.5 }}>
                             <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase" }}>
                               Horário
                             </Typography>
@@ -518,7 +521,7 @@ export default function AgendamentoCreate() {
                     onClick={submitForm}
                     sx={{
                       bgcolor: "primary.main",
-                      color: "#0B1117",
+                      color: "background.default",
                       px: 4,
                       "&:hover": { bgcolor: "text.tertiary" }
                     }}

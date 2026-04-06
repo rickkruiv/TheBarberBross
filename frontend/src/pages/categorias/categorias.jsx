@@ -114,7 +114,7 @@ function CategoryModal({ open, onClose, category, onSaved }) {
           variant="contained"
           onClick={handleSubmit}
           disabled={saving}
-          sx={{ bgcolor: "primary.main", color: "#0B1117", "&:hover": { bgcolor: "text.tertiary" } }}
+          sx={{ bgcolor: "primary.main", color: "background.default", "&:hover": { bgcolor: "text.tertiary" } }}
         >
           Adicionar
         </Button>
@@ -173,8 +173,8 @@ export default function SettingsCategories() {
           mb: 3,
           p: 3,
           borderRadius: 2,
-          border: "1px solid #1E2733",
-          bgcolor: "#0C1116",
+          border: 1, borderColor: "divider",
+          bgcolor: "background.paper",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between"
@@ -193,7 +193,7 @@ export default function SettingsCategories() {
           variant="contained"
           startIcon={<Add />}
           onClick={handleNew}
-          sx={{ bgcolor: "primary.main", color: "#0B1117", "&:hover": { bgcolor: "text.tertiary" } }}
+          sx={{ bgcolor: "primary.main", color: "background.default", "&:hover": { bgcolor: "text.tertiary" } }}
         >
           Nova Categoria
         </Button>
@@ -214,7 +214,7 @@ export default function SettingsCategories() {
       </Box>
 
 
-      <Paper sx={{ p: 3, borderRadius: 2, border: "1px solid #1E2733", bgcolor: "#0C1116" }}>
+      <Paper sx={{ p: 3, borderRadius: 2, border: 1, borderColor: "divider", bgcolor: "background.paper" }}>
         <Box sx={{ mb: 2 }}>
           <TextField
             value={q}
@@ -267,7 +267,7 @@ export default function SettingsCategories() {
                         <IconButton
                           size="small"
                           onClick={() => handleDelete(row)}
-                          sx={{ color: "#ff4d4f" }}
+                          color="error"
                         >
                           <Delete />
                         </IconButton>

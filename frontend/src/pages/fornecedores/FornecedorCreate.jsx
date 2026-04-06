@@ -8,6 +8,7 @@ import {
   MenuItem,
   Button
 } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import BusinessIcon from "@mui/icons-material/Business"
 import PhoneIcon from "@mui/icons-material/Phone"
 import RoomIcon from "@mui/icons-material/Room"
@@ -92,6 +93,8 @@ export default function FornecedorCreate() {
   const isView = !!id && !isEdit
   const isReadOnly = isView
 
+  const theme = useTheme()
+  const isDark = theme.palette.mode === "dark"
   const [form, setForm] = useState(initialForm)
   const [saving, setSaving] = useState(false)
 
@@ -255,8 +258,8 @@ export default function FornecedorCreate() {
           mb: 3,
           p: 3,
           borderRadius: 2,
-          border: "1px solid #1E2733",
-          bgcolor: "#0C1116"
+          border: 1, borderColor: "divider",
+          bgcolor: "background.paper"
         }}
       >
         <Box display="flex" alignItems="center" gap={1} mb={2}>
@@ -375,8 +378,8 @@ export default function FornecedorCreate() {
           sx={{
             p: 3,
             borderRadius: 2,
-            border: "1px solid #1E2733",
-            bgcolor: "#0C1116",
+            border: 1, borderColor: "divider",
+            bgcolor: "background.paper",
             flex: 1
           }}
         >
@@ -427,8 +430,8 @@ export default function FornecedorCreate() {
           sx={{
             p: 3,
             borderRadius: 2,
-            border: "1px solid #1E2733",
-            bgcolor: "#0C1116",
+            border: 1, borderColor: "divider",
+            bgcolor: "background.paper",
             flex: 1
           }}
         >
@@ -522,8 +525,8 @@ export default function FornecedorCreate() {
         sx={{
           p: 3,
           borderRadius: 2,
-          border: "1px solid #1E2733",
-          bgcolor: "#0C1116",
+          border: 1, borderColor: "divider",
+          bgcolor: "background.paper",
           mb: 8
         }}
       >
@@ -596,8 +599,9 @@ export default function FornecedorCreate() {
           bottom: 0,
           py: 2,
           mt: -6,
-          bgcolor: "rgba(3,7,12,0.96)",
-          borderTop: "1px solid #1E2733",
+          bgcolor: isDark ? "rgba(3,7,12,0.96)" : "background.paper",
+          borderTop: 1,
+          borderColor: "divider",
           display: "flex",
           justifyContent: "flex-end",
           gap: 2
@@ -617,7 +621,7 @@ export default function FornecedorCreate() {
               onClick={() => navigate(`/fornecedores/${id}/editar`)}
               sx={{
                 bgcolor: "primary.main",
-                color: "#0B1117",
+                color: "background.default",
                 "&:hover": { bgcolor: "text.tertiary" }
               }}
             >
@@ -642,7 +646,7 @@ export default function FornecedorCreate() {
               disabled={saving}
               sx={{
                 bgcolor: "primary.main",
-                color: "#0B1117",
+                color: "background.default",
                 "&:hover": { bgcolor: "text.tertiary" }
               }}
             >

@@ -129,8 +129,8 @@ export default function FornecedoresList() {
         <Paper
           sx={{
             borderRadius: 2,
-            border: "1px solid #1E2733",
-            bgcolor: "#0C1116"
+            border: 1, borderColor: "divider",
+            bgcolor: "background.paper"
           }}
         >
           {isLoading ? (
@@ -195,8 +195,8 @@ export default function FornecedoresList() {
                             display: "inline-flex",
                             alignItems: "center",
                             fontSize: 12,
-                            bgcolor: ativo ? "success.main" : "#1E2733",
-                            color: ativo ? "#0B1117" : "#CDD5DF",
+                            bgcolor: ativo ? "success.main" : "divider",
+                            color: ativo ? "success.contrastText" : "text.secondary",
                             fontWeight: 600
                           }}
                         >
@@ -221,7 +221,7 @@ export default function FornecedoresList() {
                         <IconButton
                           size="small"
                           onClick={() => handleDelete(row)}
-                          sx={{ color: "#ff4d4f" }}
+                          color="error"
                         >
                           <DeleteIcon />
                         </IconButton>

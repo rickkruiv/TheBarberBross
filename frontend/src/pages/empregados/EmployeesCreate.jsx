@@ -11,6 +11,7 @@ import {
   IconButton,
   Collapse
 } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import PersonOutline from "@mui/icons-material/PersonOutline"
 import WorkOutline from "@mui/icons-material/WorkOutline"
 import PaidOutlined from "@mui/icons-material/PaidOutlined"
@@ -100,6 +101,8 @@ function formatDateFromApi(iso) {
 }
 
 export default function EmployeesCreate() {
+  const theme = useTheme()
+  const isDark = theme.palette.mode === "dark"
   const [showPass, setShowPass] = useState(false)
   const [showPass2, setShowPass2] = useState(false)
 
@@ -274,7 +277,7 @@ export default function EmployeesCreate() {
                       />
                     </Box>
 
-                    <Box sx={{ my: 2, borderBottom: "1px solid #1E2733" }} />
+                    <Box sx={{ my: 2, borderBottom: 1, borderColor: "divider" }} />
 
                     <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 700 }}>
                       Endereço
@@ -581,8 +584,8 @@ export default function EmployeesCreate() {
                               border: 0,
                               borderRadius: 12,
                               padding: "0 16px",
-                              background: "primary.main",
-                              color: "#0B1117",
+                              background: theme.palette.primary.main,
+                              color: theme.palette.background.default,
                               fontWeight: 700,
                               cursor: "pointer"
                             }}
@@ -707,8 +710,8 @@ export default function EmployeesCreate() {
                   <Box>
                     <Box
                       sx={{
-                        border: "1px solid #1E2733",
-                        bgcolor: "#141B24",
+                        border: 1, borderColor: "divider",
+                        bgcolor: isDark ? "#141B24" : "rgba(255, 20, 87, 0.05)",
                         p: 2,
                         borderRadius: 2
                       }}
