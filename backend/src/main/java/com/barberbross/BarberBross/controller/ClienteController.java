@@ -29,7 +29,7 @@ public class ClienteController {
 
     @GetMapping("/{clienteNome}")
     @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity<DTOClienteResponse> buscarClientePorId(@PathVariable String clienteNome){
+    public ResponseEntity<DTOClienteResponse> buscarClientePorNome(@PathVariable String clienteNome){
         return ResponseEntity.ok(clienteService.buscarCliente(clienteNome));
     }
 
