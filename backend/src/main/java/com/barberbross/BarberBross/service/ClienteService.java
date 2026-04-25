@@ -14,6 +14,7 @@ import com.barberbross.BarberBross.repository.ClienteRepository;
 import com.barberbross.BarberBross.repository.UsuarioRepository;
 import com.barberbross.BarberBross.validation.implementations.AuthorizationValidator;
 import com.barberbross.BarberBross.validation.implementations.ClienteCamposUnicosValidator;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -107,8 +108,8 @@ public class ClienteService {
         Usuario u = usuarioRepository.findById(c.getUsuario().getUsuarioId())
                 .orElseThrow(() -> new NotFoundException("Nenhum Usuário encontrado."));
 
-        usuarioRepository.delete(u);
         clienteRepository.delete(c);
+        usuarioRepository.delete(u);
     }
 
     protected Cliente buscarClientePorId(Long id) {

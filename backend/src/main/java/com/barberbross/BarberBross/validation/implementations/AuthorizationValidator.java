@@ -6,8 +6,8 @@ import com.barberbross.BarberBross.model.*;
 import com.barberbross.BarberBross.repository.AvaliacaoRepository;
 import com.barberbross.BarberBross.repository.CategoriaRepository;
 import com.barberbross.BarberBross.repository.ClienteRepository;
+import com.barberbross.BarberBross.repository.FuncionarioRepository;
 import com.barberbross.BarberBross.service.EmpresaService;
-import com.barberbross.BarberBross.service.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +18,6 @@ public class AuthorizationValidator {
     private EmpresaService empresaService;
 
     @Autowired
-    private FuncionarioService funcionarioService;
-
-    @Autowired
     private AvaliacaoRepository avaliacaoRepository;
 
     @Autowired
@@ -28,6 +25,9 @@ public class AuthorizationValidator {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
 
     public void validarAcessoEmpresa(CustomUserPrincipal user, Long empresaId){
         if (!user.getEmpresaId().equals(empresaId)){
@@ -37,7 +37,8 @@ public class AuthorizationValidator {
 
     public boolean funcionarioPertenceEmpresa(Long funcionarioId, Long empresaId){
         Empresa e = empresaService.buscarEmpresa(empresaId);
-        Funcionario f = funcionarioService.buscarFuncionario(funcionarioId);
+        Funcionario f = funcionarioRepository.findById(funcionarioId)
+                .orElseThrow(() -> new NotFoundException("Nenhum funcionário encontrado."));
         return e.getFuncionarios().contains(f);
     }
 
@@ -50,7 +51,8 @@ public class AuthorizationValidator {
     }
 
     public void validarFuncionarioNoAgendamento(CustomUserPrincipal user, Long funcionarioId){
-        Funcionario f = funcionarioService.buscarFuncionario(user.getFuncionarioId());
+        Funcionario f = funcionarioRepository.findById(user.getFuncionarioId())
+                .orElseThrow(() -> new NotFoundException("Nenhum funcionário encontrado."));
         if(!f.getFuncionarioId().equals(funcionarioId)){
             throw new AccessDeniedException("Acesso negado: funcionário não possui permissão para acessar este agendamento.");
         }

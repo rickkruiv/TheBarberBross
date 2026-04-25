@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
@@ -32,4 +34,11 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
             WHERE f.funcionarioId = :funcionarioId AND f.empresa.empresaId = :empresaId""")
     Optional<Funcionario> findFuncionarioPorEmpresa(@Param("funcionarioId") Long funcionarioId,
                                        @Param("empresaId") Long empresaId);
+
+    @Query("""
+            SELECT f
+            FROM Funcionario f
+            WHERE f.empresa.empresaId = :empresaId
+                        AND f.ativo = true""")
+    List<Funcionario> buscarFuncionariosPorEmpresa(@Param("empresaId") Long empresaId);
 }

@@ -1,5 +1,6 @@
 package com.barberbross.BarberBross.model;
 
+import com.barberbross.BarberBross.dto.request.DTOFuncionarioPerfilRequest;
 import com.barberbross.BarberBross.dto.request.DTOFuncionarioRequest;
 import jakarta.persistence.*;
 
@@ -103,13 +104,24 @@ public class Funcionario  {
 
     public List<Agendamento> getAgendamentos() { return agendamentos; }
 
+    public void setAtivo(Boolean ativo) { this.ativo = ativo; }
+
     public void atualizarDados(DTOFuncionarioRequest dto, List<Agendamento> agendamentos) {
         this.cpf = dto.cpf();
         this.email = dto.email();
         this.nome = dto.nome();
         this.nascimento = dto.nascimento();
         this.telefone = dto.telefone();
+        this.salarioBase = dto.salarioBase();
+        this.percentualComissao = dto.percentualComissao();
         this.agendamentos = agendamentos;
     }
 
+    public void atualizarDadosPerfil(DTOFuncionarioPerfilRequest dto) {
+        this.cpf = dto.cpf();
+        this.email = dto.email();
+        this.nome = dto.nome();
+        this.nascimento = dto.nascimento();
+        this.telefone = dto.telefone();
+    }
 }
