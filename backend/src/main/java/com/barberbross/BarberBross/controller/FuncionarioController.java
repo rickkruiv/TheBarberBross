@@ -22,12 +22,6 @@ public class FuncionarioController {
     @Autowired
     private FuncionarioService funcionarioService;
 
-    //Vai deixar de existir
-//    @PostMapping
-//    public ResponseEntity<DTOFuncionarioSimplesResponse> salvarFuncionario(@RequestBody @Valid DTOFuncionarioRequest novoFuncionario){
-//        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioService.salvarFuncionario(novoFuncionario));
-//    }
-
     @GetMapping("/empresa/{empresaId}")
     @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<List<DTOFuncionarioSimplesResponse>> listarFuncionariosDaEmpresa(@PathVariable Long empresaId){
