@@ -36,7 +36,7 @@ public class Usuario implements UserDetails {
     @OneToOne(mappedBy = "usuario")
     private Funcionario funcionario;
 
-    @OneToOne(mappedBy = "usuario")
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private Cliente cliente;
 
 
