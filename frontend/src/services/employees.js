@@ -1,26 +1,6 @@
 import api from "./api"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
-function mapEstadoCivilToEnum(label) {
-  switch (label) {
-    case "Solteiro(a)": return "SOLTEIRO"
-    case "Casado(a)": return "CASADO"
-    case "Divorciado(a)": return "DIVORCIADO"
-    case "Viúvo(a)": return "VIUVO"
-    default: return null
-  }
-}
-
-export function mapEstadoCivilEnumToLabel(value) {
-  switch (value) {
-    case "SOLTEIRO": return "Solteiro(a)"
-    case "CASADO": return "Casado(a)"
-    case "DIVORCIADO": return "Divorciado(a)"
-    case "VIUVO": return "Viúvo(a)"
-    default: return ""
-  }
-}
-
 function normalizeDate(dateLike) {
   if (!dateLike) return null
 
@@ -40,28 +20,11 @@ function normalizeDate(dateLike) {
   return null
 }
 
-function buildEnderecoPayload(values) {
-  return {
-    cep: values.cep || "",
-    logradouro: values.rua || "",
-    complemento: values.complemento || "",
-    numero: values.numero ? Number(values.numero) : 0,
-    cidade: values.cidade || "",
-    bairro: values.bairro || "",
-    uf: values.uf || ""
-  }
-}
-
-function hasEnderecoData(values) {
-  return Boolean(
-    values.cep ||
-    values.rua ||
-    values.numero ||
-    values.complemento ||
-    values.bairro ||
-    values.cidade ||
-    values.uf
-  )
+export function parseCurrency(val) {
+  if (!val) return 0;
+  if (typeof val === 'number') return val;
+  const numStr = val.replace(/[^\d,-]/g, '').replace(',', '.');
+  return parseFloat(numStr) || 0;
 }
 
 export async function fetchEmployees(params) {
@@ -76,56 +39,37 @@ export async function fetchEmployeeById(id) {
 }
 
 export async function createEmployee(values) {
-  let enderecoRef = null
-
-  if (hasEnderecoData(values)) {
-    const enderecoPayload = buildEnderecoPayload(values)
-    const { data: endereco } = await api.post("/enderecos", enderecoPayload)
-    if (endereco && endereco.enderecoid) {
-      enderecoRef = { enderecoid: endereco.enderecoid }
-    }
-  }
-
   const payload = {
     nome: values.nome,
-    cpf: values.cpf || "",
-    rg: values.rg || "",
-    telefone: values.telefone || "",
-    email: values.email || "",
+    cpf: values.cpf,
+    telefone: values.telefone,
+    email: values.email,
+    senha: values.senha,
     nascimento: normalizeDate(values.nascimento),
-    estadoCivil: mapEstadoCivilToEnum(values.estadoCivil),
-    endereco: enderecoRef
+    empresaId: Number(values.empresaId),
+    dataContratacao: normalizeDate(values.dataContratacao),
+    salarioBase: parseCurrency(values.salarioBase),
+    percentualComissao: Number(values.percentualComissao),
+    nivelAcesso: values.nivelAcesso || "COLABORADOR"
   }
 
-  const { data } = await api.post("/funcionarios", payload)
+  const { data } = await api.post("/auth/admin/registrar/funcionario", payload)
   return data
 }
 
 export async function updateEmployee(id, values) {
-  let enderecoId = values.enderecoid || null
-
-  if (hasEnderecoData(values)) {
-    const enderecoPayload = buildEnderecoPayload(values)
-
-    if (enderecoId) {
-      await api.put(`/enderecos/${enderecoId}`, enderecoPayload)
-    } else {
-      const { data: novoEndereco } = await api.post("/enderecos", enderecoPayload)
-      if (novoEndereco && novoEndereco.enderecoid) {
-        enderecoId = novoEndereco.enderecoid
-      }
-    }
-  }
-
   const payload = {
     nome: values.nome,
-    cpf: values.cpf || "",
-    rg: values.rg || "",
-    telefone: values.telefone || "",
-    email: values.email || "",
+    cpf: values.cpf,
+    telefone: values.telefone,
+    email: values.email,
+    senha: values.senha,
     nascimento: normalizeDate(values.nascimento),
-    estadoCivil: mapEstadoCivilToEnum(values.estadoCivil),
-    endereco: enderecoId ? { enderecoid: enderecoId } : null
+    empresaId: Number(values.empresaId),
+    dataContratacao: normalizeDate(values.dataContratacao),
+    salarioBase: parseCurrency(values.salarioBase),
+    percentualComissao: Number(values.percentualComissao),
+    nivelAcesso: values.nivelAcesso || "COLABORADOR"
   }
 
   const { data } = await api.put(`/funcionarios/${id}`, payload)

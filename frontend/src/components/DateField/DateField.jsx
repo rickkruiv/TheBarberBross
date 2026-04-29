@@ -1,11 +1,28 @@
 import React from "react"
-import { TextField, InputAdornment, IconButton } from "@mui/material"
+import { TextField, InputAdornment, IconButton, Box } from "@mui/material"
 import { useMask } from "@react-input/mask"
 import CalendarMonthOutlined from "@mui/icons-material/CalendarMonthOutlined"
-import AttachFileOutlined from "@mui/icons-material/AttachFileOutlined"
 
-export default function DateField({ name, value, onChange, onBlur, label, placeholder = "mm/dd/yyyy", withAttach = false }) {
+export default function DateField({ name, value, onChange, onBlur, label, placeholder = "dd/mm/aaaa" }) {
   const ref = useMask({ mask: "99/99/9999", replacement: { 9: /\d/ } })
+
+  const handleHiddenDateChange = (e) => {
+    const isoDate = e.target.value
+    if (!isoDate) return
+    const [year, month, day] = isoDate.split("-")
+    const formatted = `${day}/${month}/${year}`
+
+
+    if (onChange) {
+      onChange({
+        target: {
+          name,
+          value: formatted
+        }
+      })
+    }
+  }
+
   return (
     <TextField
       fullWidth
@@ -19,13 +36,21 @@ export default function DateField({ name, value, onChange, onBlur, label, placeh
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            {withAttach && (
-              <IconButton size="small" disabled>
-                <AttachFileOutlined fontSize="small" />
-              </IconButton>
-            )}
-            <IconButton size="small" disabled>
+            <IconButton size="small" sx={{ position: "relative" }}>
               <CalendarMonthOutlined fontSize="small" />
+              <input
+                type="date"
+                onChange={handleHiddenDateChange}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  opacity: 0,
+                  cursor: "pointer"
+                }}
+              />
             </IconButton>
           </InputAdornment>
         )
