@@ -21,4 +21,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
                             @Param("id") Long id);
 
     Optional<Cliente> findByUsuarioUsuarioId(Long userId);
+
+    Optional<Cliente> findByNome(String nome);
 }

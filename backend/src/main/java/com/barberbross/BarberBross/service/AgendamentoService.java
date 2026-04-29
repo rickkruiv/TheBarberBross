@@ -67,7 +67,7 @@ public class AgendamentoService {
     private Agendamento criarAgendamentoColaborador(DTOAgendamentoRequest dto, CustomUserPrincipal user){
         authValidation.validarAcessoEmpresa(user, dto.empresaId());
 
-        Cliente cliente = clienteService.buscarCliente(dto.clienteId()); //pensar depois como vai ser se for cliente walk-in
+        Cliente cliente = clienteService.buscarClientePorId(dto.clienteId()); //pensar depois como vai ser se for cliente walk-in
         Empresa empresa = empresaService.buscarEmpresa(user.getEmpresaId());
         Funcionario funcionario = funcionarioService.buscarFuncionarioPorEmpresa(dto.funcionarioId(),
                 user.getEmpresaId());
@@ -77,7 +77,7 @@ public class AgendamentoService {
 
     private Agendamento criarAgendamentoCliente(DTOAgendamentoRequest dto){
         if (authValidation.funcionarioPertenceEmpresa(dto.funcionarioId(), dto.empresaId())){
-            Cliente cliente = clienteService.buscarCliente(dto.clienteId());
+            Cliente cliente = clienteService.buscarClientePorId(dto.clienteId());
             Empresa empresa = empresaService.buscarEmpresa(dto.empresaId());
             Funcionario funcionario = funcionarioService.buscarFuncionario(dto.funcionarioId());
             return salvarAgendamento(dto, cliente, empresa, funcionario);

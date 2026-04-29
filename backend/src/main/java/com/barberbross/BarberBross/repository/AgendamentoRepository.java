@@ -56,4 +56,9 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
                                               @Param("dataHorario") LocalDateTime dataHorario,
                                               @Param("status") Status status);
 
+    @Query("""
+            SELECT a
+            FROM Agendamento a
+            WHERE a.cliente.clienteId = :clienteId""")
+    List<Agendamento> buscarAgendamentoPorCliente(@Param("clienteId") Long id);
 }
