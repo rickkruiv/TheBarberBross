@@ -154,8 +154,8 @@ export default function AgendamentoCreate() {
     setLoading(false)
   }, [id, isEdit, agendamentoData])
 
-  const services = Array.isArray(servicesData) ? servicesData : servicesData?.data || []
-  const employees = Array.isArray(employeesData) ? employeesData : employeesData?.data || []
+  const services = servicesData? servicesData : servicesData?.data || []
+  const employees = employeesData ? employeesData : employeesData?.data || []
 
   if (loading) {
     return (

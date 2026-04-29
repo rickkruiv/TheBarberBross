@@ -48,11 +48,11 @@ export default function ProdutoList() {
     })
   }
 
-  const produtos = Array.isArray(produtosData)
+  const produtos = produtosData
     ? produtosData
     : produtosData?.data || []
 
-  const categoriasList = Array.isArray(categoriasData)
+  const categoriasList = categoriasData
     ? categoriasData
     : categoriasData?.data || []
   const categoriasMap = useMemo(() => {
@@ -88,21 +88,21 @@ export default function ProdutoList() {
     const qtd = Number(p.quantidadeEstoque ?? 0)
     const min = Number(p.estoqueMinimo ?? 0)
     if (qtd <= 0)
-      return { 
-        label: "Sem estoque", 
-        color: isDark ? "#3B1618" : "#FEE4E2", 
-        textColor: isDark ? "#F97066" : "#B42318" 
+      return {
+        label: "Sem estoque",
+        color: isDark ? "#3B1618" : "#FEE4E2",
+        textColor: isDark ? "#F97066" : "#B42318"
       }
     if (qtd > 0 && qtd <= min)
-      return { 
-        label: "Estoque baixo", 
-        color: isDark ? "#422A09" : "#FEF0C7", 
-        textColor: isDark ? "#FDB022" : "#B54708" 
+      return {
+        label: "Estoque baixo",
+        color: isDark ? "#422A09" : "#FEF0C7",
+        textColor: isDark ? "#FDB022" : "#B54708"
       }
-    return { 
-      label: "Estoque OK", 
-      color: isDark ? "#063A2D" : "#D1FADF", 
-      textColor: isDark ? "#32D583" : "#027A48" 
+    return {
+      label: "Estoque OK",
+      color: isDark ? "#063A2D" : "#D1FADF",
+      textColor: isDark ? "#32D583" : "#027A48"
     }
   }
 

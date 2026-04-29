@@ -21,7 +21,7 @@ export async function createCategory({ nome, tipo, descricao }) {
   const payload = {
     nome,
     descricao: descricao || "",
-    tipo 
+    tipo
   }
   const { data } = await api.post("/categorias", payload)
   return data
@@ -33,7 +33,7 @@ export async function updateCategory(id, { nome, tipo, descricao }) {
     descricao: descricao || "",
     tipo
   }
-  const { data } = await api.put(`/categorias/${id}`, payload)
+  const { data } = await api.patch(`/categorias/${id}`, payload)
   return data
 }
 
