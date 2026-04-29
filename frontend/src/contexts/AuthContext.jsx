@@ -19,6 +19,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("@app:name");
     localStorage.removeItem("@app:userId");
     localStorage.removeItem("@app:nivelAcesso");
+    localStorage.removeItem("@app:empresaId");
+    localStorage.removeItem("@app:funcionarioId");
     setUser(null);
   }, []);
 
@@ -28,17 +30,21 @@ export function AuthProvider({ children }) {
       senha
     });
 
-    const { token, name, userId, nivelAcesso } = response.data;
+    const { token, name, userId, nivelAcesso, empresaId, funcionarioId } = response.data;
 
     localStorage.setItem("@app:token", token);
     localStorage.setItem("@app:name", name);
     localStorage.setItem("@app:userId", userId);
     localStorage.setItem("@app:nivelAcesso", nivelAcesso);
+    if (empresaId) localStorage.setItem("@app:empresaId", empresaId);
+    if (funcionarioId) localStorage.setItem("@app:funcionarioId", funcionarioId);
 
     const userData = {
       name,
       userId,
-      nivelAcesso
+      nivelAcesso,
+      empresaId,
+      funcionarioId
     };
 
     setUser(userData);
@@ -47,7 +53,9 @@ export function AuthProvider({ children }) {
       token,
       name,
       userId,
-      nivelAcesso
+      nivelAcesso,
+      empresaId,
+      funcionarioId
     };
   }, []);
 
@@ -56,12 +64,16 @@ export function AuthProvider({ children }) {
     const name = localStorage.getItem("@app:name");
     const userId = localStorage.getItem("@app:userId");
     const nivelAcesso = localStorage.getItem("@app:nivelAcesso");
+    const empresaId = localStorage.getItem("@app:empresaId");
+    const funcionarioId = localStorage.getItem("@app:funcionarioId");
 
     if (token && name && userId && nivelAcesso) {
       setUser({
         name,
         userId,
-        nivelAcesso
+        nivelAcesso,
+        empresaId,
+        funcionarioId
       });
     }
 

@@ -21,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { useServices, useDeleteService } from "../../services/services";
+import { useCategories } from "../../services/categories";
 import { toastError, toastSuccess } from "../../services/toast";
 import DefaultLoading from "../../shared/Loading/DefaultLoading";
 import { TableVirtuoso } from "react-virtuoso"
@@ -47,21 +48,31 @@ const ServicesList = () => {
   const [search, setSearch] = useState("");
 
   const { data: services = [], isLoading } = useServices();
+  const { data: categoriasData } = useCategories();
+  const categoriesList = Array.isArray(categoriasData)
+    ? categoriasData
+    : categoriasData?.data || [];
 
   const deleteMutation = useDeleteService();
+
+  const getCategoriaNome = (categoriaId) => {
+    if (!categoriaId) return "";
+    const cat = categoriesList.find(c => c.id === categoriaId || c.categoriaId === categoriaId);
+    return cat ? (cat.nome || cat.name) : "";
+  };
 
   const filteredServices = useMemo(() => {
     const term = search.trim().toLowerCase();
     if (!term) return services;
     return services.filter((servico) => {
       const nome = servico.nome || "";
-      const categoriaNome = servico.categoria?.nome || "";
+      const categoriaNome = getCategoriaNome(servico.categoriaId) || "";
       return (
         nome.toLowerCase().includes(term) ||
         categoriaNome.toLowerCase().includes(term)
       );
     });
-  }, [services, search]);
+  }, [services, search, categoriesList]);
 
   const handleDelete = (servicoId) => {
     const confirmDelete = window.confirm("Deseja realmente excluir este serviço?");
@@ -134,36 +145,19 @@ const ServicesList = () => {
                 }}
                 fixedHeaderContent={() => (
                   <TableRow sx={{ bgcolor: "background.paper", boxShadow: "0px 2px 4px rgba(0,0,0,0.5)" }}>
-                    <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "30%" }}>Serviço</TableCell>
+                    <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "40%" }}>Serviço</TableCell>
                     <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "20%" }}>Categoria</TableCell>
                     <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Preço</TableCell>
                     <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Duração</TableCell>
-                    <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "10%" }}>Status</TableCell>
                     <TableCell align="center" sx={{ bgcolor: "background.paper", zIndex: 1, width: "10%" }}>Ações</TableCell>
                   </TableRow>
                 )}
                 itemContent={(_index, servico) => (
                   <Fragment>
                     <TableCell>{servico.nome}</TableCell>
-                    <TableCell>{servico.categoria?.nome || "-"}</TableCell>
+                    <TableCell>{getCategoriaNome(servico.categoriaId) || "-"}</TableCell>
                     <TableCell>{formatCurrency(servico.preco)}</TableCell>
                     <TableCell>{formatDuration(servico.duracao)}</TableCell>
-                    <TableCell>
-                      <Chip
-                        label={servico.status === "INATIVO" ? "Inativo" : "Ativo"}
-                        size="small"
-                        sx={{
-                          borderRadius: 999,
-                          px: 1.5,
-                          fontSize: 12,
-                          backgroundColor:
-                            servico.status === "INATIVO"
-                              ? "error.main"
-                              : "success.main",
-                          color: "common.white"
-                        }}
-                      />
-                    </TableCell>
                     <TableCell align="center">
                       <Box display="flex" justifyContent="center" gap={1}>
                         <IconButton

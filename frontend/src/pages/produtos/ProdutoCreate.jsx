@@ -61,16 +61,16 @@ export default function ProdutoCreate() {
   const { data: fornecedoresData } = useFornecedores()
 
   const { data: produtoData } = useProduto(id)
-  
+
   const createMutation = useCreateProduto()
   const updateMutation = useUpdateProduto()
 
-  const categoriasList = Array.isArray(categoriasData)
+  const categoriasList = categoriasData
     ? categoriasData
     : categoriasData?.data || []
   const categoriasProduto = categoriasList.filter(c => c.tipo === "PRODUTO")
 
-  const fornecedoresList = Array.isArray(fornecedoresData)
+  const fornecedoresList = fornecedoresData
     ? fornecedoresData
     : fornecedoresData?.data || []
 

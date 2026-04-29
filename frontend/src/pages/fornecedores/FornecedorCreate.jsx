@@ -140,7 +140,7 @@ export default function FornecedorCreate() {
     }
   }, [fornecedorData])
 
-  const categoriasList = Array.isArray(categoriasData)
+  const categoriasList = categoriasData
     ? categoriasData
     : categoriasData?.data || []
   const categoriasProduto = categoriasList.filter(c => c.tipo === "PRODUTO")
@@ -247,7 +247,7 @@ export default function FornecedorCreate() {
 
   if (fornecedorLoading && !isNew) {
     return (
-      <DefaultLoading loadMessage="Carregando fornecedor..."/>
+      <DefaultLoading loadMessage="Carregando fornecedor..." />
     )
   }
 

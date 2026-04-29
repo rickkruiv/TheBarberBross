@@ -18,7 +18,8 @@ function buildPayload(values) {
     descricao: values.descricao || "",
     preco: parseCurrencyBRL(values.preco),
     duracao,
-    categoria: values.categoriaId ? { categoriaId: Number(values.categoriaId) } : null
+    categoriaId: Number(values.categoriaId),
+    empresaId: 1
   };
 }
 
@@ -41,7 +42,7 @@ export async function fetchServiceById(id) {
 
 export async function updateService(id, values) {
   const payload = buildPayload(values);
-  const { data } = await api.put(`/servicos/${id}`, payload);
+  const { data } = await api.patch(`/servicos/${id}`, payload);
   return data;
 }
 
