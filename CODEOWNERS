@@ -2,10 +2,10 @@
 * @ErickGrisoste @rickkruiv @p3drojs
 
 # Backend
-/backend/ @ErickGrisoste
+#/backend/ @ErickGrisoste
 
 # Frontend
-/frontend/ @p3drojs
+#/frontend/ @p3drojs
 
 # Mobile
-/mobile/ @rickkruiv
+#/mobile/ @rickkruiv
