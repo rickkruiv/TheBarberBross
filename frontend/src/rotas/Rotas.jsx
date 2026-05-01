@@ -20,6 +20,7 @@ const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
 const AgendamentoCreate = lazy(() => import("../pages/agendamento/AgendamentoCreate"));
 const AgendamentosList = lazy(() => import("../pages/agendamento/AgendamentosList"));
 const AgendaSemanal = lazy(() => import("../pages/agendamento/AgendaSemanal"));
+const DadosBarbearia = lazy(() => import("../pages/config/config"));
 const Login = lazy(() => import("../pages/login/Login"));
 
 export default function Rotas() {
@@ -72,6 +73,7 @@ export default function Rotas() {
                   </Route>
 
                   <Route path="configuracoes">
+                    <Route path="dados-barbearia" element={<DadosBarbearia />} />
                     <Route path="categorias" element={<SettingsCategories />} />
                     <Route path="metodos-pagamento" element={<PaymentMethodsList />} />
                   </Route>
