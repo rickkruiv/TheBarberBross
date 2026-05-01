@@ -1,0 +1,11 @@
+# CODEOWNERS GERAL
+* @ErickGrisoste @rickkruiv @p3drojs
+
+# Backend
+/backend/ @ErickGrisoste
+
+# Frontend
+/frontend/ @p3drojs
+
+# Mobile
+/mobile/ @rickkruiv
