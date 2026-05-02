@@ -67,6 +67,11 @@ public class ClienteService {
         return new DTOClienteResponse(c);
     }
 
+    public DTOClienteResponse buscarCliente(Long id) {
+        Cliente c = buscarClientePorId(id);
+        return new DTOClienteResponse(c);
+    }
+
     public List<DTOAgendamentoResponse> buscarAgendamentos(Long id) {
         authValidation.validarClienteUsuario(authUser.get(), id);
         return agendamentoRepository.buscarAgendamentoPorCliente(id)

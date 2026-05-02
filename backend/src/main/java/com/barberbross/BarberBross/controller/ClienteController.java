@@ -27,10 +27,16 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.listarClientes());
     }
 
-    @GetMapping("/{clienteNome}")
+    @GetMapping("/")
     @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity<DTOClienteResponse> buscarClientePorNome(@PathVariable String clienteNome){
-        return ResponseEntity.ok(clienteService.buscarCliente(clienteNome));
+    public ResponseEntity<DTOClienteResponse> buscarClientePorNome(@RequestParam String nome){
+        return ResponseEntity.ok(clienteService.buscarCliente(nome));
+    }
+
+    @GetMapping("/{clienteId}")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<DTOClienteResponse> buscarClientePorNome(@PathVariable Long clienteId){
+        return ResponseEntity.ok(clienteService.buscarCliente(clienteId));
     }
 
     @GetMapping("/agendamentos/{id}")
