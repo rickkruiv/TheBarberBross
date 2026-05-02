@@ -13,7 +13,6 @@ public class UsuarioCamposUnicosValidator implements Validator<DTOUsuarioRequest
     @Autowired
     private UsuarioRepository repository;
 
-    //valida se os campos são repetidos
     @Override
     public void validar(DTOUsuarioRequest dto) {
         boolean jaExiste = repository.existsByUsername(dto.username());

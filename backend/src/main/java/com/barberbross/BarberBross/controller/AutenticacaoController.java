@@ -3,9 +3,8 @@ package com.barberbross.BarberBross.controller;
 import com.barberbross.BarberBross.dto.request.DTOAutenticacaoRequest;
 import com.barberbross.BarberBross.dto.request.DTOClienteRequest;
 import com.barberbross.BarberBross.dto.request.DTOFuncionarioRequest;
-import com.barberbross.BarberBross.dto.response.DTOClienteResponse;
-import com.barberbross.BarberBross.dto.response.DTOFuncionarioSimplesResponse;
-import com.barberbross.BarberBross.dto.response.DTOLoginResponse;
+import com.barberbross.BarberBross.dto.request.DTOUsuarioRequest;
+import com.barberbross.BarberBross.dto.response.*;
 import com.barberbross.BarberBross.service.AutenticacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +33,14 @@ public class AutenticacaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(autenticacaoService.fazerRegistroCliente(dto));
     }
 
-    @PostMapping("/admin/registrar/funcionario") //esse response é só pra teste lembrar de mudar para o normal dps pelo amor de Deus!!!!!!
+    @PostMapping("/registrar/barbeiro")
+    public ResponseEntity<DTOUsuarioResponse> registrarBarbeiro(@RequestBody @Valid DTOUsuarioRequest dto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(autenticacaoService.fazerRegistroBarbeiro(dto));
+    }
+
+    @PostMapping("/admin/registrar/funcionario")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<DTOFuncionarioSimplesResponse> registrarFuncionario(@RequestBody @Valid DTOFuncionarioRequest dto){
+    public ResponseEntity<DTOFuncionarioResponse> registrarFuncionario(@RequestBody @Valid DTOFuncionarioRequest dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(autenticacaoService.fazerRegistroFuncionario(dto));
     }
 

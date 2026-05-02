@@ -1,6 +1,7 @@
 package com.barberbross.BarberBross.config.websocket;
 
 import com.barberbross.BarberBross.config.security.TokenService;
+import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.CustomUserPrincipal;
 import com.barberbross.BarberBross.model.Funcionario;
 import com.barberbross.BarberBross.model.Usuario;
@@ -36,7 +37,8 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
 
             if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                 Usuario usuario = usuarioRepository.findByUsuarioId(tokenService.getUserId(pegaToken(accessor)));
-                Funcionario funcionario = funcionarioRepository.findByUsuarioUsuarioId(usuario.getUsuarioId());
+                Funcionario funcionario = funcionarioRepository.findByUsuarioUsuarioId(usuario.getUsuarioId())
+                        .orElseThrow(() -> new NotFoundException("Nenhum Funcionário encontrado."));
 
                 CustomUserPrincipal principal = new CustomUserPrincipal(usuario.getUsuarioId(),
                         funcionario.getFuncionarioId(),

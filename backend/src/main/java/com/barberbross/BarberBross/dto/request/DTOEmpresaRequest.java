@@ -23,4 +23,7 @@ public record DTOEmpresaRequest(
         String email,
 
         @NotNull
-        TipoAssinatura tipoAssinatura) {}
+        TipoAssinatura tipoAssinatura,
+
+        @NotNull
+        DTOEnderecoRequest endereco) {}

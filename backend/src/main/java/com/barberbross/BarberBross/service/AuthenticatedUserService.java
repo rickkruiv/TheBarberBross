@@ -1,6 +1,7 @@
 package com.barberbross.BarberBross.service;
 
 import com.barberbross.BarberBross.enums.NivelAcesso;
+import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.CustomUserPrincipal;
 import com.barberbross.BarberBross.model.Funcionario;
 import com.barberbross.BarberBross.model.Usuario;
@@ -26,7 +27,12 @@ public class AuthenticatedUserService {
         Usuario u = (Usuario) auth.getPrincipal();
 
         if (u.getNivelAcesso().equals(NivelAcesso.ADMIN) || u.getNivelAcesso().equals(NivelAcesso.COLABORADOR)){
-            Funcionario f = funcionarioRepository.findByUsuarioUsuarioId(u.getUsuarioId());
+            if (u.getFuncionario() == null) {
+                return new CustomUserPrincipal(u.getUsuarioId(), u.getAuthorities());
+            }
+
+            Funcionario f = funcionarioRepository.findByUsuarioUsuarioId(u.getUsuarioId())
+                    .orElseThrow(() -> new NotFoundException("Nenhum Funcionario encontrado."));
 
             return new CustomUserPrincipal(u.getUsuarioId(), f.getFuncionarioId(),
                     f.getEmpresa().getEmpresaId(), u.getAuthorities());
