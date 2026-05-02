@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../services/api";
+import { useRouter } from "expo-router";
 
 type LoginRequest = {
   username: string;
@@ -39,6 +40,7 @@ type Props = {
 };
 
 export function AuthProvider({ children }: Props) {
+  const router = useRouter(); 
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
 
@@ -51,7 +53,12 @@ export function AuthProvider({ children }: Props) {
       "@app:empresaId",
       "@app:funcionarioId",
     ])
+
+    delete api.defaults.headers.common.Authorization;
+    
     setUser(null);
+    
+    router.replace("/(auth)/login");
   }, []);
 
   const login = useCallback(async ({ username, senha }: { username: string; senha: string }) => {
@@ -61,6 +68,8 @@ export function AuthProvider({ children }: Props) {
     });
 
     const { token, name, userId, nivelAcesso, empresaId, funcionarioId } = response.data;
+
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
     await AsyncStorage.multiSet([
       ["@app:token", token],
@@ -124,6 +133,8 @@ export function AuthProvider({ children }: Props) {
       storageData.userId &&
       storageData.nivelAcesso
     ) {
+      api.defaults.headers.common.Authorization = `Bearer ${storageData.token}`;
+
       setUser({
         name: storageData.name,
         userId: storageData.userId,

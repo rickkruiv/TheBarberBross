@@ -24,7 +24,6 @@ export default function Login() {
       setSubmitting(true);
       await login({username, senha});
     } catch (error) {
-      console.log("API URL:", process.env.EXPO_PUBLIC_API_URL);
       Alert.alert("Erro", "Usuário ou senha inválidos!");
     } finally {
       setSubmitting(false);
