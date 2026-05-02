@@ -37,7 +37,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/teste-websocket").permitAll()
 
                         // rotas públicas
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/registrar/cliente").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/registrar/cliente", "/auth/registrar/barbeiro").permitAll()
 
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

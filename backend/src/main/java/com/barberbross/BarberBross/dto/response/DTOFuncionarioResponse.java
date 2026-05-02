@@ -1,5 +1,6 @@
 package com.barberbross.BarberBross.dto.response;
 
+import com.barberbross.BarberBross.enums.NivelAcesso;
 import com.barberbross.BarberBross.model.Funcionario;
 
 import java.math.BigDecimal;
@@ -15,11 +16,12 @@ public record DTOFuncionarioResponse(
         LocalDate dataContratacao,
         BigDecimal salarioBase,
         BigDecimal percentualComissao,
-        Long usuarioId) {
+        Long usuarioId,
+        NivelAcesso nivelAcesso) {
 
     public DTOFuncionarioResponse(Funcionario f) {
         this(f.getFuncionarioId(), f.getNome(), f.getCpf()
                 , f.getTelefone(), f.getEmail(), f.getNascimento(), f.getDataContratacao(), f.getSalarioBase(), f.getPercentualComissao()
-                , f.getUsuario().getUsuarioId());
+                , f.getUsuario().getUsuarioId(), f.getUsuario().getNivelAcesso());
     }
 }

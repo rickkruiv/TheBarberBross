@@ -20,7 +20,7 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usuarioId;
 
-    @Column(length = 20, unique = true, nullable = false)
+    @Column(length = 100, unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -72,6 +72,12 @@ public class Usuario implements UserDetails {
     public NivelAcesso getNivelAcesso() {
         return nivelAcesso;
     }
+
+    public Fornecedor getFornecedor() { return fornecedor; }
+
+    public Funcionario getFuncionario() { return funcionario; }
+
+    public Cliente getCliente() { return cliente; }
 
     public void atualizarDados(DTOUsuarioRequest dto, String senha) {
         this.username = dto.username();

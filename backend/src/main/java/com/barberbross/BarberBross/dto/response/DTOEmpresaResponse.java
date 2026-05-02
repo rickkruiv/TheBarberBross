@@ -11,10 +11,11 @@ public record DTOEmpresaResponse(
         String telefone,
         String email,
         TipoAssinatura tipoAssinatura,
-        Long enderecoId) {
+        boolean ativa,
+        DTOEnderecoResponse endereco) {
 
     public DTOEmpresaResponse(Empresa e){
         this(e.getEmpresaId(), e.getRazaoSocial(), e.getNomeFantasia(), e.getCnpj(),
-                e.getTelefone(), e.getEmail(), e.getTipoAssinatura(), e.getEndereco().getEnderecoId());
+                e.getTelefone(), e.getEmail(), e.getTipoAssinatura(), e.isAtiva(), new DTOEnderecoResponse(e.getEndereco()));
     }
 }

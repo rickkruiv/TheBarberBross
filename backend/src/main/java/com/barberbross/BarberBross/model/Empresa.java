@@ -35,14 +35,17 @@ public class Empresa implements TemEndereco {
     @Column(nullable = false)
     private TipoAssinatura tipoAssinatura;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true) //colocar nullabel false dps
+    @Column
+    private boolean ativa;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Agendamento> agendamentos;
 
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY) //colocar nullabel false dps
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Funcionario> funcionarios;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -92,6 +95,9 @@ public class Empresa implements TemEndereco {
     public String getEmail() { return email; }
 
     public TipoAssinatura getTipoAssinatura() { return tipoAssinatura; }
+
+    public boolean isAtiva() { return ativa; }
+    public void setAtiva(boolean ativa) { this.ativa = ativa; }
 
     public List<Agendamento> getAgendamentos() { return agendamentos; }
 

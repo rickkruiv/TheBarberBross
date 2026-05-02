@@ -2,8 +2,9 @@ package com.barberbross.BarberBross.controller;
 
 import com.barberbross.BarberBross.dto.request.DTOEmpresaRequest;
 import com.barberbross.BarberBross.dto.request.DTOEnderecoRequest;
-import com.barberbross.BarberBross.dto.response.DTOEmpresaSimplesResponse;
+import com.barberbross.BarberBross.dto.response.DTOEmpresaResponse;
 import com.barberbross.BarberBross.dto.response.DTOEnderecoResponse;
+import com.barberbross.BarberBross.dto.response.DTOFuncionarioResponse;
 import com.barberbross.BarberBross.service.EmpresaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,50 +25,61 @@ public class EmpresaController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<DTOEmpresaSimplesResponse> salvarEmpresa(@RequestBody @Valid DTOEmpresaRequest novaEmpresa){
+    public ResponseEntity<DTOEmpresaResponse> salvarEmpresa(@RequestBody @Valid DTOEmpresaRequest novaEmpresa){
         return ResponseEntity.status(HttpStatus.CREATED).body(empresaService.salvarEmpresa(novaEmpresa));
     }
 
-    @PostMapping("{id}/endereco")
-    public ResponseEntity<HttpStatus> salvarEnderecoEmpresa(@PathVariable Long id,
-                                                            @RequestBody @Valid DTOEnderecoRequest endereco){
-        empresaService.salvarEnderecoEmpresa(id, endereco);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @GetMapping("{idEmpresa}/endereco")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<DTOEnderecoResponse> buscarEnderecoEmpresa(@PathVariable Long idEmpresa){
+        return ResponseEntity.ok(empresaService.buscarEnderecoEmpresa(idEmpresa));
     }
 
-    @GetMapping("{id}/endereco")
-    public ResponseEntity<DTOEnderecoResponse> buscarEnderecoEmpresa(@PathVariable Long id){
-        return ResponseEntity.ok(empresaService.buscarEnderecoEmpresa(id));
+    @GetMapping("{idEmpresa}/funcionarios")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<List<DTOFuncionarioResponse>> buscarFuncionariosDaEmpresa(@PathVariable Long idEmpresa){
+        return ResponseEntity.ok(empresaService.buscarFuncionariosDaEmpresa(idEmpresa));
     }
 
-
-    @PutMapping("{id}/endereco")
-    public ResponseEntity<HttpStatus> editarEnderecoEmpresa(@PathVariable Long id,
+    @PutMapping("{idEmpresa}/endereco")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<HttpStatus> editarEnderecoEmpresa(@PathVariable Long idEmpresa,
                                                             @RequestBody @Valid DTOEnderecoRequest endereco){
-        empresaService.editarEnderecoEmpresa(id, endereco);
+        empresaService.editarEnderecoEmpresa(idEmpresa, endereco);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<DTOEmpresaSimplesResponse>> listarEmpresas(){
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<List<DTOEmpresaResponse>> listarEmpresas(){
         return ResponseEntity.ok(empresaService.listarEmpresas());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DTOEmpresaSimplesResponse> buscarEmpresaPorId(@PathVariable Long id){
-        return ResponseEntity.ok(empresaService.buscarEmpresaPorId(id));
+    @GetMapping("/{idEmpresa}")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<DTOEmpresaResponse> buscarEmpresaPorId(@PathVariable Long idEmpresa){
+        return ResponseEntity.ok(empresaService.buscarEmpresaPorId(idEmpresa));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<DTOEmpresaSimplesResponse> editarEmpresa(@PathVariable Long id,
-                                                                   @RequestBody @Valid DTOEmpresaRequest empresa){
-        return ResponseEntity.ok(empresaService.editarEmpresa(id, empresa));
+    @PutMapping("/{idEmpresa}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<DTOEmpresaResponse> editarEmpresa(@PathVariable Long idEmpresa,
+                                                                   @RequestBody @Valid DTOEmpresaRequest dto){
+        return ResponseEntity.ok(empresaService.editarEmpresa(idEmpresa, dto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deletarEmpresa(@PathVariable Long id){
-        empresaService.deletarEmpresa(id);
+    @DeleteMapping("/{idEmpresa}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<HttpStatus> deletarEmpresa(@PathVariable Long idEmpresa){
+        empresaService.deletarEmpresa(idEmpresa);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{idEmpresa}")
+    @PreAuthorize("hasRole('ADMIN')") //só pra dev (temporario)
+    public ResponseEntity<HttpStatus> ativarEmpresa(@PathVariable Long idEmpresa){
+        empresaService.ativarEmpresa(idEmpresa);
+        return ResponseEntity.ok().build();
     }
 
 }
