@@ -3,11 +3,7 @@ package com.barberbross.BarberBross.validation.implementations;
 import com.barberbross.BarberBross.exceptions.AccessDeniedException;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.*;
-import com.barberbross.BarberBross.repository.AvaliacaoRepository;
-import com.barberbross.BarberBross.repository.CategoriaRepository;
-import com.barberbross.BarberBross.repository.ClienteRepository;
-import com.barberbross.BarberBross.repository.FuncionarioRepository;
-import com.barberbross.BarberBross.service.EmpresaService;
+import com.barberbross.BarberBross.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class AuthorizationValidator {
 
     @Autowired
-    private EmpresaService empresaService;
+    private EmpresaRepository empresaRepository;
 
     @Autowired
     private AvaliacaoRepository avaliacaoRepository;
@@ -36,7 +32,9 @@ public class AuthorizationValidator {
     }
 
     public boolean funcionarioPertenceEmpresa(Long funcionarioId, Long empresaId){
-        Empresa e = empresaService.buscarEmpresa(empresaId);
+        Empresa e = empresaRepository.findById(empresaId)
+                .orElseThrow(() -> new NotFoundException("Nenhuma empresa encontrada."));
+
         Funcionario f = funcionarioRepository.findById(funcionarioId)
                 .orElseThrow(() -> new NotFoundException("Nenhum funcionário encontrado."));
         return e.getFuncionarios().contains(f);

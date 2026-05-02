@@ -9,6 +9,7 @@ import com.barberbross.BarberBross.validation.implementations.UsuarioCamposUnico
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,15 +22,15 @@ public class UsuarioService {
     @Autowired
     private UsuarioCamposUnicosValidator validator;
 
-//    @Transactional
-//    public DTOUsuarioResponse salvarUsuario(DTOUsuarioRequest dto, String senhaEncriptada) {
-//        validator.validar(dto);
-//        Usuario u = new Usuario(dto, senhaEncriptada);
-//        usuarioRepository.save(u);
-//
-// n vai mais existir se pa
-//        return new DTOUsuarioResponse(u);
-//    }
+    @Transactional
+    public DTOUsuarioResponse salvarUsuario(DTOUsuarioRequest dto) {
+        validator.validar(dto);
+        String senhaEncriptada = new BCryptPasswordEncoder().encode(dto.senha());
+        Usuario u = new Usuario(dto, senhaEncriptada);
+        usuarioRepository.save(u);
+
+        return new DTOUsuarioResponse(u);
+    }
 
     public List<DTOUsuarioResponse> listarUsuarios() {
         return usuarioRepository.findAll()
@@ -49,7 +50,8 @@ public class UsuarioService {
         if(!usuarioAtual.getUsername().equals(dto.username())){
             validator.validar(dto);
         }
-        String senhaHash = new BCryptPasswordEncoder().encode(dto.senha()); //gambiarra só pra testar um negócio
+
+        String senhaHash = new BCryptPasswordEncoder().encode(dto.senha());
         usuarioAtual.atualizarDados(dto, senhaHash);
         usuarioRepository.save(usuarioAtual);
         return new DTOUsuarioResponse(usuarioAtual);
@@ -60,7 +62,7 @@ public class UsuarioService {
         usuarioRepository.delete(u);
     }
 
-    private Usuario buscarUsuario(Long id){
+    protected Usuario buscarUsuario(Long id){
         return usuarioRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Nenhum usuário encontrado com id: " + id));
     }

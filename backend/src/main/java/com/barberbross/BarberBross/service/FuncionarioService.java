@@ -17,7 +17,6 @@ import com.barberbross.BarberBross.repository.FuncionarioRepository;
 import com.barberbross.BarberBross.repository.UsuarioRepository;
 import com.barberbross.BarberBross.validation.implementations.AuthorizationValidator;
 import com.barberbross.BarberBross.validation.implementations.FuncionarioCamposUnicosValidator;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class FuncionarioService {
     @Autowired
     private AuthorizationValidator authValidation;
 
-    public DTOFuncionarioSimplesResponse salvarFuncionario(DTOFuncionarioRequest dto){
+    public DTOFuncionarioResponse salvarFuncionario(DTOFuncionarioRequest dto){
         validator.validar(dto);
 
         String senhaEncriptografada = new BCryptPasswordEncoder().encode(dto.senha());
@@ -58,7 +57,7 @@ public class FuncionarioService {
         Funcionario f = new Funcionario(dto, e, u);
         funcionarioRepository.save(f);
 
-        return new DTOFuncionarioSimplesResponse(f);
+        return new DTOFuncionarioResponse(f);
     }
 
     public List<DTOFuncionarioSimplesResponse> listarFuncionario(Long empresaId){
@@ -139,7 +138,8 @@ public class FuncionarioService {
     }
 
     protected Funcionario buscarFuncionarioPorUserId(Long userId){
-        return funcionarioRepository.findByUsuarioUsuarioId(userId);
+        return funcionarioRepository.findByUsuarioUsuarioId(userId)
+                .orElseThrow(() -> new NotFoundException("Nenhum Funcionario encontrado"));
     }
 
 }

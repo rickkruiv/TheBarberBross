@@ -75,6 +75,10 @@ public class Funcionario  {
         this.agendamentos = new ArrayList<>();
     }
 
+    public Funcionario(Empresa empresa, Usuario usuario){
+        //
+    }
+
     public Funcionario() {}
 
     public Long getFuncionarioId() { return funcionarioId; }
