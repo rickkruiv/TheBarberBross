@@ -12,15 +12,16 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  IconButton
+  IconButton,
+  Tooltip
 } from "@mui/material"
 import { useTheme } from "@mui/material/styles"
 import SearchIcon from "@mui/icons-material/Search"
 import AddIcon from "@mui/icons-material/Add"
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined"
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import VisibilityIcon from "@mui/icons-material/Visibility"
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { useProdutos, useDeleteProduto } from "../../services/produto"
@@ -28,9 +29,13 @@ import { useCategories } from "../../services/categories"
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import { TableVirtuoso } from "react-virtuoso"
+import { useFornecedores } from "../../services/fornecedores"
+import ProductDetailModal from "../../components/ProductDetailModal/ProductDetailModal"
 
 export default function ProdutoList() {
   const [search, setSearch] = useState("")
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
   const navigate = useNavigate()
 
   const theme = useTheme()
@@ -38,6 +43,7 @@ export default function ProdutoList() {
   const { data: produtosData, isLoading } = useProdutos()
 
   const { data: categoriasData } = useCategories()
+  const { data: fornecedoresData } = useFornecedores()
 
   const deleteMutation = useDeleteProduto()
 
@@ -63,6 +69,16 @@ export default function ProdutoList() {
     })
     return map
   }, [categoriasList])
+
+  const fornecedoresList = fornecedoresData ? (Array.isArray(fornecedoresData) ? fornecedoresData : fornecedoresData.data || []) : []
+  const fornecedoresMap = useMemo(() => {
+    const map = {}
+    fornecedoresList.forEach(f => {
+      const id = f.fornecedorId || f.id
+      map[id] = f
+    })
+    return map
+  }, [fornecedoresList])
 
   const filtrados = produtos.filter(p => {
     if (!search) return true
@@ -293,7 +309,7 @@ export default function ProdutoList() {
                   <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Estoque</TableCell>
                   <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "10%" }}>Custo</TableCell>
                   <TableCell sx={{ bgcolor: "background.paper", zIndex: 1, width: "10%" }}>Preço</TableCell>
-                  <TableCell align="right" sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Ações</TableCell>
+                  <TableCell align="center" sx={{ bgcolor: "background.paper", zIndex: 1, width: "15%" }}>Ações</TableCell>
                 </TableRow>
               )}
               itemContent={(_index, p) => {
@@ -334,16 +350,27 @@ export default function ProdutoList() {
                     <TableCell>
                       <Typography>R$ {Number(preco).toFixed(2)}</Typography>
                     </TableCell>
-                    <TableCell align="right">
-                      <IconButton onClick={() => navigate(`/produtos/${id}`)}>
-                        <VisibilityOutlinedIcon />
-                      </IconButton>
-                      <IconButton onClick={() => navigate(`/produtos/${id}/editar`)}>
-                        <EditOutlinedIcon />
-                      </IconButton>
-                      <IconButton onClick={() => handleDelete(p)} color="error">
-                        <DeleteOutlineIcon />
-                      </IconButton>
+                    <TableCell align="center">
+                      <Box display="flex" justifyContent="center" gap={1}>
+                        <Tooltip title="Visualizar">
+                          <IconButton size="small" onClick={() => {
+                            setSelectedProduct(p)
+                            setModalOpen(true)
+                          }}>
+                            <VisibilityIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Editar">
+                          <IconButton size="small" onClick={() => navigate(`/produtos/${id}/editar`)}>
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Excluir">
+                          <IconButton size="small" onClick={() => handleDelete(p)} color="error">
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </Fragment>
                 )
@@ -352,6 +379,14 @@ export default function ProdutoList() {
           )}
         </Paper>
       </Box>
+
+      <ProductDetailModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        product={selectedProduct}
+        categoryName={selectedProduct ? categoriasMap[selectedProduct.categoriaId]?.nome : ""}
+        supplierName={selectedProduct ? fornecedoresMap[selectedProduct.fornecedorId]?.nomeFantasia || fornecedoresMap[selectedProduct.fornecedorId]?.razaoSocial : ""}
+      />
     </Container>
   )
 }

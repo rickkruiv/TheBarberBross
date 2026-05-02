@@ -11,14 +11,15 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody
+  TableBody,
+  Tooltip
 } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
 import AddIcon from "@mui/icons-material/Add"
 import LocalShippingIcon from "@mui/icons-material/LocalShipping"
 import VisibilityIcon from "@mui/icons-material/Visibility"
-import EditIcon from "@mui/icons-material/EditOutlined"
-import DeleteIcon from "@mui/icons-material/DeleteOutline"
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { useNavigate } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useFornecedores, useDeleteFornecedor } from "../../services/fornecedores"
@@ -134,7 +135,7 @@ export default function FornecedoresList() {
           }}
         >
           {isLoading ? (
-            <DefaultLoading loadMessage="Carregando fornecedores..."/>
+            <DefaultLoading loadMessage="Carregando fornecedores..." />
           ) : filtered.length === 0 ? (
             <Box p={3}>
               <Typography color="text.secondary">
@@ -151,7 +152,7 @@ export default function FornecedoresList() {
                   <TableCell>Telefone</TableCell>
                   <TableCell>E-mail</TableCell>
                   <TableCell>Status</TableCell>
-                  <TableCell align="right">Ações</TableCell>
+                  <TableCell align="center">Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -203,28 +204,36 @@ export default function FornecedoresList() {
                           {ativo ? "Ativo" : "Inativo"}
                         </Box>
                       </TableCell>
-                      <TableCell align="right">
-                        <IconButton
-                          size="small"
-                          onClick={() => navigate(`/fornecedores/${id}`)}
-                        >
-                          <VisibilityIcon />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            navigate(`/fornecedores/${id}/editar`)
-                          }
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(row)}
-                          color="error"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
+                      <TableCell align="center">
+                        <Box display="flex" justifyContent="center" gap={1}>
+                          <Tooltip title="Visualizar">
+                            <IconButton
+                              size="small"
+                              onClick={() => navigate(`/fornecedores/${id}`)}
+                            >
+                              <VisibilityIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Editar">
+                            <IconButton
+                              size="small"
+                              onClick={() =>
+                                navigate(`/fornecedores/${id}/editar`)
+                              }
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Excluir">
+                            <IconButton
+                              size="small"
+                              onClick={() => handleDelete(row)}
+                              color="error"
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
                       </TableCell>
                     </TableRow>
                   )

@@ -20,17 +20,22 @@ import PersonAdd from "@mui/icons-material/PersonAddAlt"
 import StatCard from "../../components/StatCard/StatCard"
 import useDebounce from "../../hooks/useDebounce"
 import GroupAdd from "@mui/icons-material/GroupAddOutlined"
-import Visibility from "@mui/icons-material/VisibilityOutlined"
-import Edit from "@mui/icons-material/EditOutlined"
+import Visibility from "@mui/icons-material/Visibility"
+import Edit from "@mui/icons-material/Edit"
+import Delete from "@mui/icons-material/Delete"
 import { useNavigate } from "react-router-dom"
-import { useEmployees, exportEmployees } from "../../services/employees"
+import { useEmployees, exportEmployees, useDeleteEmployee } from "../../services/employees"
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
+import EmployeeDetailModal from "../../components/EmployeeDetailModal/EmployeeDetailModal"
 
 export default function EmployeesList() {
   const navigate = useNavigate()
   const [q, setQ] = useState("")
   const dq = useDebounce(q, 400)
+
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedEmployee, setSelectedEmployee] = useState(null)
 
   const { data, isLoading, isError } = useEmployees({ q: dq })
 
@@ -43,6 +48,8 @@ export default function EmployeesList() {
     if (isError) toastError("Falha ao carregar funcionários")
   }, [isError])
 
+  const deleteMutation = useDeleteEmployee()
+
   const handleExport = async () => {
     try {
       await exportEmployees({ q: dq })
@@ -50,6 +57,25 @@ export default function EmployeesList() {
     } catch {
       toastError("Erro ao exportar")
     }
+  }
+
+  const handleDelete = (row) => {
+    if (window.confirm(`Deseja realmente excluir o funcionário "${row.nome}"?`)) {
+      deleteMutation.mutate(row.funcionarioId, {
+        onSuccess: () => toastSuccess("Funcionário excluído com sucesso"),
+        onError: () => toastError("Erro ao excluir funcionário")
+      })
+    }
+  }
+
+  const handleOpenModal = (employee) => {
+    setSelectedEmployee(employee)
+    setModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setModalOpen(false)
+    setSelectedEmployee(null)
   }
 
   return (
@@ -162,7 +188,7 @@ export default function EmployeesList() {
                 <TableCell>E-mail</TableCell>
                 <TableCell>CPF</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell align="right">Ações</TableCell>
+                <TableCell align="center">Ações</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -173,23 +199,34 @@ export default function EmployeesList() {
                   <TableCell>{row.email}</TableCell>
                   <TableCell>{row.cpf}</TableCell>
                   <TableCell>Ativo</TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Visualizar">
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/funcionarios/${row.funcionarioId}`)}
-                      >
-                        <Visibility />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Editar">
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/funcionarios/${row.funcionarioId}/editar`)}
-                      >
-                        <Edit />
-                      </IconButton>
-                    </Tooltip>
+                  <TableCell align="center">
+                    <Box display="flex" justifyContent="center" gap={1}>
+                      <Tooltip title="Visualizar">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleOpenModal(row)}
+                        >
+                          <Visibility fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Editar">
+                        <IconButton
+                          size="small"
+                          onClick={() => navigate(`/funcionarios/${row.funcionarioId}/editar`)}
+                        >
+                          <Edit fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Excluir">
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleDelete(row)}
+                        >
+                          <Delete fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
@@ -197,6 +234,12 @@ export default function EmployeesList() {
           </Table>
         )}
       </Paper>
+
+      <EmployeeDetailModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        employee={selectedEmployee}
+      />
     </Box>
   )
 }

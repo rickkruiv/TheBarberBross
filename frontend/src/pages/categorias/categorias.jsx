@@ -23,8 +23,8 @@ import {
 } from "@mui/material"
 import Search from "@mui/icons-material/Search"
 import Add from "@mui/icons-material/Add"
-import Edit from "@mui/icons-material/EditOutlined"
-import Delete from "@mui/icons-material/DeleteOutline"
+import Edit from "@mui/icons-material/Edit"
+import Delete from "@mui/icons-material/Delete"
 import LocalOffer from "@mui/icons-material/LocalOffer"
 import StatCard from "../../components/StatCard/StatCard"
 import useDebounce from "../../hooks/useDebounce"
@@ -244,7 +244,7 @@ export default function SettingsCategories() {
                 <TableCell>Nome da Categoria</TableCell>
                 <TableCell>Tipo</TableCell>
                 <TableCell>Itens Associados</TableCell>
-                <TableCell align="right">Ações</TableCell>
+                <TableCell align="center">Ações</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -257,21 +257,23 @@ export default function SettingsCategories() {
                     <TableCell>
                       {itens} {itens === 1 ? "item" : "itens"}
                     </TableCell>
-                    <TableCell align="right">
-                      <Tooltip title="Editar">
-                        <IconButton size="small" onClick={() => handleEdit(row)}>
-                          <Edit />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Excluir">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(row)}
-                          color="error"
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Tooltip>
+                    <TableCell align="center">
+                      <Box display="flex" justifyContent="center" gap={1}>
+                        <Tooltip title="Editar">
+                          <IconButton size="small" onClick={() => handleEdit(row)}>
+                            <Edit fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Excluir">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleDelete(row)}
+                            color="error"
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 )
