@@ -4,8 +4,6 @@ import com.barberbross.BarberBross.dto.request.DTOFuncionarioPerfilRequest;
 import com.barberbross.BarberBross.dto.request.DTOFuncionarioRequest;
 import com.barberbross.BarberBross.dto.request.DTOUsuarioRequest;
 import com.barberbross.BarberBross.dto.response.DTOFuncionarioResponse;
-import com.barberbross.BarberBross.dto.response.DTOFuncionarioSimplesResponse;
-import com.barberbross.BarberBross.enums.NivelAcesso;
 import com.barberbross.BarberBross.exceptions.AccessDeniedException;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.Agendamento;
@@ -62,10 +60,10 @@ public class FuncionarioService {
         return new DTOFuncionarioResponse(f);
     }
 
-    public List<DTOFuncionarioSimplesResponse> listarFuncionario(Long empresaId){
+    public List<DTOFuncionarioResponse> listarFuncionario(Long empresaId){
         return funcionarioRepository.buscarFuncionariosPorEmpresa(empresaId)
                 .stream()
-                .map(DTOFuncionarioSimplesResponse::new)
+                .map(DTOFuncionarioResponse::new)
                 .toList();
     }
 
@@ -74,11 +72,12 @@ public class FuncionarioService {
         return new DTOFuncionarioResponse(f);
     }
 
-    public DTOFuncionarioSimplesResponse editarFuncionario(Long id, DTOFuncionarioRequest dto){
+    @Transactional
+    public DTOFuncionarioResponse editarFuncionario(Long id, DTOFuncionarioRequest dto){
         if(authUser.isAdmin() && authValidation.funcionarioPertenceEmpresa(id, dto.empresaId())){
             Funcionario funcionarioAtual = buscarFuncionario(id);
 
-            if (!funcionarioAtual.getCpf().equals(dto.cpf())){
+            if (funcionarioAtual.getCpf() != null && !funcionarioAtual.getCpf().equals(dto.cpf())){
                 validator.validar(dto, id);
             }
 
@@ -87,13 +86,14 @@ public class FuncionarioService {
             funcionarioAtual.atualizarDados(dto, agendamentos);
             funcionarioRepository.save(funcionarioAtual);
 
-            return new DTOFuncionarioSimplesResponse(funcionarioAtual);
+            return new DTOFuncionarioResponse(funcionarioAtual);
         } else {
             throw new AccessDeniedException("Usuário não tem permissão para alterar os dados deste Funcionário.");
         }
     }
 
-    public DTOFuncionarioSimplesResponse editarPerfilFuncionario(Long id, DTOFuncionarioPerfilRequest dto){
+    @Transactional
+    public DTOFuncionarioResponse editarPerfilFuncionario(Long id, DTOFuncionarioPerfilRequest dto){
         if(authUser.isColaborador() && authUser.get().getFuncionarioId().equals(id)){
             Funcionario funcionarioAtual = buscarFuncionario(id);
 
@@ -104,18 +104,23 @@ public class FuncionarioService {
             funcionarioAtual.atualizarDadosPerfil(dto);
             funcionarioRepository.save(funcionarioAtual);
 
-            Usuario u = usuarioRepository.findById(funcionarioAtual.getUsuario().getUsuarioId())
-                    .orElseThrow(() -> new NotFoundException("Nenhum usuário encontrado."));
+            atualizaUsuario(funcionarioAtual, dto);
 
-            DTOUsuarioRequest request = new DTOUsuarioRequest(dto.email(), dto.senha(), NivelAcesso.COLABORADOR);
-            String senhaHash = new BCryptPasswordEncoder().encode(request.senha());
-            u.atualizarDados(request, senhaHash);
-            usuarioRepository.save(u);
-
-            return new DTOFuncionarioSimplesResponse(funcionarioAtual);
+            return new DTOFuncionarioResponse(funcionarioAtual);
         } else {
             throw new AccessDeniedException("Acesso negado: usuário não tem permissão para alterar os dados deste funcionário.");
         }
+    }
+
+    @Transactional
+    private void atualizaUsuario(Funcionario funcionarioAtual, DTOFuncionarioPerfilRequest dto) {
+        Usuario u = usuarioRepository.findById(funcionarioAtual.getUsuario().getUsuarioId())
+                .orElseThrow(() -> new NotFoundException("Nenhum usuário encontrado."));
+
+        DTOUsuarioRequest request = new DTOUsuarioRequest(dto.email(), dto.senha(), dto.nivelAcesso());
+        String senhaHash = new BCryptPasswordEncoder().encode(request.senha());
+        u.atualizarDados(request, senhaHash);
+        usuarioRepository.save(u);
     }
 
     public void deletarFuncionario(Long id){
