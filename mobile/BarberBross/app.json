@@ -6,6 +6,10 @@
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "BarberBross",
+    "experiments": {
+      "typedRoutes": true
+    },
     "splash": {
       "image": "./src/assets/splash-icon.png",
       "resizeMode": "contain",
@@ -37,7 +41,6 @@
         }
       ],
       "expo-font"
-    ],
-    "scheme": "barberbross"
+    ]
   }
 }
