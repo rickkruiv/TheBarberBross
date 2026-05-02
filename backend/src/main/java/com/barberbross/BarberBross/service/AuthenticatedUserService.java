@@ -27,6 +27,10 @@ public class AuthenticatedUserService {
         Usuario u = (Usuario) auth.getPrincipal();
 
         if (u.getNivelAcesso().equals(NivelAcesso.ADMIN) || u.getNivelAcesso().equals(NivelAcesso.COLABORADOR)){
+            if (u.getFuncionario() == null) {
+                return new CustomUserPrincipal(u.getUsuarioId(), u.getAuthorities());
+            }
+
             Funcionario f = funcionarioRepository.findByUsuarioUsuarioId(u.getUsuarioId())
                     .orElseThrow(() -> new NotFoundException("Nenhum Funcionario encontrado."));
 

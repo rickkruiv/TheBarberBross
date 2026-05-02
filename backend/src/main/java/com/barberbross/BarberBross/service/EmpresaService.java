@@ -4,6 +4,7 @@ import com.barberbross.BarberBross.dto.request.DTOEmpresaRequest;
 import com.barberbross.BarberBross.dto.request.DTOEnderecoRequest;
 import com.barberbross.BarberBross.dto.response.DTOEmpresaResponse;
 import com.barberbross.BarberBross.dto.response.DTOEnderecoResponse;
+import com.barberbross.BarberBross.dto.response.DTOFuncionarioResponse;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
 import com.barberbross.BarberBross.model.Empresa;
 import com.barberbross.BarberBross.model.Funcionario;
@@ -28,9 +29,6 @@ public class EmpresaService {
     private EnderecoService enderecoService;
 
     @Autowired
-    private FuncionarioService funcionarioService;
-
-    @Autowired
     private UsuarioService usuarioService;
 
     @Autowired
@@ -45,22 +43,25 @@ public class EmpresaService {
     @Transactional
     public DTOEmpresaResponse salvarEmpresa(DTOEmpresaRequest dto) {
         if(authUser.isAdmin() && authUser.get().getEmpresaId() == null) {
+            System.out.println("entrou no método");
             validator.validar(dto);
 
             Empresa emp = new Empresa(dto);
             enderecoService.salvarEndereco(dto.endereco(), emp);
             empresaRepository.save(emp);
 
-            Usuario user = usuarioService.buscarUsuario(authUser.get().getUserId());
-
-            Funcionario f = new Funcionario(emp, user);
-
-            //emp.getFuncionarios().add()
+            vincularDonoEmpresa(emp);
 
             return new DTOEmpresaResponse(emp);
         } else{
             throw new IllegalStateException();
         }
+    }
+
+    private void vincularDonoEmpresa(Empresa emp){
+        Usuario user = usuarioService.buscarUsuario(authUser.get().getUserId());
+        Funcionario f = new Funcionario(emp, user);
+        emp.getFuncionarios().add(f);
     }
 
     public DTOEnderecoResponse buscarEnderecoEmpresa(Long id) {
@@ -131,5 +132,10 @@ public class EmpresaService {
         }
         authValidation.validarAcessoEmpresa(authUser.get(), e.getEmpresaId());
         e.setAtiva(true);
+    }
+
+    public List<DTOFuncionarioResponse> buscarFuncionariosDaEmpresa(Long id) {
+        Empresa e = buscarEmpresa(id);
+        return e.getFuncionarios().stream().map(DTOFuncionarioResponse::new).toList();
     }
 }

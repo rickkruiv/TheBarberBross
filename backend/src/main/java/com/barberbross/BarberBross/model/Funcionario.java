@@ -17,16 +17,16 @@ public class Funcionario  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long funcionarioId;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50)
     private String nome;
 
-    @Column(unique = true, length = 14, nullable = false)
+    @Column(unique = true, length = 14)
     private String cpf;
 
-    @Column(length = 15, nullable = false)
+    @Column(length = 15)
     private String telefone;
 
-    @Column(length = 100, unique = true, nullable = false)
+    @Column(length = 100, unique = true)
     private String email;
 
     private LocalDate nascimento;
@@ -76,7 +76,11 @@ public class Funcionario  {
     }
 
     public Funcionario(Empresa empresa, Usuario usuario){
-        //
+        this.empresa = empresa;
+        this.usuario = usuario;
+        this.email = usuario.getUsername();
+        this.ativo = true;
+        this.dataContratacao = LocalDate.now();
     }
 
     public Funcionario() {}

@@ -4,6 +4,7 @@ import com.barberbross.BarberBross.dto.request.DTOEmpresaRequest;
 import com.barberbross.BarberBross.dto.request.DTOEnderecoRequest;
 import com.barberbross.BarberBross.dto.response.DTOEmpresaResponse;
 import com.barberbross.BarberBross.dto.response.DTOEnderecoResponse;
+import com.barberbross.BarberBross.dto.response.DTOFuncionarioResponse;
 import com.barberbross.BarberBross.service.EmpresaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,12 @@ public class EmpresaController {
     @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<DTOEnderecoResponse> buscarEnderecoEmpresa(@PathVariable Long idEmpresa){
         return ResponseEntity.ok(empresaService.buscarEnderecoEmpresa(idEmpresa));
+    }
+
+    @GetMapping("{idEmpresa}/funcionarios")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<List<DTOFuncionarioResponse>> buscarFuncionariosDaEmpresa(@PathVariable Long idEmpresa){
+        return ResponseEntity.ok(empresaService.buscarFuncionariosDaEmpresa(idEmpresa));
     }
 
     @PutMapping("{idEmpresa}/endereco")
@@ -69,7 +76,7 @@ public class EmpresaController {
     }
 
     @PatchMapping("/{idEmpresa}")
-    @PreAuthorize("hasRole('ADMIN')") //criar role system dps
+    @PreAuthorize("hasRole('ADMIN')") //só pra dev (temporario)
     public ResponseEntity<HttpStatus> ativarEmpresa(@PathVariable Long idEmpresa){
         empresaService.ativarEmpresa(idEmpresa);
         return ResponseEntity.ok().build();
