@@ -1,5 +1,6 @@
 package com.barberbross.BarberBross.dto.request;
 
+import com.barberbross.BarberBross.enums.NivelAcesso;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,4 +25,7 @@ public record DTOFuncionarioPerfilRequest(
         String senha,
 
         @NotNull
-        LocalDate nascimento) {}
+        LocalDate nascimento,
+
+        @NotNull
+        NivelAcesso nivelAcesso) {}
