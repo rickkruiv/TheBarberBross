@@ -25,7 +25,7 @@ type Props = {
 };
 
 export default function Scheduling({ service, onClose }: Props) {
-  if (!service) return null;
+  // if (!service) return null;
 
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -44,8 +44,9 @@ export default function Scheduling({ service, onClose }: Props) {
   }
 
   useEffect(() => {
-    if (!selectedProfessional || !selectedDate) return;
-    loadTimes(selectedProfessional.id, selectedDate);
+    if (selectedProfessional && selectedDate) {
+      loadTimes(selectedProfessional.id, selectedDate);
+  }
   }, [selectedProfessional, selectedDate]);
 
   return (
