@@ -4,8 +4,8 @@ import { YStack, XStack, Text } from "tamagui"
 import { ArrowLeft } from "@tamagui/lucide-icons-2"
 import MapViewComponent from "../components/MapViewComponent"
 
-import FilterButton from "../components/FilterButton"
-import SearchBar from "../components/SearchBar"
+import FilterButton from "../components/Search/FilterButton"
+import SearchBar from "../components/Search/SearchBar"
 
 export default function Search() {
   const [selectedFilter, setSelectedFilter] = useState("Name")
