@@ -11,12 +11,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Chip,
   IconButton,
   Tooltip,
-  Select,
-  MenuItem,
-  TablePagination
 } from "@mui/material"
 import Search from "@mui/icons-material/Search"
 import EventAvailable from "@mui/icons-material/EventAvailable"
@@ -25,13 +21,14 @@ import DoneAll from "@mui/icons-material/DoneAll"
 import PendingActions from "@mui/icons-material/PendingActions"
 import CheckCircle from "@mui/icons-material/CheckCircle"
 import Refresh from "@mui/icons-material/Refresh"
-import EditIcon from "@mui/icons-material/EditOutlined"
-import DeleteIcon from "@mui/icons-material/DeleteOutline"
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteIcon from "@mui/icons-material/Delete"
+import VisibilityIcon from "@mui/icons-material/Visibility"
 import { useNavigate } from "react-router-dom"
 import { useAgendamentos, useDeleteAgendamento, useUpdateStatusAgendamento } from "../../services/agendamentos"
 import StatCard from "../../components/StatCard/StatCard"
 import { toastError, toastSuccess } from "../../services/toast"
-import AgendamentoModal from "../../components/AgendamentoModal/ApointmentDetailModal"
+import AgendamentoModal from "../../components/AgendamentoModal/AgendamentoDetailModal"
 import StatusSelect from "../../components/StatusSelect/statusSelect"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import { TableSortLabel } from "@mui/material"
@@ -327,7 +324,7 @@ export default function AgendamentosList() {
                     </TableSortLabel>
                   </TableCell>
                 ))}
-                <TableCell align="right" width={"10%"} sx={{ bgcolor: "background.paper", zIndex: 1 }}>Ações</TableCell>
+                <TableCell align="center" width={"10%"} sx={{ bgcolor: "background.paper", zIndex: 1 }}>Ações</TableCell>
               </TableRow>
             )}
             itemContent={(_index, row) => (
@@ -350,17 +347,27 @@ export default function AgendamentosList() {
                 <TableCell align="right">
                   {formatBRL(row.valorTotal)}
                 </TableCell>
-                <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                  <Tooltip title="Editar">
-                    <IconButton size="small" onClick={() => navigate(`/agenda/${row.agendamentoId}/editar`)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Excluir">
-                    <IconButton size="small" onClick={() => handleDelete(row.agendamentoId)}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
+                <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                  <Box display="flex" justifyContent="center" gap={1}>
+                    <Tooltip title="Visualizar">
+                      <IconButton size="small" onClick={() => {
+                        setAgendamentoSelecionado(row);
+                        setModalOpen(true);
+                      }}>
+                        <VisibilityIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Editar">
+                      <IconButton size="small" onClick={() => navigate(`/agenda/${row.agendamentoId}/editar`)}>
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Excluir">
+                      <IconButton size="small" color="error" onClick={() => handleDelete(row.agendamentoId)}>
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
                 </TableCell>
               </Fragment>
             )}
@@ -371,7 +378,7 @@ export default function AgendamentosList() {
       <AgendamentoModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        agendamentoSelecionado={agendamentoSelecionado}
+        agendamento={agendamentoSelecionado}
         formatBRL={formatBRL}
         formatDate={formatDate}
         formatTime={formatTime}

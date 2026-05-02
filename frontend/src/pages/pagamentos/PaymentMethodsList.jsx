@@ -19,7 +19,8 @@ import {
   TextField,
   Typography,
   MenuItem,
-  InputAdornment
+  InputAdornment,
+  Tooltip
 } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import EditIcon from "@mui/icons-material/Edit"
@@ -325,7 +326,7 @@ const PaymentMethodsList = () => {
                   <TableCell>Método</TableCell>
                   <TableCell>Taxa (%)</TableCell>
                   <TableCell>Status</TableCell>
-                  <TableCell align="right">Ações</TableCell>
+                  <TableCell align="center">Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -367,13 +368,19 @@ const PaymentMethodsList = () => {
                         <Typography>{method.status === ACTIVE_STATUS ? "Ativo" : "Inativo"}</Typography>
                       </Box>
                     </TableCell>
-                    <TableCell align="right">
-                      <IconButton onClick={() => handleOpenEdit(method)}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton onClick={() => handleDelete(method)}>
-                        <DeleteIcon sx={{ color: "error.main" }} />
-                      </IconButton>
+                    <TableCell align="center">
+                      <Box display="flex" justifyContent="center" gap={1}>
+                        <Tooltip title="Editar">
+                          <IconButton size="small" onClick={() => handleOpenEdit(method)}>
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Excluir">
+                          <IconButton size="small" onClick={() => handleDelete(method)} color="error">
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}

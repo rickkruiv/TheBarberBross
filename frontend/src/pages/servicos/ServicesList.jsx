@@ -12,6 +12,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -25,6 +26,7 @@ import { useCategories } from "../../services/categories";
 import { toastError, toastSuccess } from "../../services/toast";
 import DefaultLoading from "../../shared/Loading/DefaultLoading";
 import { TableVirtuoso } from "react-virtuoso"
+import ServiceDetailModal from "../../components/ServiceDetailModal/ServiceDetailModal";
 
 const formatCurrency = (value) => {
   if (value == null) return "-";
@@ -46,6 +48,8 @@ const formatDuration = (minutes) => {
 const ServicesList = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   const { data: services = [], isLoading } = useServices();
   const { data: categoriasData } = useCategories();
@@ -87,8 +91,9 @@ const ServicesList = () => {
     navigate(`/servicos/${servicoId}/editar`);
   };
 
-  const handleView = (servicoId) => {
-    navigate(`/servicos/${servicoId}`);
+  const handleView = (servico) => {
+    setSelectedService(servico);
+    setModalOpen(true);
   };
 
   return (
@@ -160,25 +165,31 @@ const ServicesList = () => {
                     <TableCell>{formatDuration(servico.duracao)}</TableCell>
                     <TableCell align="center">
                       <Box display="flex" justifyContent="center" gap={1}>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleView(servico.servicoId)}
-                        >
-                          <VisibilityIcon fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleEdit(servico.servicoId)}
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(servico.servicoId)}
-                          sx={{ color: "error.main" }}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
+                        <Tooltip title="Visualizar">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleView(servico)}
+                          >
+                            <VisibilityIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Editar">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleEdit(servico.servicoId)}
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Excluir">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleDelete(servico.servicoId)}
+                            color="error"
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                       </Box>
                     </TableCell>
                   </Fragment>
@@ -188,6 +199,13 @@ const ServicesList = () => {
           )}
         </Paper>
       </Box>
+
+      <ServiceDetailModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        service={selectedService}
+        categoryName={selectedService ? getCategoriaNome(selectedService.categoriaId) : ""}
+      />
     </Box>
   );
 };
