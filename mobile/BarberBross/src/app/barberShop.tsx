@@ -11,6 +11,8 @@ import Professionals from "../components/BarberShop/Professionals";
 import Products from "../components/BarberShop/Products";
 import LoyaltyCard from "../components/BarberShop/LoyaltyCard";
 import type { Service } from "../components/BarberShop/Services";
+import { ArrowLeft } from "@tamagui/lucide-icons-2";
+import { router } from "expo-router";
 
 const data = {
   id: "2",
@@ -43,6 +45,20 @@ export default function BarberShop() {
             borderBottomRightRadius={14}
             borderBottomLeftRadius={14}
           />
+
+          <XStack
+            position="absolute"
+            top={0}
+            left={"$4"}
+            right={0}
+            paddingVertical="$4"
+            alignItems="center"
+            gap="$3"
+            onPress={() => router.back()}
+          >
+            <ArrowLeft size={20} color="$text" />
+            <Text fontSize="$5" fontWeight="700" color="$text">Voltar</Text>
+          </XStack>
 
           <YStack
             position="absolute"

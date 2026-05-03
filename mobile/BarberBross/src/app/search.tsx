@@ -6,6 +6,7 @@ import MapViewComponent from "../components/MapViewComponent"
 
 import FilterButton from "../components/Search/FilterButton"
 import SearchBar from "../components/Search/SearchBar"
+import VoltarButton from "../components/VoltarButton"
 
 export default function Search() {
   const [selectedFilter, setSelectedFilter] = useState("Name")
@@ -16,17 +17,8 @@ export default function Search() {
     <YStack flex={1} backgroundColor="$background">
 
       <YStack paddingHorizontal="$4" gap="$3">
-        <XStack
-          paddingVertical="$4"
-          alignItems="center"
-          gap="$3"
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={18} color="$text" />
-          <Text fontSize="$6" fontWeight="700" color="$text">
-            Voltar
-          </Text>
-        </XStack>
+        
+        <VoltarButton />
 
         {!isMapMode && <SearchBar ref={inputRef} autoFocus />}
 
