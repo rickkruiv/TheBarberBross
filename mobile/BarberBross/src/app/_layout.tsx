@@ -23,11 +23,11 @@ function AppContent() {
     const inAuthGroup = segments[0] === "(auth)";
 
     if (!isAuthenticated && !inAuthGroup) {
-      router.replace("/(auth)/login");
+      router.replace("/(auth)/presentation");
     }
 
     if (isAuthenticated && inAuthGroup) {
-      router.replace("/home");
+      router.replace("/(tabs)/home");
     }
   }, [isAuthenticated, loading, segments]);
 
