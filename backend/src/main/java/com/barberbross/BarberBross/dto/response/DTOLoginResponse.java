@@ -5,6 +5,7 @@ import com.barberbross.BarberBross.enums.NivelAcesso;
 public record DTOLoginResponse(
         Long userId,
         Long funcionarioId,
+        Long clienteId,
         Long empresaId,
         String name,
         NivelAcesso nivelAcesso,
