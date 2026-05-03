@@ -39,21 +39,6 @@ const schema = Yup.object({
   hora: Yup.string().required("Selecione o horário")
 })
 
-const initialValues = {
-  servicoIds: [],
-  funcionarioId: "",
-  nomeCliente: "",
-  telefoneCliente: "",
-  emailCliente: "",
-  data: "",
-  hora: "",
-  observacao: "",
-  clienteId: null,
-  empresaId: 7,
-  status: "PENDENTE",
-  valorTotal: 0
-}
-
 const horarios = [
   "09:00",
   "09:30",
@@ -98,6 +83,40 @@ function formatTimeInput(date) {
   const h = String(date.getHours()).padStart(2, "0")
   const m = String(date.getMinutes()).padStart(2, "0")
   return `${h}:${m}`
+}
+
+function getInitialDateTime() {
+  const now = new Date()
+  
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, "0")
+  const d = String(now.getDate()).padStart(2, "0")
+  const data = `${y}-${m}-${d}`
+
+  const currentH = now.getHours()
+  const currentM = now.getMinutes()
+  
+  const timeStr = `${String(currentH).padStart(2, "0")}:${currentM < 30 ? "00" : "30"}`
+  const horaValida = horarios.includes(timeStr) ? timeStr : "09:00"
+
+  return { data, hora: horaValida }
+}
+
+const { data: initialData, hora: initialHora } = getInitialDateTime()
+
+const initialValues = {
+  servicoIds: [],
+  funcionarioId: "",
+  nomeCliente: "",
+  telefoneCliente: "",
+  emailCliente: "",
+  data: initialData,
+  hora: initialHora,
+  observacao: "",
+  clienteId: null,
+  empresaId: 7,
+  status: "PENDENTE",
+  valorTotal: 0
 }
 
 export default function AgendamentoCreate() {
