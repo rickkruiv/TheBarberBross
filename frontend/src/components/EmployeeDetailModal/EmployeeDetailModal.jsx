@@ -11,14 +11,9 @@ import {
   Avatar,
   Divider
 } from "@mui/material"
-import Visibility from "@mui/icons-material/Visibility"
-import VisibilityOff from "@mui/icons-material/VisibilityOff"
 
 export default function EmployeeDetailModal({ open, onClose, employee }) {
-  const [showPassword, setShowPassword] = useState(false)
-
   const handleClose = () => {
-    setShowPassword(false)
     onClose()
   }
 
@@ -81,33 +76,6 @@ export default function EmployeeDetailModal({ open, onClose, employee }) {
               <Typography variant="body1">
                 {employee.telefone || "-"}
               </Typography>
-
-              <Divider sx={{ my: 1.5 }} />
-
-              <Typography variant="caption" color="text.secondary">
-                Senha
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between"
-                }}
-              >
-                <Typography variant="body1">
-                  {showPassword ? employee.senha || "********" : "********"}
-                </Typography>
-                <IconButton
-                  size="small"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <VisibilityOff fontSize="small" />
-                  ) : (
-                    <Visibility fontSize="small" />
-                  )}
-                </IconButton>
-              </Box>
 
               <Divider sx={{ my: 1.5 }} />
 

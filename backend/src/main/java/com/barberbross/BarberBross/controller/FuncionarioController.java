@@ -22,13 +22,13 @@ public class FuncionarioController {
     private FuncionarioService funcionarioService;
 
     @GetMapping("/empresa/{empresaId}")
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR', 'CLIENTE')")
     public ResponseEntity<List<DTOFuncionarioResponse>> listarFuncionariosDaEmpresa(@PathVariable Long empresaId){
         return  ResponseEntity.ok(funcionarioService.listarFuncionario(empresaId));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COLABORADOR', 'CLIENTE')")
     public ResponseEntity<DTOFuncionarioResponse> buscarFuncionarioPorId(@PathVariable Long id){
         return  ResponseEntity.ok(funcionarioService.buscarFuncionarioPorId(id));
     }

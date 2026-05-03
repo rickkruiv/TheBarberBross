@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import {
   Box,
   Button,
@@ -28,6 +28,7 @@ import { useEmployees, exportEmployees, useDeleteEmployee } from "../../services
 import { toastError, toastSuccess } from "../../services/toast"
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
 import EmployeeDetailModal from "../../components/EmployeeDetailModal/EmployeeDetailModal"
+import { useAuth } from "../../contexts/AuthContext"
 
 export default function EmployeesList() {
   const navigate = useNavigate()
@@ -36,10 +37,22 @@ export default function EmployeesList() {
 
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedEmployee, setSelectedEmployee] = useState(null)
+  const { user } = useAuth()
+  const empresaId = user?.empresaId
+  const { data, isLoading, isError } = useEmployees(empresaId)
 
-  const { data, isLoading, isError } = useEmployees({ q: dq })
+  const list = useMemo(() => {
+    const rawList = Array.isArray(data) ? data : data?.data || []
+    if (!dq) return rawList
+    const lower = dq.toLowerCase()
+    return rawList.filter(f => 
+      f.nome?.toLowerCase().includes(lower) ||
+      f.email?.toLowerCase().includes(lower) ||
+      f.cpf?.includes(lower) ||
+      f.cargo?.toLowerCase().includes(lower)
+    )
+  }, [data, dq])
 
-  const list = Array.isArray(data) ? data : data?.data || []
   const total = list.length
   const ativos = total
   const inativos = 0
