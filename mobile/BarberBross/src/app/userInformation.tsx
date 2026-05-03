@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { ArrowLeft, Mail, Phone } from "@tamagui/lucide-icons-2";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import VoltarButton from "../components/VoltarButton";
 
 export default function UserInformation() {
   const { cliente } = useAuth();
@@ -10,15 +11,8 @@ export default function UserInformation() {
 
   return (
     <ScrollView flex={1} background="$background" padding="$4" paddingBottom="$8">
-      <XStack
-        paddingVertical="$4"
-        alignItems="center"
-        gap="$3"
-        onPress={() => router.back()}
-      >
-        <ArrowLeft size={18} color="$text" />
-        <Text fontSize="$6" fontWeight="700" color="$text">Voltar</Text>
-      </XStack>
+
+      <VoltarButton />
 
       <YStack gap={"$4"} alignContent="center" justifyContent="center">
 
