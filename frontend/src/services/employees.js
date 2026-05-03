@@ -21,15 +21,13 @@ function normalizeDate(dateLike) {
 }
 
 export function parseCurrency(val) {
-  if (!val) return 0;
-  if (typeof val === 'number') return val;
   const numStr = val.replace(/[^\d,-]/g, '').replace(',', '.');
   return parseFloat(numStr) || 0;
 }
 
-export async function fetchEmployees(params) {
-  const config = params ? { params } : undefined
-  const { data } = await api.get("/funcionarios", config)
+export async function fetchEmployees(empresaId) {
+  if (!empresaId) return []
+  const { data } = await api.get(`/funcionarios/empresa/${empresaId}`)
   return data
 }
 
@@ -92,10 +90,10 @@ export async function exportEmployees(params) {
   window.URL.revokeObjectURL(url)
 }
 
-export const useEmployees = (params) => {
+export const useEmployees = (empresaId) => {
   return useQuery({
-    queryKey: ["employees", params],
-    queryFn: () => fetchEmployees(params),
+    queryKey: ["employees", empresaId],
+    queryFn: () => fetchEmployees(empresaId),
     staleTime: 30000
   })
 }
@@ -126,6 +124,21 @@ export const useUpdateEmployee = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["employees"] })
       queryClient.invalidateQueries({ queryKey: ["employee", variables.id] })
+    }
+  })
+}
+
+export async function deleteEmployee(id) {
+  const { data } = await api.delete(`/funcionarios/${id}`)
+  return data
+}
+
+export const useDeleteEmployee = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: deleteEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] })
     }
   })
 }

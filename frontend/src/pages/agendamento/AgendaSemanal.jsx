@@ -19,8 +19,9 @@ import { useAgendamentos } from "../../services/agendamentos"
 import { useServices } from "../../services/services"
 import { useEmployees } from "../../services/employees"
 import { toastError } from "../../services/toast"
-import AgendamentoModal from "../../components/AgendamentoModal/ApointmentDetailModal";
+import AgendamentoModal from "../../components/AgendamentoModal/AgendamentoDetailModal";
 import DefaultLoading from "../../shared/Loading/DefaultLoading"
+import { useAuth } from "../../contexts/AuthContext"
 import { Virtuoso } from "react-virtuoso"
 
 const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
@@ -187,11 +188,14 @@ export default function AgendaSemanal() {
     isError: errorServices
   } = useServices()
 
+  const { user } = useAuth()
+  const empresaId = user?.empresaId
+
   const {
     data: employeesData,
     isLoading: loadingEmployees,
     isError: errorEmployees
-  } = useEmployees()
+  } = useEmployees(empresaId)
 
   useEffect(() => {
     if (errorAgenda || errorServices || errorEmployees) {
