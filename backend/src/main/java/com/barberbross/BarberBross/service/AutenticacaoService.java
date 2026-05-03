@@ -59,7 +59,7 @@ public class AutenticacaoService {
             Funcionario f = funcionarioService.buscarFuncionarioPorUserId(u.getUsuarioId());
 
             if (f.getAtivo()) {
-                return new DTOLoginResponse(u.getUsuarioId(), f.getFuncionarioId(), f.getEmpresa().getEmpresaId(), null,
+                return new DTOLoginResponse(u.getUsuarioId(), f.getFuncionarioId(), null, f.getEmpresa().getEmpresaId(),
                         u.getUsername(), u.getNivelAcesso(), token);
             } else {
                 throw new AccessDeniedException("Funcionário está invativo.");
