@@ -2,6 +2,7 @@ import { YStack, XStack, Text, Button, useTheme } from "tamagui"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { Pressable, Linking, ScrollView, Alert } from "react-native"
 import { useAuth } from "../../contexts/AuthContext";
+import { useRouter } from "expo-router";
 
 type MenuItemProps = {
   icon: React.ComponentProps<typeof Ionicons>["name"]
@@ -12,8 +13,10 @@ type MenuItemProps = {
 }
 
 export default function Menu() {
-  const theme      = useTheme();
-  const { logout } = useAuth();
+  const theme       = useTheme();
+  const router      = useRouter();
+  const { logout }  = useAuth();
+  const { cliente } = useAuth();
 
   function handleLogout() {
     Alert.alert(
@@ -90,8 +93,8 @@ export default function Menu() {
             </XStack>
 
             <YStack>
-              <Text fontSize={20} fontWeight="700" color="$text">Thiago Bussola</Text>
-              <Text color="$textSecondary" marginTop={4} >thiago.bussola@unicesumar.com.br</Text>
+              <Text fontSize={20} fontWeight="700" color="$text">{cliente?.nome}</Text>
+              <Text color="$textSecondary" marginTop={4} >{cliente?.email}</Text>
             </YStack>
           </XStack>
 
@@ -102,16 +105,17 @@ export default function Menu() {
             background="$surface"
             overflow="hidden"
             marginBottom="$4" >
-            <MenuItem icon="person-outline"   title="Meu acesso / informações" onPress={() => { }} />
+            <MenuItem icon="person-outline"   title="Meu acesso / informações" onPress={() => router.push("/userInformation") } />
             <MenuItem icon="settings-outline" title="Preferências"             onPress={() => { }} />
-            <MenuItem icon="location-outline" title="Endereço"                 onPress={() => { }} />
+            {/* sem configuracao de endereco disponivel */}
+            {/* <MenuItem icon="location-outline" title="Endereço"                 onPress={() => { }} /> */}
           </YStack>
 
           <YStack borderRadius={16} borderWidth={1} borderColor="$border" background="$surface" overflow="hidden" marginBottom="$4">
             <MenuItem icon="heart-outline"  title="Favoritos"         onPress={() => { }} />
             <MenuItem icon="cube-outline"   title="Pacotes"           onPress={() => { }} />
             <MenuItem icon="time-outline"   title="Histórico"         onPress={() => { }} />
-            <MenuItem icon="wallet-outline" title="Expenses (Gastos)" onPress={() => { }} />
+            <MenuItem icon="wallet-outline" title="Gastos"            onPress={() => { }} />
           </YStack>
 
           <YStack borderRadius={16} borderWidth={1} borderColor="$border" background="$surface" overflow="hidden">

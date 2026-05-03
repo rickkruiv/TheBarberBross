@@ -41,7 +41,12 @@ function AppContent() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background?.val }}>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "transparent" }
+        }}
+      />
     </SafeAreaView>
   );
 }

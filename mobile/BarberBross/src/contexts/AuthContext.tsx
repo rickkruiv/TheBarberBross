@@ -9,14 +9,23 @@ import React, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../services/api";
 import { useRouter } from "expo-router";
+import { buscarClientePorId } from "../services/clienteService";
 
 type LoginRequest = {
   username: string;
   senha: string;
 };
 
+type Cliente = {
+  id: number;
+  nome: string;
+  email: string;
+  telefone?: string;
+};
+
 type AuthContextData = {
   user: User | null;
+  cliente: Cliente | null;
   loading: boolean;
   isAuthenticated: boolean;
   login: (data: LoginRequest) => Promise<any>;
@@ -29,6 +38,7 @@ type User = {
   nivelAcesso: string;
   empresaId: string | null;
   funcionarioId: string | null;
+  clienteId: string | null;
 };
 
 const AuthContext = createContext<AuthContextData>(
@@ -40,9 +50,10 @@ type Props = {
 };
 
 export function AuthProvider({ children }: Props) {
-  const router = useRouter(); 
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [cliente, setCliente] = useState<Cliente | null>(null);
 
   const logout = useCallback(async () => {
     await AsyncStorage.multiRemove([
@@ -52,13 +63,26 @@ export function AuthProvider({ children }: Props) {
       "@app:nivelAcesso",
       "@app:empresaId",
       "@app:funcionarioId",
+      "@app:clienteId",
     ])
 
     delete api.defaults.headers.common.Authorization;
-    
+
     setUser(null);
-    
+    setCliente(null);
+
     router.replace("/(auth)/login");
+  }, []);
+
+  const carregarCliente = useCallback(async (clienteId?: string | null) => {
+    if (!clienteId) return;
+
+    try {
+      const data = await buscarClientePorId(clienteId);
+      setCliente(data);
+    } catch (error) {
+      console.log("Erro ao buscar cliente:", error);
+    }
   }, []);
 
   const login = useCallback(async ({ username, senha }: { username: string; senha: string }) => {
@@ -67,7 +91,7 @@ export function AuthProvider({ children }: Props) {
       senha
     });
 
-    const { token, name, userId, nivelAcesso, empresaId, funcionarioId } = response.data;
+    const { token, name, userId, nivelAcesso, empresaId, funcionarioId, clienteId } = response.data;
 
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
@@ -78,6 +102,7 @@ export function AuthProvider({ children }: Props) {
       ["@app:nivelAcesso", String(nivelAcesso)],
       ["@app:empresaId", empresaId ? String(empresaId) : ""],
       ["@app:funcionarioId", funcionarioId ? String(funcionarioId) : ""],
+      ["@app:clienteId", clienteId ? String(clienteId) : ""],
     ]);
 
     const userData: User = {
@@ -85,80 +110,97 @@ export function AuthProvider({ children }: Props) {
       userId,
       nivelAcesso,
       empresaId,
-      funcionarioId
+      funcionarioId,
+      clienteId,
     };
 
     setUser(userData);
+    
+    if (clienteId) {
+      await carregarCliente(String(clienteId));
+    }
 
     return {
-      token,
-      name,
-      userId,
-      nivelAcesso,
-      empresaId,
-      funcionarioId
-    };
-  }, []);
-
-  useEffect(() => {
-  async function loadUserFromStorage() {
-    const [
       token,
       name,
       userId,
       nivelAcesso,
       empresaId,
       funcionarioId,
-    ] = await AsyncStorage.multiGet([
-      "@app:token",
-      "@app:name",
-      "@app:userId",
-      "@app:nivelAcesso",
-      "@app:empresaId",
-      "@app:funcionarioId",
-    ]);
-
-    const storageData = {
-      token: token[1],
-      name: name[1],
-      userId: userId[1],
-      nivelAcesso: nivelAcesso[1],
-      empresaId: empresaId[1],
-      funcionarioId: funcionarioId[1],
+      clienteId,
     };
+  }, []);
 
-    if (
-      storageData.token &&
-      storageData.name &&
-      storageData.userId &&
-      storageData.nivelAcesso
-    ) {
-      api.defaults.headers.common.Authorization = `Bearer ${storageData.token}`;
+  useEffect(() => {
+    async function loadUserFromStorage() {
+      const [
+        token,
+        name,
+        userId,
+        nivelAcesso,
+        empresaId,
+        funcionarioId,
+        clienteId,
+      ] = await AsyncStorage.multiGet([
+        "@app:token",
+        "@app:name",
+        "@app:userId",
+        "@app:nivelAcesso",
+        "@app:empresaId",
+        "@app:funcionarioId",
+        "@app:clienteId",
+      ]);
 
-      setUser({
-        name: storageData.name,
-        userId: storageData.userId,
-        nivelAcesso: storageData.nivelAcesso,
-        empresaId: storageData.empresaId,
-        funcionarioId: storageData.funcionarioId,
-      });
+      const storageData = {
+        token: token[1],
+        name: name[1],
+        userId: userId[1],
+        nivelAcesso: nivelAcesso[1],
+        empresaId: empresaId[1],
+        funcionarioId: funcionarioId[1],
+        clienteId: clienteId[1],
+      };
+
+      if (
+        storageData.token &&
+        storageData.name &&
+        storageData.userId &&
+        storageData.nivelAcesso
+      ) {
+        api.defaults.headers.common.Authorization = `Bearer ${storageData.token}`;
+
+        const userData = {
+          name: storageData.name,
+          userId: storageData.userId,
+          nivelAcesso: storageData.nivelAcesso,
+          empresaId: storageData.empresaId,
+          funcionarioId: storageData.funcionarioId,
+          clienteId: storageData.clienteId,
+        };
+
+        setUser(userData);
+
+        if (storageData.clienteId) {
+          await carregarCliente(storageData.clienteId);
+        }
+      }
+
+      setLoading(false);
     }
 
-    setLoading(false);
-  }
-
-  loadUserFromStorage();
-}, []);
+    loadUserFromStorage();
+  }, []);
 
   const value = useMemo(() => {
     return {
       user,
+      cliente,
       loading,
       isAuthenticated: !!user,
       login,
       logout
     };
-  }, [user, loading, login, logout]);
+  }, [user, cliente, loading, login, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
