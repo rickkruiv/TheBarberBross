@@ -2,11 +2,11 @@ import { router } from "expo-router"
 import { useState, useRef } from "react"
 import { YStack, XStack, Text } from "tamagui"
 import { ArrowLeft } from "@tamagui/lucide-icons-2"
-import MapViewComponent from "../components/MapViewComponent"
+import MapViewComponent from "../../components/MapViewComponent"
 
-import FilterButton from "../components/Search/FilterButton"
-import SearchBar from "../components/Search/SearchBar"
-import VoltarButton from "../components/VoltarButton"
+import FilterButton from "../../components/Search/FilterButton"
+import SearchBar from "../../components/Search/SearchBar"
+import VoltarButton from "../../components/VoltarButton"
 
 export default function Search() {
   const [selectedFilter, setSelectedFilter] = useState("Name")

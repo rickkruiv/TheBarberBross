@@ -1,9 +1,9 @@
 import { Card, ScrollView, Separator, Text, XStack, YStack, useTheme } from "tamagui";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { ArrowLeft, Mail, Phone } from "@tamagui/lucide-icons-2";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import VoltarButton from "../components/VoltarButton";
+import VoltarButton from "../../components/VoltarButton";
 
 export default function UserInformation() {
   const { cliente } = useAuth();

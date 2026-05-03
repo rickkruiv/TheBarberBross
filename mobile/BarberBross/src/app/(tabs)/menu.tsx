@@ -132,7 +132,7 @@ export default function Menu() {
             <MenuItem icon="log-out-outline" title="Sair da conta" onPress={handleLogout} isDestructive />
           </YStack>
 
-          <Text color="$textMuted" textAlign="center" marginTop="$8" marginBottom="$4">Versão do aplicativo 1.0.0 © BrossSoft Sistemas</Text>
+          <Text color="$textMuted" textAlign="center" marginTop="$8" marginBottom="$4">Versão do aplicativo 1.0.0 © 2026 BrossSoft Sistemas. Todos os direitos reservados.</Text>
 
         </YStack>
       </ScrollView>
