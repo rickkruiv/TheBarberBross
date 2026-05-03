@@ -8,6 +8,7 @@ import com.barberbross.BarberBross.dto.request.DTOUsuarioRequest;
 import com.barberbross.BarberBross.dto.response.*;
 import com.barberbross.BarberBross.enums.NivelAcesso;
 import com.barberbross.BarberBross.exceptions.AccessDeniedException;
+import com.barberbross.BarberBross.model.Cliente;
 import com.barberbross.BarberBross.model.Funcionario;
 import com.barberbross.BarberBross.model.Usuario;
 import com.barberbross.BarberBross.repository.UsuarioRepository;
@@ -51,21 +52,21 @@ public class AutenticacaoService {
 
         if (u.getNivelAcesso().equals(NivelAcesso.COLABORADOR) || u.getNivelAcesso().equals(NivelAcesso.ADMIN)){
             if (u.getFuncionario() == null){
-                return new DTOLoginResponse(u.getUsuarioId(), null, null,
+                return new DTOLoginResponse(u.getUsuarioId(), null, null, null,
                         u.getUsername(), u.getNivelAcesso(), token);
             }
 
             Funcionario f = funcionarioService.buscarFuncionarioPorUserId(u.getUsuarioId());
 
             if (f.getAtivo()) {
-                return new DTOLoginResponse(u.getUsuarioId(), f.getFuncionarioId(), f.getEmpresa().getEmpresaId(),
+                return new DTOLoginResponse(u.getUsuarioId(), f.getFuncionarioId(), f.getEmpresa().getEmpresaId(), null,
                         u.getUsername(), u.getNivelAcesso(), token);
             } else {
                 throw new AccessDeniedException("Funcionário está invativo.");
             }
         }
 
-        return new DTOLoginResponse(u.getUsuarioId(), null, null,
+        return new DTOLoginResponse(u.getUsuarioId(), null, u.getCliente().getClienteId(), null,
                 u.getUsername(), u.getNivelAcesso(), token);
     }
 

@@ -6,9 +6,11 @@ import { getFormattedToday } from '../../utils/format';
 import HomeSection from '../../components/Home/HomeSection';
 import LatestVisitCard from '../../components/Home/LatestVisitCard'
 import DiscoverCard from '../../components/Home/DiscoverCard';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Home() {
   const dateFormated = getFormattedToday();
+  const { cliente } = useAuth();
 
   return (
     <ScrollView
@@ -21,7 +23,7 @@ export default function Home() {
     >
 
       <YStack paddingTop={50}>
-        <Text fontSize={'$9'} fontWeight={'bold'} color="$text">Hey, {'Thiago'}! </Text>
+        <Text fontSize={'$9'} fontWeight={'bold'} color="$text">Hey, {cliente?.nome}! </Text>
         <Text color="$textSecundary">{dateFormated}</Text>
       </YStack>
 
