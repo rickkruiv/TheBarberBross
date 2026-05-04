@@ -2,8 +2,10 @@ import React from "react"
 import { Outlet } from "react-router-dom"
 import { Box, Container } from "@mui/material"
 import Topbar from "../modules/Topbar"
+import { useRouteTracker } from "../hooks/useRecentRoutes"
 
 export default function DashboardLayout() {
+  useRouteTracker()
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default", position: "relative" }}>
       <Topbar />

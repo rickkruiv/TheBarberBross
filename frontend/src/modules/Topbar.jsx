@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, IconButton, Menu, MenuItem, Tooltip, Zoom } from "@mui/material";
 
+import HomeIcon from "@mui/icons-material/Home";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import PeopleIcon from "@mui/icons-material/People";
@@ -15,7 +16,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { useThemeContext } from "../contexts/ThemeContext";
 
 const NAVBAR_ITEMS = [
-  { path: "/", id: "dashboard", label: "Dashboard", icon: <DashboardIcon /> },
+  { path: "/", id: "home", label: "Início", icon: <HomeIcon /> },
+  { path: "/dashboard", id: "dashboard", label: "Dashboard", icon: <DashboardIcon /> },
   {
     path: "/agenda", id: "agenda", label: "Agenda", icon: <EventAvailableIcon />,
     subCategories: [
@@ -99,8 +101,8 @@ export default function Topbar() {
   };
 
   const activeCategoryId = () => {
-    if (location.pathname === "/") return "dashboard";
-    const match = NAVBAR_ITEMS.find(item => item.path !== "/" && location.pathname.startsWith(item.path));
+    if (location.pathname === "/") return "home";
+    const match = NAVBAR_ITEMS.find(item => item.path !== "/" && (item.path === location.pathname || (item.path !== "/" && location.pathname.startsWith(item.path))));
     return match ? match.id : null;
   };
 
