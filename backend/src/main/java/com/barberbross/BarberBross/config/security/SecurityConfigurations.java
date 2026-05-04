@@ -34,7 +34,6 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/teste-websocket").permitAll()
 
                         // rotas públicas
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/registrar/cliente", "/auth/registrar/barbeiro").permitAll()

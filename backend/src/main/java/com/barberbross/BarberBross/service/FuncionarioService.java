@@ -47,10 +47,12 @@ public class FuncionarioService {
     public DTOFuncionarioResponse salvarFuncionario(DTOFuncionarioRequest dto){
         validator.validar(dto);
 
-        String senhaEncriptografada = new BCryptPasswordEncoder().encode(dto.senha());
-        Usuario u = new Usuario(dto, senhaEncriptografada);
         Empresa e = empresaRepository.findById(dto.empresaId())
                 .orElseThrow(() -> new NotFoundException("Nenhuma empresa encontrada"));
+
+        String senhaEncriptografada = new BCryptPasswordEncoder().encode(dto.senha());
+        Usuario u = new Usuario(dto, senhaEncriptografada, e);
+        u.setAuthorities(u.getAuthorities());
 
         usuarioRepository.save(u);
 
@@ -94,7 +96,7 @@ public class FuncionarioService {
 
     @Transactional
     public DTOFuncionarioResponse editarPerfilFuncionario(Long id, DTOFuncionarioPerfilRequest dto){
-        if(authUser.isColaborador() && authUser.get().getFuncionarioId().equals(id)){
+        if(authUser.isColaborador() && authUser.get().getFuncionario().getFuncionarioId().equals(id)){
             Funcionario funcionarioAtual = buscarFuncionario(id);
 
             if (!funcionarioAtual.getCpf().equals(dto.cpf())){
@@ -124,7 +126,7 @@ public class FuncionarioService {
     }
 
     public void deletarFuncionario(Long id){
-        if (authUser.isAdmin() && authValidation.funcionarioPertenceEmpresa(id, authUser.get().getEmpresaId())){
+        if (authUser.isAdmin() && authValidation.funcionarioPertenceEmpresa(id, authUser.get().getEmpresa().getEmpresaId())){
             Funcionario f = buscarFuncionario(id);
             f.setAtivo(false);
             funcionarioRepository.save(f);
@@ -140,8 +142,7 @@ public class FuncionarioService {
 
     protected Funcionario buscarFuncionarioPorEmpresa(Long funcionarioId, Long empresaId){
        return funcionarioRepository.findFuncionarioPorEmpresa(funcionarioId, empresaId)
-               .orElseThrow(() -> new NotFoundException("Nenhum Funcionário com id: " + funcionarioId +
-                       " foi encontrado na Empresa: " + empresaId)); //melhorar essa msg
+               .orElseThrow(() -> new NotFoundException("Este Funcionário não foi encontrado na Empresa."));
     }
 
     protected Funcionario buscarFuncionarioPorUserId(Long userId){

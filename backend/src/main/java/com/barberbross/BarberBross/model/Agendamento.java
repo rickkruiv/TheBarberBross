@@ -51,7 +51,7 @@ public class Agendamento {
     @OneToOne(mappedBy = "agendamento", cascade = CascadeType.ALL)
     private Avaliacao avaliacao;
 
-    @OneToMany(mappedBy = "agendamento")
+    @OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL)
     private List<Pagamento> pagamentos;
 
     public Agendamento() {}
@@ -91,6 +91,8 @@ public class Agendamento {
     public Integer getDuracaoTotal() { return duracaoTotal; }
 
     public Avaliacao getAvaliacao() { return avaliacao; }
+
+    public void setAvaliacao(Avaliacao avaliacao) { this.avaliacao = avaliacao; }
 
     public void adicionarServico(Servico s){
         AgendamentoServico as = new AgendamentoServico(this, s);

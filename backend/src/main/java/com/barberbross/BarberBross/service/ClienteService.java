@@ -14,7 +14,6 @@ import com.barberbross.BarberBross.repository.ClienteRepository;
 import com.barberbross.BarberBross.repository.UsuarioRepository;
 import com.barberbross.BarberBross.validation.implementations.AuthorizationValidator;
 import com.barberbross.BarberBross.validation.implementations.ClienteCamposUnicosValidator;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,6 +46,7 @@ public class ClienteService {
 
         String senhaEncriptada = new BCryptPasswordEncoder().encode(dto.senha());
         Usuario u = new Usuario(dto, senhaEncriptada);
+        u.setAuthorities(u.getAuthorities());
         usuarioRepository.save(u);
 
         Cliente c = new Cliente(dto, u);
@@ -92,7 +92,7 @@ public class ClienteService {
         Cliente c = buscarClientePorId(id);
         c.atualizarDados(clienteEditado);
 
-        Usuario u = usuarioRepository.findById(authUser.get().getUserId())
+        Usuario u = usuarioRepository.findById(authUser.get().getUsuarioId())
                         .orElseThrow(() -> new NotFoundException("Nenhum Usuário encontrado"));
         DTOUsuarioRequest usuarioEditado = new DTOUsuarioRequest(clienteEditado.email(), clienteEditado.senha(), NivelAcesso.CLIENTE);
         String senhaHash = new BCryptPasswordEncoder().encode(usuarioEditado.senha());
@@ -113,8 +113,8 @@ public class ClienteService {
         Usuario u = usuarioRepository.findById(c.getUsuario().getUsuarioId())
                 .orElseThrow(() -> new NotFoundException("Nenhum Usuário encontrado."));
 
-        clienteRepository.delete(c);
-        usuarioRepository.delete(u);
+        c.setAtivo(false);
+        u.setAtivo(false);
     }
 
     protected Cliente buscarClientePorId(Long id) {
@@ -131,6 +131,5 @@ public class ClienteService {
         return clienteRepository.findByUsuarioUsuarioId(userId).
                 orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado com userId: " + userId));
     }
-
 
 }

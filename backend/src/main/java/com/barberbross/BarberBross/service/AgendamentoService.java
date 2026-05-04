@@ -23,36 +23,28 @@ import java.util.List;
 public class AgendamentoService {
 
     @Autowired
+    AgendamentoNotificationService agendamentoNotificationService;
+    @Autowired
     private AuthenticatedUserService authUser;
-
     @Autowired
     private AgendamentoRepository agendamentoRepository;
-
     @Autowired
     private FuncionarioService funcionarioService;
-
     @Autowired
     private ClienteService clienteService;
-
     @Autowired
     private EmpresaService empresaService;
-
     @Autowired
     private ServicoService servicoService;
-
     @Autowired
     private AgendamentoConflitoHorariosValidator agendamentoValidation;
-
     @Autowired
     private AuthorizationValidator authValidation;
 
-    @Autowired
-    AgendamentoNotificationService agendamentoNotificationService;
-
-    public DTOAgendamentoResponse salvar(DTOAgendamentoRequest dto)  {
+    public DTOAgendamentoResponse salvar(DTOAgendamentoRequest dto) {
         agendamentoValidation.validar(dto);
 
-        CustomUserPrincipal user = authUser.get();
+        Usuario user = authUser.get();
 
         Agendamento agendamento = authUser.isColaborador()
                 ? criarAgendamentoColaborador(dto, user)
@@ -64,19 +56,19 @@ public class AgendamentoService {
         return response;
     }
 
-    private Agendamento criarAgendamentoColaborador(DTOAgendamentoRequest dto, CustomUserPrincipal user){
+    private Agendamento criarAgendamentoColaborador(DTOAgendamentoRequest dto, Usuario user) {
         authValidation.validarAcessoEmpresa(user, dto.empresaId());
 
         Cliente cliente = clienteService.buscarClientePorId(dto.clienteId()); //pensar depois como vai ser se for cliente walk-in
-        Empresa empresa = empresaService.buscarEmpresa(user.getEmpresaId());
+        Empresa empresa = empresaService.buscarEmpresa(user.getEmpresa().getEmpresaId());
         Funcionario funcionario = funcionarioService.buscarFuncionarioPorEmpresa(dto.funcionarioId(),
-                user.getEmpresaId());
+                user.getEmpresa().getEmpresaId());
 
         return salvarAgendamento(dto, cliente, empresa, funcionario);
     }
 
-    private Agendamento criarAgendamentoCliente(DTOAgendamentoRequest dto){
-        if (authValidation.funcionarioPertenceEmpresa(dto.funcionarioId(), dto.empresaId())){
+    private Agendamento criarAgendamentoCliente(DTOAgendamentoRequest dto) {
+        if (authValidation.funcionarioPertenceEmpresa(dto.funcionarioId(), dto.empresaId())) {
             Cliente cliente = clienteService.buscarClientePorId(dto.clienteId());
             Empresa empresa = empresaService.buscarEmpresa(dto.empresaId());
             Funcionario funcionario = funcionarioService.buscarFuncionario(dto.funcionarioId());
@@ -87,12 +79,14 @@ public class AgendamentoService {
     }
 
     private Agendamento salvarAgendamento(DTOAgendamentoRequest dto, Cliente cliente,
-                                          Empresa empresa, Funcionario funcionario){
+                                          Empresa empresa, Funcionario funcionario) {
 
         Agendamento novo = new Agendamento(dto, cliente, empresa, funcionario);
 
         List<Servico> servicos = servicoService.buscarListaDeServicos(dto);
-        for (Servico s : servicos){ novo.adicionarServico(s); }
+        for (Servico s : servicos) {
+            novo.adicionarServico(s);
+        }
 
         return agendamentoRepository.save(novo);
     }
@@ -109,11 +103,11 @@ public class AgendamentoService {
     }
 
     public List<DTOAgendamentoResponse> listarAgendamentosEmpresaPorDia(LocalDate data) {
-        if (authUser.isAdmin()){
-            CustomUserPrincipal user = authUser.get();
+        if (authUser.isAdmin()) {
+            Usuario user = authUser.get();
 
             return agendamentoRepository
-                    .listarAgendamentosEmpresaPorData(user.getEmpresaId(), data.atStartOfDay(), data.atTime(LocalTime.MAX))
+                    .listarAgendamentosEmpresaPorData(user.getEmpresa().getEmpresaId(), data.atStartOfDay(), data.atTime(LocalTime.MAX))
                     .stream()
                     .map(DTOAgendamentoResponse::new)
                     .toList();
@@ -124,21 +118,22 @@ public class AgendamentoService {
     }
 
     public List<DTOAgendamentoResponse> listarAgendamentosBarbeiroPorDia(Long funcionarioId, LocalDate data) {
-        if (authUser.isColaborador() && (!authValidation.funcionarioPertenceEmpresa(funcionarioId, authUser.get().getEmpresaId()))){
-           throw new AccessDeniedException("Acesso negado: colaborador não pertence à empresa do usuário autenticado.");
+        if (authUser.isColaborador() && (!authValidation.funcionarioPertenceEmpresa(funcionarioId, authUser.get().getEmpresa().getEmpresaId()))) {
+            throw new AccessDeniedException("Acesso negado: colaborador não pertence à empresa do usuário autenticado.");
         }
 
         return agendamentoRepository.listarAgendamentosBarbeiroPorData(funcionarioId,
                         data.atStartOfDay(), data.atTime(LocalTime.MAX))
-                        .stream()
-                        .map(DTOAgendamentoResponse::new)
-                        .toList();
+                .stream()
+                .map(DTOAgendamentoResponse::new)
+                .toList();
 
     }
 
     public List<DTOAgendamentoResponse> listarAgendamentosEmpresaPorPeriodo(LocalDate inicio, LocalDate fim) {
-        if (authUser.isAdmin()){
-            return agendamentoRepository.listarAgendamentosEmpresaPorData(authUser.get().getEmpresaId(), inicio.atStartOfDay(), fim.atTime(LocalTime.MAX))
+        if (authUser.isAdmin()) {
+            return agendamentoRepository.listarAgendamentosEmpresaPorData(authUser.get().getEmpresa().getEmpresaId(),
+                            inicio.atStartOfDay(), fim.atTime(LocalTime.MAX))
                     .stream()
                     .map(DTOAgendamentoResponse::new)
                     .toList();
@@ -148,7 +143,7 @@ public class AgendamentoService {
     }
 
     public List<DTOAgendamentoResponse> listarAgendamentosBarbeiroPorPeriodo(Long funcionarioId, LocalDate inicio, LocalDate fim) {
-        if (authUser.isColaborador() && (!authValidation.funcionarioPertenceEmpresa(funcionarioId, authUser.get().getEmpresaId()))) {
+        if (authUser.isColaborador() && (!authValidation.funcionarioPertenceEmpresa(funcionarioId, authUser.get().getEmpresa().getEmpresaId()))) {
             throw new AccessDeniedException("Acesso negado: colaborador não pertence à empresa do usuário autenticado.");
         }
 
@@ -167,12 +162,14 @@ public class AgendamentoService {
         else
             authValidation.validarClienteNoAgendamento(authUser.get(), agendamentoAtual.getCliente().getClienteId());
 
-        if (agendamentoAtual.getStatus() == Status.PENDENTE || agendamentoAtual.getStatus() == Status.EM_ANDAMENTO){
+        if (agendamentoAtual.getStatus() == Status.PENDENTE || agendamentoAtual.getStatus() == Status.EM_ANDAMENTO) {
             agendamentoAtual.limparServicos();
             agendamentoRepository.flush();
 
             List<Servico> servicos = servicoService.buscarListaDeServicos(dto);
-            for (Servico s : servicos){ agendamentoAtual.adicionarServico(s); }
+            for (Servico s : servicos) {
+                agendamentoAtual.adicionarServico(s);
+            }
 
             agendamentoRepository.save(agendamentoAtual);
 
@@ -189,11 +186,11 @@ public class AgendamentoService {
     public DTOAgendamentoResponse atualizarStatus(Long agendamentoId, Status status) {
         Agendamento existente = buscarAgendamento(agendamentoId);
 
-        if (authValidation.funcionarioPertenceEmpresa(existente.getFuncionario().getFuncionarioId(), authUser.get().getEmpresaId())){
+        if (authValidation.funcionarioPertenceEmpresa(existente.getFuncionario().getFuncionarioId(), authUser.get().getEmpresa().getEmpresaId())) {
             if (authUser.isColaborador() && !authUser.isAdmin())
                 authValidation.validarFuncionarioNoAgendamento(authUser.get(), existente.getFuncionario().getFuncionarioId());
 
-            if (existente.getStatus() == Status.PENDENTE || existente.getStatus() == Status.EM_ANDAMENTO){
+            if (existente.getStatus() == Status.PENDENTE || existente.getStatus() == Status.EM_ANDAMENTO) {
                 existente.setStatus(status);
                 agendamentoRepository.save(existente);
 
@@ -214,18 +211,22 @@ public class AgendamentoService {
     public void deletarAgendamento(Long agendamentoId) {
         Agendamento agendamentoEncontrado = buscarAgendamento(agendamentoId);
 
-        if (authUser.isColaborador() && !authUser.isAdmin()){
-            authValidation.validarAcessoEmpresa(authUser.get(), agendamentoEncontrado.getEmpresa().getEmpresaId());
-            authValidation.validarFuncionarioNoAgendamento(authUser.get(), agendamentoEncontrado.getFuncionario().getFuncionarioId());
-        }  else if (!authUser.isColaborador()) {
-            authValidation.validarClienteNoAgendamento(authUser.get(), agendamentoEncontrado.getCliente().getClienteId());
-        }
+        if (agendamentoEncontrado.getStatus() != Status.CONCLUIDO) {
+            if (authUser.isColaborador() && !authUser.isAdmin()) {
+                authValidation.validarAcessoEmpresa(authUser.get(), agendamentoEncontrado.getEmpresa().getEmpresaId());
+                authValidation.validarFuncionarioNoAgendamento(authUser.get(), agendamentoEncontrado.getFuncionario().getFuncionarioId());
+            } else if (!authUser.isColaborador()) {
+                authValidation.validarClienteNoAgendamento(authUser.get(), agendamentoEncontrado.getCliente().getClienteId());
+            }
 
-        agendamentoNotificationService.notificarAgendamentoDeletado(agendamentoEncontrado);
-        agendamentoRepository.delete(agendamentoEncontrado);
+            agendamentoNotificationService.notificarAgendamentoDeletado(agendamentoEncontrado);
+            agendamentoRepository.delete(agendamentoEncontrado);
+        } else {
+            throw new BadRequestException("Não é possível deletar um agendamento que está " + agendamentoEncontrado.getStatus());
+        }
     }
 
-    protected Agendamento buscarAgendamento(Long id){
+    protected Agendamento buscarAgendamento(Long id) {
         return agendamentoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nenhum agendamento encontrado com id: " + id));
     }

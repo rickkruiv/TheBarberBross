@@ -25,8 +25,8 @@ public class AuthorizationValidator {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
-    public void validarAcessoEmpresa(CustomUserPrincipal user, Long empresaId){
-        if (!user.getEmpresaId().equals(empresaId)){
+    public void validarAcessoEmpresa(Usuario user, Long empresaId){
+        if (!user.getEmpresa().getEmpresaId().equals(empresaId)){
             throw new AccessDeniedException("Acesso negado: você não tem permissão para acessar recursos desta empresa.");
         }
     }
@@ -40,25 +40,25 @@ public class AuthorizationValidator {
         return e.getFuncionarios().contains(f);
     }
 
-    public void validarClienteNoAgendamento(CustomUserPrincipal user, Long clienteId){
-        Cliente c = clienteRepository.findByUsuarioUsuarioId(user.getUserId()).
-                orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado com userId: " + user.getUserId()));
+    public void validarClienteNoAgendamento(Usuario user, Long clienteId){
+        Cliente c = clienteRepository.findByUsuarioUsuarioId(user.getUsuarioId()).
+                orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado."));
         if(!c.getClienteId().equals(clienteId)){
             throw new AccessDeniedException("Acesso negado: usuário não possui permissão para acessar este agendamento.");
         }
     }
 
-    public void validarFuncionarioNoAgendamento(CustomUserPrincipal user, Long funcionarioId){
-        Funcionario f = funcionarioRepository.findById(user.getFuncionarioId())
+    public void validarFuncionarioNoAgendamento(Usuario user, Long funcionarioId){
+        Funcionario f = funcionarioRepository.findById(user.getFuncionario().getFuncionarioId())
                 .orElseThrow(() -> new NotFoundException("Nenhum funcionário encontrado."));
         if(!f.getFuncionarioId().equals(funcionarioId)){
             throw new AccessDeniedException("Acesso negado: funcionário não possui permissão para acessar este agendamento.");
         }
     }
 
-    public void validarClienteNaAvaliacao(CustomUserPrincipal user, Long avaliacaoId){
-        Cliente c = clienteRepository.findByUsuarioUsuarioId(user.getUserId()).
-                orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado com userId: " + user.getUserId()));
+    public void validarClienteNaAvaliacao(Usuario user, Long avaliacaoId){
+        Cliente c = clienteRepository.findByUsuarioUsuarioId(user.getUsuarioId()).
+                orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado."));
         Avaliacao a = avaliacaoRepository.findById(avaliacaoId)
                 .orElseThrow(() -> new NotFoundException("Nenhuma Avaliação encontrada"));
         if(!a.getCliente().getClienteId().equals(c.getClienteId())){
@@ -66,18 +66,18 @@ public class AuthorizationValidator {
         }
     }
 
-    public void validarCategoriaEmpresa(CustomUserPrincipal user, Long categoriaId){
+    public void validarCategoriaEmpresa(Usuario user, Long categoriaId){
         Categoria c = categoriaRepository.findById(categoriaId)
                 .orElseThrow(() -> new NotFoundException("Nenhuma Categoria encontrada"));
-        if (!c.getEmpresa().getEmpresaId().equals(user.getEmpresaId())){
+        if (!c.getEmpresa().getEmpresaId().equals(user.getEmpresa().getEmpresaId())){
             throw new AccessDeniedException("Acesso negado: usuário não possui permissão para alterar esta categoria.");
         }
     }
 
-    public void validarClienteUsuario(CustomUserPrincipal user, Long clienteId){
+    public void validarClienteUsuario(Usuario user, Long clienteId){
         Cliente c = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new NotFoundException("Nenhum Cliente encontrado"));
-        if (!c.getUsuario().getUsuarioId().equals(user.getUserId())){
+        if (!c.getUsuario().getUsuarioId().equals(user.getUsuarioId())){
             throw new AccessDeniedException("Acesso negado: usuário não possui permissão para visualizar dados deste cliente.");
         }
     }

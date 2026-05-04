@@ -33,6 +33,8 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Avaliacao> avaliacoes;
 
+    private boolean ativo;
+
     public Cliente() {}
 
     public Cliente(DTOClienteRequest c, Usuario u) {
@@ -55,6 +57,9 @@ public class Cliente {
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public boolean isAtivo() { return ativo; }
+    public void setAtivo(boolean ativo) { this.ativo = ativo; }
 
     public void atualizarDados(DTOClienteRequest dto) {
         this.email = dto.email();

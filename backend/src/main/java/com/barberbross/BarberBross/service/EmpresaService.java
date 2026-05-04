@@ -29,9 +29,6 @@ public class EmpresaService {
     private EnderecoService enderecoService;
 
     @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
     private EmpresaCamposUnicosValidator validator;
 
     @Autowired
@@ -42,8 +39,7 @@ public class EmpresaService {
 
     @Transactional
     public DTOEmpresaResponse salvarEmpresa(DTOEmpresaRequest dto) {
-        if(authUser.isAdmin() && authUser.get().getEmpresaId() == null) {
-            System.out.println("entrou no método");
+        if(authUser.isAdmin() && authUser.get().getEmpresa() == null) {
             validator.validar(dto);
 
             Empresa emp = new Empresa(dto);
@@ -59,7 +55,8 @@ public class EmpresaService {
     }
 
     private void vincularDonoEmpresa(Empresa emp){
-        Usuario user = usuarioService.buscarUsuario(authUser.get().getUserId());
+        Usuario user = authUser.get();
+        user.setEmpresa(emp);
         Funcionario f = new Funcionario(emp, user);
         emp.getFuncionarios().add(f);
     }

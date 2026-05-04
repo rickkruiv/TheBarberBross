@@ -36,9 +36,17 @@ public class Usuario implements UserDetails {
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private Funcionario funcionario;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
+
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private Cliente cliente;
 
+    @Column
+    private boolean ativo;
+
+    private Collection<? extends GrantedAuthority> authorities;
 
     public Usuario(DTOUsuarioRequest dto, String senha) {
         this.username = dto.username();
@@ -58,16 +66,41 @@ public class Usuario implements UserDetails {
         this.nivelAcesso = dto.nivelAcesso();
     }
 
-    public Usuario() {
+    public Usuario(DTOFuncionarioRequest dto, String senha, Empresa e) {
+        this.username = dto.email();
+        this.senha = senha;
+        this.nivelAcesso = dto.nivelAcesso();
+        this.empresa = e;
+    }
+
+    public Usuario(Usuario u) {
+        this.usuarioId = u.getUsuarioId();
+        this.username = u.getUsername();
+        this.senha = u.getPassword();
+        this.nivelAcesso = u.getNivelAcesso();
+        this.fornecedor = u.getFornecedor();
+        this.funcionario = u.getFuncionario();
+        this.empresa = u.getEmpresa();
+        this.cliente = u.getCliente();
+        this.authorities = u.getAuthorities();
+    }
+
+    public Usuario() {}
+
+    public Usuario(Long usuarioId, Funcionario funcionario, Empresa empresa, Collection<? extends GrantedAuthority> authorities,
+                   NivelAcesso nivelAcesso) {
+        this.usuarioId = usuarioId;
+        this.funcionario = funcionario;
+        this.empresa = empresa;
+        this.authorities = authorities;
+        this.nivelAcesso = nivelAcesso;
     }
 
     public Long getUsuarioId() {
         return usuarioId;
     }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username; }
 
     public NivelAcesso getNivelAcesso() {
         return nivelAcesso;
@@ -78,6 +111,15 @@ public class Usuario implements UserDetails {
     public Funcionario getFuncionario() { return funcionario; }
 
     public Cliente getCliente() { return cliente; }
+
+    public Empresa getEmpresa() { return empresa; }
+
+    public void setEmpresa(Empresa empresa) { this.empresa = empresa; }
+
+    public boolean isAtivo() { return ativo; }
+    public void setAtivo(boolean ativo) { this.ativo = ativo; }
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) { this.authorities = authorities; }
 
     public void atualizarDados(DTOUsuarioRequest dto, String senha) {
         this.username = dto.username();

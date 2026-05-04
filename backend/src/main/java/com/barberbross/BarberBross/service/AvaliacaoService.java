@@ -43,8 +43,8 @@ public class AvaliacaoService {
     private AvaliacaoNotificationService notificationService;
 
     public DTOAvaliacaoResponse salvarAvaliacao(DTOAvaliacaoRequest novaAvaliacao){
-        if (authUser.isColaborador() || authUser.isFornecedor()) //provisorio
-            throw new AccessDeniedException("usuario não pode salvar avaliações em agendamentos"); //sera q faz sentido manter assim??
+        if (authUser.isColaborador() || authUser.isFornecedor())
+            throw new AccessDeniedException("Usuário não pode salvar avaliações em agendamentos");
 
         Agendamento agendamento = agendamentoService.buscarAgendamento(novaAvaliacao.agendamentoId());
 
@@ -52,7 +52,7 @@ public class AvaliacaoService {
 
         if (agendamento.getStatus().equals(Status.CONCLUIDO)){
             Empresa empresa = empresaService.buscarEmpresa(agendamento.getEmpresa().getEmpresaId());
-            Cliente cliente = clienteService.buscarClientePorUsuario(authUser.get().getUserId());
+            Cliente cliente = clienteService.buscarClientePorUsuario(authUser.get().getUsuarioId());
             Funcionario funcionario = funcionarioService.buscarFuncionario(agendamento.getFuncionario().getFuncionarioId());
 
             Avaliacao a = new Avaliacao(novaAvaliacao, cliente, empresa, agendamento, funcionario);
@@ -103,11 +103,13 @@ public class AvaliacaoService {
 
         Avaliacao a = buscarAvaliacao(id);
         authValidator.validarClienteNaAvaliacao(authUser.get(), a.getAvaliacaoId());
+        Agendamento agendamento = a.getAgendamento();
+        agendamento.setAvaliacao(null);
         avaliacaoRepository.delete(a);
     }
 
     public Avaliacao buscarAvaliacao(Long id){
         return avaliacaoRepository.findById(id).
-                orElseThrow(() -> new NotFoundException("Nenhuma avaliação encontrada com id: " + id));
+                orElseThrow(() -> new NotFoundException("Nenhuma avaliação encontrada."));
     }
 }

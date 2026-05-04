@@ -49,12 +49,12 @@ public class CategoriaService {
         }
 
         DTOCategoriaResponse response = new DTOCategoriaResponse(c);
-        notifcationService.notificarNovaCategoria(response, authUser.get().getEmpresaId());
+        notifcationService.notificarNovaCategoria(response, authUser.get().getEmpresa().getEmpresaId());
         return response;
     }
 
     private Categoria salvarCategoriaEmpresa(DTOCategoriaRequest novaCategoria){
-        Empresa empresa = empresaService.buscarEmpresa(authUser.get().getEmpresaId());
+        Empresa empresa = empresaService.buscarEmpresa(authUser.get().getEmpresa().getEmpresaId());
         validator.validar(novaCategoria, empresa.getEmpresaId());
         Categoria c = new Categoria(novaCategoria,  empresa);
         validator.validarDono(c);
@@ -62,7 +62,7 @@ public class CategoriaService {
     }
 
     private Categoria salvarCategoriaFornecedor(DTOCategoriaRequest novaCategoria){
-        Fornecedor fornecedor = fornecedorService.buscarFornecedorPorUsuario(authUser.get().getUserId());
+        Fornecedor fornecedor = fornecedorService.buscarFornecedorPorUsuario(authUser.get().getUsuarioId());
         validator.validarFornecedor(novaCategoria, fornecedor.getFornecedorId());
         Categoria c = new Categoria(novaCategoria, fornecedor);
         validator.validarDono(c);
@@ -71,11 +71,11 @@ public class CategoriaService {
 
     public List<DTOCategoriaResponse> listarCategorias() {
         if (authUser.isAdmin()){
-            List<DTOCategoriaResponse> lista = listarCategoriasEmpresa(authUser.get().getEmpresaId());
-            notifcationService.notificarListaCategorias(lista, authUser.get().getEmpresaId());
+            List<DTOCategoriaResponse> lista = listarCategoriasEmpresa(authUser.get().getEmpresa().getEmpresaId());
+            notifcationService.notificarListaCategorias(lista, authUser.get().getEmpresa().getEmpresaId());
            return lista;
         } else {
-            Fornecedor fornecedor = fornecedorService.buscarFornecedorPorUsuario(authUser.get().getUserId());
+            Fornecedor fornecedor = fornecedorService.buscarFornecedorPorUsuario(authUser.get().getUsuarioId());
             return listarCategoriasFornecedor(fornecedor.getFornecedorId());
         }
     }
@@ -119,7 +119,7 @@ public class CategoriaService {
         categoriaRepository.save(c);
 
         DTOCategoriaResponse response = new DTOCategoriaResponse(c);
-        notifcationService.notificarCategoriaEditada(response, authUser.get().getEmpresaId());
+        notifcationService.notificarCategoriaEditada(response, authUser.get().getEmpresa().getEmpresaId());
 
         return response;
     }
@@ -135,6 +135,6 @@ public class CategoriaService {
 
     public Categoria buscarCategoria(Long id){
         return categoriaRepository.findById(id).
-                orElseThrow(() -> new NotFoundException("Nenhum Categoria encontrada com id: " + id));
+                orElseThrow(() -> new NotFoundException("Nenhum Categoria encontrada."));
     }
 }
