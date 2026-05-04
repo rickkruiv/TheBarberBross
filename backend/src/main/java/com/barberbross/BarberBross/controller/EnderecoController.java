@@ -11,13 +11,13 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/enderecos")
-public class EnderecoController { //se pa isso aqui tem que deixar de existir
+public class EnderecoController {
 
     @Autowired
     private EnderecoService enderecoService;
 
     @GetMapping
-    public ResponseEntity<List<DTOEnderecoResponse>> listarEnderecos(){
+    public ResponseEntity<List<DTOEnderecoResponse>> listarEnderecos(){ //só pra dev
         return ResponseEntity.ok(enderecoService.listarEnderecos());
     }
 

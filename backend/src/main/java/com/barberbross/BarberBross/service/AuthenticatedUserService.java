@@ -2,7 +2,6 @@ package com.barberbross.BarberBross.service;
 
 import com.barberbross.BarberBross.enums.NivelAcesso;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
-import com.barberbross.BarberBross.model.CustomUserPrincipal;
 import com.barberbross.BarberBross.model.Funcionario;
 import com.barberbross.BarberBross.model.Usuario;
 import com.barberbross.BarberBross.repository.FuncionarioRepository;
@@ -17,7 +16,7 @@ public class AuthenticatedUserService {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
-    public CustomUserPrincipal get() {
+    public Usuario get() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null) {
@@ -26,36 +25,37 @@ public class AuthenticatedUserService {
 
         Usuario u = (Usuario) auth.getPrincipal();
 
-        if (u.getNivelAcesso().equals(NivelAcesso.ADMIN) || u.getNivelAcesso().equals(NivelAcesso.COLABORADOR)){
-            if (u.getFuncionario() == null) {
-                return new CustomUserPrincipal(u.getUsuarioId(), u.getAuthorities());
-            }
+//        if (u.getNivelAcesso().equals(NivelAcesso.ADMIN) || u.getNivelAcesso().equals(NivelAcesso.COLABORADOR)){
+//            if (u.getFuncionario() == null) {
+//                return new Usuario(u);
+//            }
+//
+//            Funcionario f = funcionarioRepository.findByUsuarioUsuarioId(u.getUsuarioId())
+//                    .orElseThrow(() -> new NotFoundException("Nenhum Funcionario encontrado."));
+//
+//            return new Usuario(u.getUsuarioId(), f,
+//                    f.getEmpresa(), u.getAuthorities(), u.getNivelAcesso());
+//        }
 
-            Funcionario f = funcionarioRepository.findByUsuarioUsuarioId(u.getUsuarioId())
-                    .orElseThrow(() -> new NotFoundException("Nenhum Funcionario encontrado."));
-
-            return new CustomUserPrincipal(u.getUsuarioId(), f.getFuncionarioId(),
-                    f.getEmpresa().getEmpresaId(), u.getAuthorities());
-        }
-
-        return new CustomUserPrincipal(u.getUsuarioId(), u.getAuthorities());
+        return new Usuario(u);
     }
 
     public boolean isColaborador(){
-        CustomUserPrincipal principal = get();
-        return principal.getAuthorities().stream().
-                anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_COLABORADOR"));
+        Usuario u = get();
+        return u.getAuthorities().stream().
+                anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") ||
+                        a.getAuthority().equals("ROLE_COLABORADOR"));
     }
 
     public boolean isAdmin(){
-        CustomUserPrincipal principal = get();
-        return principal.getAuthorities().stream().
+        Usuario u = get();
+        return u.getAuthorities().stream().
                 anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
     public boolean isFornecedor(){
-        CustomUserPrincipal principal = get();
-        return principal.getAuthorities().stream().
+        Usuario u = get();
+        return u.getAuthorities().stream().
                 anyMatch(a -> a.getAuthority().equals("ROLE_FORNECEDOR"));
     }
 

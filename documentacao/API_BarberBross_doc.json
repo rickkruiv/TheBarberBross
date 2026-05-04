@@ -1,0 +1,2072 @@
+{
+  "info": {
+    "_postman_id": "5e4cd5c2-c3b7-42de-a636-b73d9b5a0c12",
+    "name": "BarberBross",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40391242"
+  },
+  "item": [
+    {
+      "name": "Agendamento",
+      "item": [
+        {
+          "name": "Buscar Agendamento por Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/agendamentos/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos",
+                "1"
+              ]
+            },
+            "description": "## Buscar Agendamento por ID\n\nRetorna os detalhes de um agendamento específico com base no seu identificador único.  \nSó pode ser acessado por funcionários da barbearia e pelo cliente do agendamento.\n\n---\n\n### Método e URL\n\nMétodo: `GET`\n\nURL: `{{baseURL}}/agendamentos/{id}`\n\n---\n\n### Parâmetros de Rota\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `id` | inteiro | Sim | Identificador único do agendamento |\n\n---\n\n### Cabeçalhos (Headers)\n\n| Chave | Valor | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `Authorization` | `Bearer {{auth_token}}` | Sim | Token de autenticação do tipo Bearer |\n\n---\n\n### Resposta de Sucesso (200 OK)\n\n``` json\n{\n  \"agendamentoId\": 1,\n  \"dataHorario\": \"2026-03-31T10:00:00\",\n  \"status\": \"PENDENTE\",\n  \"observacao\": \"\",\n  \"servicosIds\": [1],\n  \"valorTotal\": 50,\n  \"duracaoTotal\": 30,\n  \"clienteId\": 1,\n  \"empresaId\": 1,\n  \"funcionarioId\": 1\n}\n\n ```\n\n#### Descrição dos Campos\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `agendamentoId` | inteiro | Identificador único do agendamento |\n| `dataHorario` | string | Data e horário do agendamento no formato ISO 8601 |\n| `status` | string | Status atual do agendamento (ex: `PENDENTE`, `CONCLUIDO`) |\n| `observacao` | string | Observações adicionais sobre o agendamento |\n| `servicosIds` | array | Lista de IDs dos serviços incluídos no agendamento |\n| `valorTotal` | número | Valor total do agendamento em reais (R$) |\n| `duracaoTotal` | inteiro | Duração total do agendamento em minutos |\n| `clienteId` | inteiro | Identificador do cliente associado ao agendamento |\n| `empresaId` | inteiro | Identificador da empresa responsável pelo agendamento |\n| `funcionarioId` | inteiro | Identificador do funcionário responsável pelo atendimento |"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Agendamentos por dia da Empresa",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/agendamentos/empresa/2026-03-31",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos",
+                "empresa",
+                "2026-03-31"
+              ]
+            },
+            "description": "## Buscar Agendamentos por Dia da Empresa\n\nRetorna a lista de agendamentos da empresa do usuário para uma data determinada.\n\n---\n\n### Autenticação\n\nEste endpoint requer autenticação via token Bearer. O token deve ser enviado no cabeçalho da requisição:\n\n| Cabeçalho | Valor |\n| --- | --- |\n| `Authorization` | `Bearer {{auth_token}}` |\n\n---\n\n### Parâmetros da URL\n\nA data é informada diretamente no caminho da URL no formato `YYYY-MM-DD`:\n\nMétodo: `GET`  \nURL: `{{baseURL}}/agendamentos/empresa/{data}`\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `data` | string | Sim | Data dos agendamentos a serem buscados (formato `YYYY-MM-DD`). Exemplo: `2026-03-31` |\n\n---\n\n### Resposta\n\nRetorna um array de objetos, onde cada objeto representa um agendamento da empresa na data informada.\n\n#### Campos da Resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `agendamentoId` | inteiro | Identificador único do agendamento |\n| `dataHorario` | string | Data e horário do agendamento no formato ISO 8601 (`YYYY-MM-DDTHH:mm:ss`) |\n| `status` | string | Status atual do agendamento (ex: `PENDENTE`, `CONFIRMADO`, `CANCELADO`) |\n| `observacao` | string | Observações adicionais sobre o agendamento (pode ser vazio) |\n| `servicosIds` | array | Lista de identificadores dos serviços incluídos no agendamento |\n| `valorTotal` | número | Valor total do agendamento em reais |\n| `duracaoTotal` | inteiro | Duração total do agendamento em minutos |\n| `clienteId` | inteiro | Identificador do cliente associado ao agendamento |\n| `empresaId` | inteiro | Identificador da empresa associada ao agendamento |\n| `funcionarioId` | inteiro | Identificador do funcionário responsável pelo atendimento |\n\n#### Exemplo de Resposta\n\n``` json\n[\n  {\n    \"agendamentoId\": 1,\n    \"dataHorario\": \"2026-03-31T10:00:00\",\n    \"status\": \"PENDENTE\",\n    \"observacao\": \"\",\n    \"servicosIds\": [1],\n    \"valorTotal\": 50,\n    \"duracaoTotal\": 30,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 1\n  },\n  {\n    \"agendamentoId\": 2,\n    \"dataHorario\": \"2026-03-31T11:00:00\",\n    \"status\": \"PENDENTE\",\n    \"observacao\": \"Preferência por fade\",\n    \"servicosIds\": [3],\n    \"valorTotal\": 80,\n    \"duracaoTotal\": 25,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 2\n  }\n]\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Agendamentos do dia do Barbeiro",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/agendamentos/barbeiro/1/2026-03-31",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos",
+                "barbeiro",
+                "1",
+                "2026-03-31"
+              ]
+            },
+            "description": "## Buscar Agendamentos do Dia do Barbeiro\n\nRetorna a lista de agendamentos de um barbeiro específico para uma determinada data.\n\n---\n\n### Método e URL\n\nMétodo: `GET`  \nURL: `{{baseURL}}/agendamentos/barbeiro/{barbeiroId}/{data}`\n\n---\n\n### Parâmetros de URL\n\n| Parâmetro | Tipo | Descrição | Exemplo |\n| --- | --- | --- | --- |\n| `barbeiroId` | inteiro | ID do funcionário (barbeiro) cujos agendamentos serão buscados | `1` |\n| `data` | string | Data dos agendamentos no formato `YYYY-MM-DD` | `2026-03-31` |\n\n---\n\n### Autenticação\n\nEsta requisição requer autenticação via **Bearer Token**.\n\nInclua o header abaixo em todas as requisições:\n\n`Authorization: Bearer {{auth_token}}`\n\n---\n\n### Exemplo de Resposta — 200 OK\n\n``` json\n[\n  {\n    \"agendamentoId\": 1,\n    \"dataHorario\": \"2026-03-31T10:00:00\",\n    \"status\": \"PENDENTE\",\n    \"observacao\": \"\",\n    \"servicosIds\": [1],\n    \"valorTotal\": 50,\n    \"duracaoTotal\": 30,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 1\n  }\n]\n\n ```\n\n### Campos da Resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `agendamentoId` | inteiro | Identificador único do agendamento |\n| `dataHorario` | string | Data e hora do agendamento no formato ISO 8601 (`YYYY-MM-DDTHH:mm:ss`) |\n| `status` | string | Status atual do agendamento (ex: `PENDENTE`, `CONCLUIDO`, `CANCELADO`) |\n| `observacao` | string | Observações adicionais sobre o agendamento |\n| `servicosIds` | array | Lista de IDs dos serviços incluídos no agendamento |\n| `valorTotal` | número | Valor total do agendamento em reais (R$) |\n| `duracaoTotal` | inteiro | Duração total do agendamento em minutos |\n| `clienteId` | inteiro | ID do cliente que realizou o agendamento |\n| `empresaId` | inteiro | ID da empresa à qual o agendamento pertence |\n| `funcionarioId` | inteiro | ID do funcionário (barbeiro) responsável pelo agendamento |"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Agendamentos da Empresa por período",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/agendamentos/empresa/?inicio=2026-03-01&fim=2026-03-31",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos",
+                "empresa",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "inicio",
+                  "value": "2026-03-01"
+                },
+                {
+                  "key": "fim",
+                  "value": "2026-03-31"
+                }
+              ]
+            },
+            "description": "## Buscar Agendamentos da Empresa por Período\n\nEste endpoint retorna a lista de agendamentos de uma empresa filtrados por um intervalo de datas (período). É útil para consultar todos os agendamentos realizados dentro de um mês específico ou qualquer faixa de datas desejada.\n\n---\n\n## Autenticação\n\nEsta requisição requer autenticação via **Bearer Token** no cabeçalho `Authorization`:\n\n`Authorization: Bearer {{auth_token}}`\n\n---\n\n## Parâmetros de Consulta (Query Parameters)\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `inicio` | string | Sim | Data de início do período (formato `YYYY-MM-DD`) |\n| `fim` | string | Sim | Data de fim do período (formato `YYYY-MM-DD`) |\n\n**Exemplo de uso:**\n\n`GET {{baseURL}}/agendamentos/empresa/?inicio=2026-03-01&fim=2026-03-31`\n\n---\n\n## Resposta\n\n### Status `200 OK`\n\nRetorna um array de objetos representando os agendamentos encontrados no período informado.\n\n**Campos do objeto de agendamento:**\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `agendamentoId` | integer | Identificador único do agendamento |\n| `dataHorario` | string | Data e hora do agendamento (formato ISO 8601) |\n| `status` | string | Status do agendamento (ex: `PENDENTE`, `CONFIRMADO`) |\n| `observacao` | string | Observações adicionais sobre o agendamento |\n| `servicosIds` | array | Lista de IDs dos serviços incluídos no agendamento |\n| `valorTotal` | number | Valor total do agendamento |\n| `duracaoTotal` | integer | Duração total do agendamento em minutos |\n| `clienteId` | integer | Identificador do cliente |\n| `empresaId` | integer | Identificador da empresa |\n| `funcionarioId` | integer | Identificador do funcionário responsável |\n\n**Exemplo de resposta:**\n\n``` json\n[\n  {\n    \"agendamentoId\": 1,\n    \"dataHorario\": \"2026-03-31T10:00:00\",\n    \"status\": \"PENDENTE\",\n    \"observacao\": \"\",\n    \"servicosIds\": [1],\n    \"valorTotal\": 50,\n    \"duracaoTotal\": 30,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 1\n  },\n  {\n    \"agendamentoId\": 2,\n    \"dataHorario\": \"2026-03-31T11:00:00\",\n    \"status\": \"PENDENTE\",\n    \"observacao\": \"Preferência por fade\",\n    \"servicosIds\": [3],\n    \"valorTotal\": 80,\n    \"duracaoTotal\": 25,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 2\n  }\n]\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Agendamentos do Barbeiro por período",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/agendamentos/barbeiro/1/?inicio=2026-03-01&fim=2026-03-31",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos",
+                "barbeiro",
+                "1",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "inicio",
+                  "value": "2026-03-01"
+                },
+                {
+                  "key": "fim",
+                  "value": "2026-03-31"
+                }
+              ]
+            },
+            "description": "# Listar Agendamentos do Barbeiro por período\n\nRetorna a lista de agendamentos de um barbeiro (funcionário) dentro de um período de datas especificado.\n\n## Parâmetros de Rota\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID do barbeiro (funcionário) |\n\n## Parâmetros de Query\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `inicio` | string (date) | Sim | Data de início do período no formato `YYYY-MM-DD` |\n| `fim` | string (date) | Sim | Data de fim do período no formato `YYYY-MM-DD` |\n\n## Autenticação\n\nEsta requisição requer autenticação via token Bearer no cabeçalho `Authorization`:\n\n`Authorization: Bearer {{auth_token}}`\n\n## Exemplo de Resposta\n\n**Status:** `200 OK`\n\n``` json\n[\n  {\n    \"agendamentoId\": 1,\n    \"dataHorario\": \"2026-03-31T10:00:00\",\n    \"status\": \"PENDENTE\",\n    \"observacao\": \"\",\n    \"servicosIds\": [1],\n    \"valorTotal\": 50,\n    \"duracaoTotal\": 30,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 1\n  }\n]\n\n ```\n\n## Campos da Resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `agendamentoId` | integer | Identificador único do agendamento |\n| `dataHorario` | string (datetime) | Data e horário do agendamento no formato ISO 8601 |\n| `status` | string | Status atual do agendamento (ex: `PENDENTE`, `CONCLUIDO`, `CANCELADO`) |\n| `observacao` | string | Observações adicionais sobre o agendamento |\n| `servicosIds` | array | Lista de IDs dos serviços incluídos no agendamento |\n| `valorTotal` | number | Valor total do agendamento em reais (R$) |\n| `duracaoTotal` | integer | Duração total do agendamento em minutos |\n| `clienteId` | integer | Identificador do cliente |\n| `empresaId` | integer | Identificador da empresa |\n| `funcionarioId` | integer | Identificador do funcionário (barbeiro) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar novo Agendamento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"dataHorario\": \"2026-05-04T16:30:00\",\r\n    \"observacao\": \"Agendamento realizado pelo cliente via app\",\r\n    \"clienteId\": 1,\r\n    \"empresaId\": 1,\r\n    \"funcionarioId\": 2,\r\n    \"listaDeServicosId\": [\r\n        1,\r\n        2,\r\n        3\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/agendamentos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos"
+              ]
+            },
+            "description": "## Cadastrar novo Agendamento\n\nCria um novo agendamento no sistema para um cliente específico, associando funcionário, empresa e lista de serviços desejados.\n\n---\n\n### Autenticação\n\nEsta requisição requer autenticação via token Bearer:\n\n| Header | Valor |\n| --- | --- |\n| `Authorization` | `Bearer {{auth_token}}` |\n\n---\n\n### Corpo da Requisição (JSON)\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `dataHorario` | `string` (ISO 8601) | Data e horário do agendamento. Exemplo: `2026-05-04T16:30:00` |\n| `observacao` | `string` | Observação opcional sobre o agendamento |\n| `clienteId` | `integer` | ID do cliente que está realizando o agendamento |\n| `empresaId` | `integer` | ID da empresa onde o serviço será realizado |\n| `funcionarioId` | `integer` | ID do funcionário responsável pelo atendimento |\n| `listaDeServicosId` | `array` | Lista de IDs dos serviços a serem realizados |\n\n**Exemplo de corpo:**\n\n``` json\n{\n  \"dataHorario\": \"2026-05-04T16:30:00\",\n  \"observacao\": \"Agendamento realizado pelo cliente via app\",\n  \"clienteId\": 1,\n  \"empresaId\": 1,\n  \"funcionarioId\": 2,\n  \"listaDeServicosId\": [1, 2, 3]\n}\n\n ```\n\n---\n\n### Resposta de Sucesso — `201 Created`\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `agendamentoId` | `integer` | ID único do agendamento criado |\n| `dataHorario` | `string` (ISO 8601) | Data e horário confirmados do agendamento |\n| `status` | `string` | Status atual do agendamento (ex: `PENDENTE`) |\n| `observacao` | `string` | Observação registrada |\n| `servicosIds` | `array` | IDs dos serviços agendados |\n| `valorTotal` | `number` | Valor total dos serviços em reais |\n| `duracaoTotal` | `integer` | Duração total estimada em minutos |\n| `clienteId` | `integer` | ID do cliente |\n| `empresaId` | `integer` | ID da empresa |\n| `funcionarioId` | `integer` | ID do funcionário |\n\n**Exemplo de resposta:**\n\n``` json\n{\n  \"agendamentoId\": 4,\n  \"dataHorario\": \"2026-05-04T16:30:00\",\n  \"status\": \"PENDENTE\",\n  \"observacao\": \"Agendamento realizado pelo cliente via app\",\n  \"servicosIds\": [1, 2, 3],\n  \"valorTotal\": 170,\n  \"duracaoTotal\": 115,\n  \"clienteId\": 1,\n  \"empresaId\": 1,\n  \"funcionarioId\": 2\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Serviços do Agendamento",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"servicos\": [1]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/agendamentos/4",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos",
+                "4"
+              ]
+            },
+            "description": "## Editar Serviços do Agendamento\n\nAtualiza parcialmente os serviços vinculados a um agendamento existente. Utilize este endpoint para substituir a lista de serviços de um agendamento específico.\n\n---\n\n### 🔐 Autenticação\n\nEste endpoint requer autenticação via **Bearer Token**.\n\n| Header | Valor |\n| --- | --- |\n| `Authorization` | `Bearer {{auth_token}}` |\n\n---\n\n### 📋 Detalhes da Requisição\n\n| Campo | Valor |\n| --- | --- |\n| **Método** | `PATCH` |\n| **URL** | `{{baseURL}}/agendamentos/4` |\n| **Content-Type** | `application/json` |\n\n---\n\n### 📦 Corpo da Requisição (JSON)\n\n``` json\n{\n  \"servicos\": [1]\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `servicos` | `array` de inteiros | Lista com os IDs dos serviços a serem vinculados ao agendamento. Substitui os serviços anteriores. |\n\n---\n\n### ✅ Resposta de Sucesso — `200 OK`\n\n``` json\n{\n  \"agendamentoId\": 4,\n  \"dataHorario\": \"2026-05-04T16:30:00\",\n  \"status\": \"PENDENTE\",\n  \"observacao\": \"Agendamento realizado pelo cliente via a...\",\n  \"servicosIds\": [1],\n  \"valorTotal\": 50,\n  \"duracaoTotal\": 30,\n  \"clienteId\": 1,\n  \"empresaId\": 1,\n  \"funcionarioId\": 2\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `agendamentoId` | `integer` | Identificador único do agendamento. |\n| `dataHorario` | `string` (ISO 8601) | Data e horário do agendamento. |\n| `status` | `string` | Status atual do agendamento (ex: `PENDENTE`, `CONFIRMADO`, `CANCELADO`). |\n| `observacao` | `string` | Observação registrada pelo cliente no momento do agendamento. |\n| `servicosIds` | `array` de inteiros | Lista com os IDs dos serviços vinculados ao agendamento após a atualização. |\n| `valorTotal` | `number` | Valor total do agendamento em reais (R$), calculado com base nos serviços. |\n| `duracaoTotal` | `integer` | Duração total estimada do atendimento em minutos. |\n| `clienteId` | `integer` | Identificador do cliente que realizou o agendamento. |\n| `empresaId` | `integer` | Identificador da empresa responsável pelo atendimento. |\n| `funcionarioId` | `integer` | Identificador do funcionário designado para o atendimento. |"
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "\"CONCLUIDO\"",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/agendamentos/5/status",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos",
+                "5",
+                "status"
+              ]
+            },
+            "description": "## Atualizar Status do Agendamento\n\nEste endpoint atualiza o status de um agendamento existente, identificado pelo seu ID na URL.\n\n### Método\n\n`PATCH`\n\n### URL\n\n`{{baseURL}}/agendamentos/{id}/status`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID do agendamento cujo status será atualizado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Corpo da Requisição\n\nO corpo deve ser enviado como **raw string** contendo o novo status do agendamento.\n\n**Exemplo:**\n\n``` json\n\"CONCLUIDO\"\n\n ```\n\n### Resposta\n\nRetorna os dados atualizados do agendamento em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n{\n  \"agendamentoId\": 1,\n  \"dataHorario\": \"2026-03-31T10:00:00\",\n  \"status\": \"CONCLUIDO\",\n  \"observacao\": \"\",\n  \"servicosIds\": [1],\n  \"valorTotal\": 50,\n  \"duracaoTotal\": 30,\n  \"clienteId\": 1,\n  \"empresaId\": 1,\n  \"funcionarioId\": 1\n}\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `agendamentoId` | integer | ID do agendamento |\n| `dataHorario` | string (ISO 8601) | Data e horário do agendamento |\n| `status` | string | Status atualizado do agendamento |\n| `observacao` | string | Observações sobre o agendamento |\n| `servicosIds` | array | Lista de IDs dos serviços associados |\n| `valorTotal` | number | Valor total do agendamento |\n| `duracaoTotal` | integer | Duração total em minutos |\n| `clienteId` | integer | ID do cliente |\n| `empresaId` | integer | ID da empresa |\n| `funcionarioId` | integer | ID do funcionário responsável |"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Agendamento",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/agendamentos/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "agendamentos",
+                "1"
+              ]
+            },
+            "description": "## Deletar Agendamento\n\nExclui um agendamento existente com base no seu identificador único.\n\n### Autenticação\n\nEsta requisição requer autenticação via **Bearer Token**. O token deve ser informado no cabeçalho `Authorization`:\n\n```\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### URL\n\n```\nDELETE {{baseURL}}/agendamentos/:id\n\n ```\n\n### Parâmetros de Rota\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | número | Identificador único do agendamento |\n\n### Exemplo de Requisição\n\n```\nDELETE {{baseURL}}/agendamentos/4\n\n ```\n\n### Respostas\n\n| Código | Descrição |\n| --- | --- |\n| `200` | Agendamento excluído com sucesso |\n| `401` | Não autorizado — token inválido ou ausente |\n| `404` | Agendamento não encontrado |\n\n### Observações\n\n- A operação de exclusão é **irreversível**. Certifique-se de que o agendamento correto está sendo deletado antes de confirmar a requisição.\n    \n- Substitua o valor `4` na URL pelo `id` do agendamento que deseja excluir."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Registrar Novo Cliente",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\" : \"Junior\",\r\n    \"email\": \"junior@email.com\",\r\n    \"senha\": \"123\",\r\n    \"telefone\": \"(66) 55555-4444\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/registrar/cliente",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "registrar",
+                "cliente"
+              ]
+            },
+            "description": "## Registrar Novo Cliente\n\nRegistra um novo cliente no sistema.\n\n### Corpo da Requisição\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `nome` | string | Nome completo do cliente |\n| `email` | string | Endereço de e-mail do cliente |\n| `senha` | string | Senha de acesso do cliente |\n| `telefone` | string | Número de telefone do cliente |\n\n### Exemplo de Requisição\n\n``` json\n{\n  \"nome\": \"Junior\",\n  \"email\": \"junior@email.com\",\n  \"senha\": \"123\",\n  \"telefone\": \"(66) 55555-4444\"\n}\n\n ```\n\n### Resposta de Sucesso\n\n**Código:** `201 Created`\n\n``` json\n{\n  \"clienteId\": 2,\n  \"nome\": \"Junior\",\n  \"email\": \"junior@email.com\",\n  \"telefone\": \"(66) 55555-4444\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Novo Funcionario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Diogo Silva\",\r\n    \"cpf\": \"202.202.202-23\",\r\n    \"telefone\": \"(21) 95263-2024\",\r\n    \"email\": \"diogosilva@email.com\",\r\n    \"senha\" : \"123\",\r\n    \"nascimento\": \"2000-11-01\",\r\n    \"empresaId\": 2,\r\n    \"dataContratacao\": \"2026-01-01\",\r\n    \"salarioBase\": \"10000\",\r\n    \"percentualComissao\": \"20\",\r\n    \"nivelAcesso\": \"COLABORADOR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/admin/registrar/funcionario",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "admin",
+                "registrar",
+                "funcionario"
+              ]
+            },
+            "description": "## Registrar Novo Funcionário\n\nRegistra um novo funcionário no sistema vinculado a uma empresa específica. Este endpoint é restrito a administradores e cria tanto o perfil do funcionário quanto a conta de usuário associada.\n\n---\n\n### Autenticação\n\nEste endpoint requer um token Bearer válido com privilégios de nível administrador.\n\n| Cabeçalho | Valor |\n| --- | --- |\n| `Authorization` | `Bearer {{auth_token}}` |\n\n---\n\n### Corpo da Requisição\n\nContent-Type: `application/json`\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `nome` | `string` | ✅ | Nome completo do funcionário |\n| `cpf` | `string` | ✅ | CPF do funcionário no formato `000.000.000-00` |\n| `telefone` | `string` | ✅ | Número de telefone no formato `(00) 00000-0000` |\n| `email` | `string` | ✅ | Endereço de e-mail do funcionário, utilizado para login |\n| `senha` | `string` | ✅ | Senha inicial para a conta de usuário do funcionário |\n| `nascimento` | `string` | ✅ | Data de nascimento no formato `YYYY-MM-DD` |\n| `empresaId` | `integer` | ✅ | ID da empresa à qual o funcionário pertence |\n| `dataContratacao` | `string` | ✅ | Data de contratação no formato `YYYY-MM-DD` |\n| `salarioBase` | `string` | ✅ | Salário base do funcionário |\n| `percentualComissao` | `string` | ✅ | Percentual de comissão aplicado ao funcionário |\n| `nivelAcesso` | `string` | ✅ | Nível de acesso para a conta do funcionário (ex.: `COLABORADOR`) |\n\n---\n\n### Resposta — 201 Created\n\nRetorna o objeto do funcionário recém-criado após o registro bem-sucedido.\n\n``` json\n{\n    \"funcionarioId\": 4,\n    \"nome\": \"Matheus Souza\",\n    \"cpf\": \"111.111.111-11\",\n    \"telefone\": \"(22) 22222-2222\",\n    \"email\": \"matheussouza@email.com\",\n    \"nascimento\": \"2000-11-01\",\n    \"dataContratacao\": \"2026-01-01\",\n    \"salarioBase\": 10000,\n    \"percentualComissao\": 20,\n    \"usuarioId\": 6,\n    \"nivelAcesso\": \"COLABORADOR\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"admin\",\r\n    \"senha\": \"123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "## Login\n\nAutentica um usuário e retorna um token JWT junto com informações de identidade e nível de acesso do usuário. Este token deve ser utilizado nas requisições subsequentes que exigem autorização.\n\n---\n\n## Corpo da Requisição\n\nO corpo da requisição deve ser enviado como **raw JSON**.\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `username` | `string` | ✅ Sim | O identificador de login do usuário. Pode ser um endereço de e-mail ou um alias de nome de usuário (ex.: `\"admin\"`). |\n| `senha` | `string` | ✅ Sim | A senha do usuário. |\n\n---\n\n## Campos da Resposta (200 OK)\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `userId` | `integer` | Identificador único do usuário autenticado. |\n| `funcionarioId` | `integer` | Identificador único do funcionário (caso o usuário seja) |\n| `clienteId` | `integer` | Identificador único do cliente(caso o usuário seja) |\n| `empresaId` | `integer` | Identificador único da empresa (caso o usuário seja funcionário) |\n| `name` | `string` | Nome de exibição do usuário autenticado. |\n| `nivelAcesso` | `string` | Nível de acesso/papel do usuário (ex.: `\"ADMIN\"`). |\n| `token` | `string` | Token JWT Bearer a ser utilizado para autenticar as requisições subsequentes. |\n\n---\n\n## Exemplo de Corpo da Requisição\n\n``` json\n{\n  \"username\": \"admin\",\n  \"senha\": \"123\"\n}\n\n ```\n\n---\n\n## Exemplo de Resposta de Sucesso (200 OK)\n\n``` json\n{\n  \"userId\": 1,\n  \"funcionarioId\": 1,\n  \"clienteId\": null,\n  \"empresaId\": 1,\n  \"name\": \"admin\",\n  \"nivelAcesso\": \"ADMIN\",\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Novo Usuário (Dono da Barbearia)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"novouser@email.com\",\r\n    \"senha\": \"123\",\r\n    \"nivelAcesso\": \"ADMIN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/registrar/barbeiro",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "registrar",
+                "barbeiro"
+              ]
+            },
+            "description": "## Registrar Novo Usuário (Dono da Barbearia)\n\nEste endpoint realiza o cadastro de um novo usuário com perfil de **Dono da Barbearia** (nível de acesso ADMIN) no sistema.\n\n---\n\n### Requisição\n\n**Método:** `POST`  \n**URL:** `{{baseURL}}/auth/registrar/barbeiro`\n\n#### Corpo da Requisição (JSON)\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `username` | string | Sim | E-mail do usuário que será utilizado como identificador de login. |\n| `senha` | string | Sim | Senha de acesso do usuário. |\n| `nivelAcesso` | string | Sim | Nível de permissão do usuário. Para donos de barbearia, utilize `\"ADMIN\"`. |\n\n**Exemplo de corpo:**\n\n``` json\n{\n  \"username\": \"novouser@email.com\",\n  \"senha\": \"123\",\n  \"nivelAcesso\": \"ADMIN\"\n}\n\n ```\n\n---\n\n### Resposta\n\n#### Sucesso — `201 Created`\n\n``` json\n{\n  \"usuarioId\": 8,\n  \"username\": \"novouser@email.com\",\n  \"nivelAcesso\": \"ADMIN\"\n}\n\n ```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Avaliação",
+      "item": [
+        {
+          "name": "Buscar Avaliação por Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/avaliacoes/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "avaliacoes",
+                "1"
+              ]
+            },
+            "description": "## Buscar Avaliação por ID\n\nEste endpoint retorna os dados de uma avaliação específica, identificada pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/avaliacoes/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição                        |\n| --------- | ------- | -------------------------------- |\n| `id`      | integer | ID da avaliação a ser consultada |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http\nAuthorization: Bearer {{auth_token}}\n```\n\n### Exemplo de Requisição\n\n```http\nGET /avaliacoes/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer {{auth_token}}\n```\n\n### Resposta\n\nRetorna os dados da avaliação em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json\n{\n  \"avaliacaoId\": 1,\n  \"clienteId\": 1,\n  \"empresaId\": 1,\n  \"funcionarioId\": 1,\n  \"agendamentoId\": 1,\n  \"servicos\": [1],\n  \"nota\": 5.00,\n  \"comentario\": \"Ótimo atendimento!\",\n  \"data\": \"2026-03-31T12:00:00\"\n}\n```\n\n### Campos da resposta\n\n| Campo           | Tipo              | Descrição                                    |\n| --------------- | ----------------- | -------------------------------------------- |\n| `avaliacaoId`   | integer           | ID da avaliação                              |\n| `clienteId`     | integer           | ID do cliente que realizou a avaliação       |\n| `empresaId`     | integer           | ID da empresa avaliada                       |\n| `funcionarioId` | integer           | ID do funcionário avaliado                   |\n| `agendamentoId` | integer           | ID do agendamento relacionado                |\n| `servicos`      | array             | Lista de IDs dos serviços avaliados          |\n| `nota`          | number            | Nota atribuída (ex: 0 a 5)                   |\n| `comentario`    | string            | Comentário do cliente                        |\n| `data`          | string (ISO 8601) | Data e horário em que a avaliação foi criada |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar todas Avalições por Empresa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/avaliacoes/empresa/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "avaliacoes",
+                "empresa",
+                "1"
+              ]
+            },
+            "description": "## Buscar Todas as Avaliações por Empresa\n\nEste endpoint retorna todas as avaliações associadas a uma empresa específica, identificada pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/avaliacoes/empresa/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da empresa a ser consultada |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nGET /avaliacoes/empresa/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW8iLCJ1c2VyX2lkIjozLCJuaXZlbF9hY2Vzc28iOiJDTElFTlRFIiwiZXhwIjoxNzc4MDA3NjI2fQ.r70sAWnPwXpTKm39_YE4EvL-C7fnzNpx3r3hhf780Yo\n\n ```\n\n### Resposta\n\nRetorna uma lista de avaliações da empresa em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n[\n  {\n    \"avaliacaoId\": 1,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 1,\n    \"agendamentoId\": 1,\n    \"servicos\": [1],\n    \"nota\": 5.00,\n    \"comentario\": \"Ótimo atendimento!\",\n    \"data\": \"2026-03-31T12:00:00\"\n  }\n]\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `avaliacaoId` | integer | ID da avaliação |\n| `clienteId` | integer | ID do cliente que realizou a avaliação |\n| `empresaId` | integer | ID da empresa avaliada |\n| `funcionarioId` | integer | ID do funcionário avaliado |\n| `agendamentoId` | integer | ID do agendamento relacionado |\n| `servicos` | array | Lista de IDs dos serviços avaliados |\n| `nota` | number | Nota atribuída (ex: 0 a 5) |\n| `comentario` | string | Comentário do cliente |\n| `data` | string (ISO 8601) | Data e horário em que a avaliação foi criada |"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar todas Avaliações por Barbeiro",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/avaliacoes/barbeiro/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "avaliacoes",
+                "barbeiro",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar nova Avaliação",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"agendamentoId\": 5,\r\n    \"nota\" : 5,\r\n    \"comentario\": \"Muito top.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/avaliacoes",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "avaliacoes"
+              ]
+            },
+            "description": "## Cadastrar Nova Avaliação\n\nEste endpoint permite cadastrar uma nova avaliação associada a um agendamento.\n\nSó é possível associar a avaliação para agendamentos com o status `CONCLUIDO.`\n\n### Método\n\n`POST`\n\n### URL\n\n`{{baseURL}}/avaliacoes`\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Headers\n\n| Header | Tipo | Descrição |\n| --- | --- | --- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n``` http\nPOST /avaliacoes HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW8iLCJ1c2VyX2lkIjozLCJuaXZlbF9hY2Vzc28iOiJDTElFTlRFIiwiZXhwIjoxNzc4MDA3NjI2fQ.r70sAWnPwXpTKm39_YE4EvL-C7fnzNpx3r3hhf780Yo\nContent-Type: application/json\nContent-Length: 78\n{\n  \"agendamentoId\": 5,\n  \"nota\": 5,\n  \"comentario\": \"Muito top.\"\n}\n\n ```\n\n### Corpo da Requisição\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `agendamentoId` | integer | Sim | ID do agendamento a ser avaliado |\n| `nota` | number | Sim | Nota atribuída (0 a 5) |\n| `comentario` | string | Não | Comentário opcional sobre o atendimento |\n\n### Resposta\n\nRetorna os dados da avaliação criada em formato JSON.\n\n**Exemplo de resposta (****`201 Created`** **ou** **`200 OK`****):**\n\n``` json\n{\n  \"avaliacaoId\": 6,\n  \"clienteId\": 1,\n  \"empresaId\": 1,\n  \"funcionarioId\": 2,\n  \"agendamentoId\": 5,\n  \"servicos\": [1, 2, 3],\n  \"nota\": 5,\n  \"comentario\": \"Muito top.\",\n  \"data\": \"2026-05-03T20:28:01.858735995\"\n}\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `avaliacaoId` | integer | ID da avaliação criada |\n| `clienteId` | integer | ID do cliente que realizou a avaliação |\n| `empresaId` | integer | ID da empresa avaliada |\n| `funcionarioId` | integer | ID do funcionário avaliado |\n| `agendamentoId` | integer | ID do agendamento relacionado |\n| `servicos` | array | Lista de IDs dos serviços avaliados |\n| `nota` | number | Nota atribuída |\n| `comentario` | string | Comentário do cliente |\n| `data` | string (ISO 8601) | Data e horário em que a avaliação foi criada |"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Avaliação",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"agendamentoId\": 5,\r\n    \"nota\": 1,\r\n    \"comentario\": \"Ficou muito péssimo!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/avaliacoes/6",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "avaliacoes",
+                "6"
+              ]
+            },
+            "description": "# Editar Avaliação\n\nEste endpoint permite atualizar os dados de uma avaliação existente, identificada pelo seu ID na URL.\n\n### Método\n\n`PATCH`\n\n### URL\n\n`{{baseURL}}/avaliacoes/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da avaliação a ser atualizada |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Headers\n\n| Header | Tipo | Descrição |\n| --- | --- | --- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n``` http\nPATCH /avaliacoes/6 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW8iLCJ1c2VyX2lkIjozLCJuaXZlbF9hY2Vzc28iOiJDTElFTlRFIiwiZXhwIjoxNzc4MDA3NjI2fQ.r70sAWnPwXpTKm39_YE4EvL-C7fnzNpx3r3hhf780Yo\nContent-Type: application/json\nContent-Length: 87\n{\n  \"agendamentoId\": 5,\n  \"nota\": 1,\n  \"comentario\": \"Ficou muito péssimo!\"\n}\n\n ```\n\n### Corpo da Requisição\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `agendamentoId` | integer | Sim | ID do agendamento relacionado |\n| `nota` | number | Sim | Nova nota atribuída (0 a 5) |\n| `comentario` | string | Não | Novo comentário sobre o atendimento |\n\n### Resposta\n\nRetorna os dados atualizados da avaliação em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n{\n  \"avaliacaoId\": 6,\n  \"clienteId\": 1,\n  \"empresaId\": 1,\n  \"funcionarioId\": 2,\n  \"agendamentoId\": 5,\n  \"servicos\": [1, 2, 3],\n  \"nota\": 1,\n  \"comentario\": \"Ficou muito péssimo!\",\n  \"data\": \"2026-05-03T20:28:01.858736\"\n}\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `avaliacaoId` | integer | ID da avaliação |\n| `clienteId` | integer | ID do cliente que realizou a avaliação |\n| `empresaId` | integer | ID da empresa relacionada |\n| `funcionarioId` | integer | ID do funcionário avaliado |\n| `agendamentoId` | integer | ID do agendamento relacionado |\n| `servicos` | array | Lista de IDs dos serviços avaliados |\n| `nota` | number | Nota atualizada |\n| `comentario` | string | Comentário atualizado |\n| `data` | string (ISO 8601) | Data e horário da última atualização |"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Avaliação",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/avaliacoes/6",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "avaliacoes",
+                "6"
+              ]
+            },
+            "description": "StartFragment\n\n## Deletar Avaliação\n\nEste endpoint permite remover uma avaliação existente, identificada pelo seu ID na URL.\n\n### Método\n\n`DELETE`\n\n### URL\n\n`{{baseURL}}/avaliacoes/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da avaliação a ser removida |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nDELETE /avaliacoes/6 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW8iLCJ1c2VyX2lkIjozLCJuaXZlbF9hY2Vzc28iOiJDTElFTlRFIiwiZXhwIjoxNzc4MDA3NjI2fQ.r70sAWnPwXpTKm39_YE4EvL-C7fnzNpx3r3hhf780Yo\n\n ```\n\n### Resposta\n\nNão retorna corpo na resposta.\n\n**Exemplo de resposta:**\n\n```\n204 No Content\n\n ```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categoria",
+      "item": [
+        {
+          "name": "Buscar todas Categorias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/categorias",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "## Buscar Todas as Categorias\n\nEste endpoint retorna todas as categorias cadastradas no sistema.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/categorias`\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nGET /categorias HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\n\n ```\n\n### Resposta\n\nRetorna uma lista de categorias em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n[\n  {\n    \"categoriaId\": 4,\n    \"nome\": \"Corte empresa 1\",\n    \"descricao\": \"Serviços de cabelo.\",\n    \"tipo\": \"SERVICO\"\n  }\n]\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `categoriaId` | integer | ID da categoria |\n| `nome` | string | Nome da categoria |\n| `descricao` | string | Descrição da categoria |\n| `tipo` | string | Tipo da categoria (ex: SERVICO, PRODUTO) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Categoria por Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/categorias/5",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "categorias",
+                "5"
+              ]
+            },
+            "description": "## Buscar Categoria por ID\n\nEste endpoint retorna os dados de uma categoria específica, identificada pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/categorias/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da categoria a ser consultada |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nGET /categorias/4 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\n\n ```\n\n### Resposta\n\nRetorna os dados da categoria em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n{\n  \"categoriaId\": 4,\n  \"nome\": \"Corte empresa 1\",\n  \"descricao\": \"Serviços de cabelo.\",\n  \"tipo\": \"SERVICO\"\n}\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `categoriaId` | integer | ID da categoria |\n| `nome` | string | Nome da categoria |\n| `descricao` | string | Descrição da categoria |\n| `tipo` | string | Tipo da categoria (ex: SERVICO, PRODUTO) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar Categoria",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\" : \"servico premium empresa 1\",\r\n    \"descricao\" : \"Produtos de cabelo.\",\r\n    \"tipo\" : \"SERVICO\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/categorias",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "## Cadastrar Categoria\n\nEste endpoint permite cadastrar uma nova categoria no sistema.\n\n### Método\n\n`POST`\n\n### URL\n\n`{{baseURL}}/categorias`\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Headers\n\n| Header | Tipo | Descrição |\n| --- | --- | --- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n``` http\nPOST /categorias HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\nContent-Type: application/json\nContent-Length: 103\n{\n  \"nome\": \"Corte empresa 2\",\n  \"descricao\": \"Serviços de cabelo.\",\n  \"tipo\": \"SERVICO\"\n}\n\n ```\n\n### Corpo da Requisição\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `nome` | string | Sim | Nome da categoria |\n| `descricao` | string | Não | Descrição da categoria |\n| `tipo` | string | Sim | Tipo da categoria (ex: SERVICO, PRODUTO) |\n\n### Resposta\n\nRetorna os dados da categoria criada em formato JSON.\n\n**Exemplo de resposta (****`201 Created`****):**\n\n``` json\n{\n  \"categoriaId\": 5,\n  \"nome\": \"Corte empresa 2\",\n  \"descricao\": \"Serviços de cabelo.\",\n  \"tipo\": \"SERVICO\"\n}\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `categoriaId` | integer | ID da categoria criada |\n| `nome` | string | Nome da categoria |\n| `descricao` | string | Descrição da categoria |\n| `tipo` | string | Tipo da categoria |"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Categoria",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Corte empresa 22\",\r\n    \"descricao\": \"Cortes de cabelo.\",\r\n    \"tipo\": \"SERVICO\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/categorias/5",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "categorias",
+                "5"
+              ]
+            },
+            "description": "## Editar Categoria\n\nEste endpoint permite atualizar os dados de uma categoria existente, identificada pelo seu ID na URL.\n\n### Método\n\n`PATCH`\n\n### URL\n\n`{{baseURL}}/categorias/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da categoria a ser atualizada |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Headers\n\n| Header | Tipo | Descrição |\n| --- | --- | --- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n``` http\nPATCH /categorias/5 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InBlZHJvIiwidXNlcl9pZCI6NCwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDc3OTV9.fp0W7ofcLHqUrcRilF7PI2iWaZzY0r6QLQs0WjYTIww\nContent-Type: application/json\nContent-Length: 99\n{\n  \"nome\": \"Corte empresa 22\",\n  \"descricao\": \"Cortes de cabelo.\",\n  \"tipo\": \"SERVICO\"\n}\n\n ```\n\n### Corpo da Requisição\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `nome` | string | Sim | Nome da categoria |\n| `descricao` | string | Não | Descrição da categoria |\n| `tipo` | string | Sim | Tipo da categoria (ex: SERVICO, PRODUTO) |\n\n### Resposta\n\nRetorna os dados atualizados da categoria em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n{\n  \"categoriaId\": 5,\n  \"nome\": \"Corte empresa 22\",\n  \"descricao\": \"Cortes de cabelo.\",\n  \"tipo\": \"SERVICO\"\n}\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `categoriaId` | integer | ID da categoria |\n| `nome` | string | Nome da categoria atualizado |\n| `descricao` | string | Descrição atualizada |\n| `tipo` | string | Tipo da categoria |"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Categoria",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\" : \"Corte\",\r\n    \"descricao\" : \"Cortes de cabelo.\",\r\n    \"tipo\" : \"SERVICO\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}/categorias/5",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "categorias",
+                "5"
+              ]
+            },
+            "description": "## Deletar Categoria\n\nEste endpoint permite remover uma categoria existente, identificada pelo seu ID na URL.\n\n### Método\n\n`DELETE`\n\n### URL\n\n`{{baseURL}}/categorias/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da categoria a ser removida |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Headers\n\n| Header | Tipo | Descrição |\n| --- | --- | --- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type | string | Deve ser `text/plain` |\n\n### Exemplo de Requisição\n\n``` http\nDELETE /categorias/5 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InBlZHJvIiwidXNlcl9pZCI6NCwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDc3OTV9.fp0W7ofcLHqUrcRilF7PI2iWaZzY0r6QLQs0WjYTIww\nContent-Type: text/plain\nContent-Length: 91\n{\n  \"nome\": \"Corte\",\n  \"descricao\": \"Cortes de cabelo.\",\n  \"tipo\": \"SERVICO\"\n}\n\n ```\n\n### Corpo da Requisição\n\n> Apesar de não ser comum em requisições `DELETE`, este endpoint aceita um corpo com os dados da categoria. \n  \n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `nome` | string | Não | Nome da categoria |\n| `descricao` | string | Não | Descrição da categoria |\n| `tipo` | string | Não | Tipo da categoria |\n\n### Resposta\n\nNão retorna corpo na resposta.\n\n**Exemplo de resposta:**\n\nStatus: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cliente",
+      "item": [
+        {
+          "name": "Buscar todos os Clientes (dev)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/clientes",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Cliente Por Nome",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/clientes/?nome=João Silva",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "clientes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "nome",
+                  "value": "João Silva"
+                }
+              ]
+            },
+            "description": "## Buscar Cliente por Nome\n\nEste endpoint retorna os dados de um cliente com base no nome informado como parâmetro de query.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/clientes/?nome={nome}`\n\n### Parâmetro de Query\n\n| Parâmetro | Tipo   | Descrição                     |\n| --------- | ------ | ----------------------------- |\n| `nome`    | string | Nome do cliente a ser buscado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"k2x9qp\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Exemplo de Requisição\n\n```http id=\"v7m3zn\"\nGET /clientes/?nome=João Silva HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InBlZHJvIiwidXNlcl9pZCI6NCwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDc3OTV9.fp0W7ofcLHqUrcRilF7PI2iWaZzY0r6QLQs0WjYTIww\n```\n\n### Resposta\n\nRetorna os dados do cliente em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p9x4rt\"\n{\n  \"clienteId\": 1,\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"telefone\": \"44911111111\"\n}\n```\n\n### Campos da resposta\n\n| Campo       | Tipo    | Descrição                |\n| ----------- | ------- | ------------------------ |\n| `clienteId` | integer | ID do cliente            |\n| `nome`      | string  | Nome completo do cliente |\n| `email`     | string  | Email do cliente         |\n| `telefone`  | string  | Telefone do cliente      |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Cliente por Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/clientes/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "clientes",
+                "1"
+              ]
+            },
+            "description": "## Buscar Cliente por ID\n\nEste endpoint retorna os dados de um cliente específico, identificado pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/clientes/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição                      |\n| --------- | ------- | ------------------------------ |\n| `id`      | integer | ID do cliente a ser consultado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"k5n2qp\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Exemplo de Requisição\n\n```http id=\"x3m9zn\"\nGET /clientes/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVyaWNraW5AZW1haWwuY29tIiwidXNlcl9pZCI6Mywibml2ZWxfYWNlc3NvIjoiQ0xJRU5URSIsImV4cCI6MTc3ODAyNjk2Mn0.9GtPx69RwB3S9edD_2mukBcaTGHzpQ82cKM6CjOcLnM\n```\n\n### Resposta\n\nRetorna os dados do cliente em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p8x4rt\"\n{\n  \"clienteId\": 1,\n  \"nome\": \"erickin\",\n  \"email\": \"erickin@email.com\",\n  \"telefone\": \"69984432512\"\n}\n```\n\n### Campos da resposta\n\n| Campo       | Tipo    | Descrição           |\n| ----------- | ------- | ------------------- |\n| `clienteId` | integer | ID do cliente       |\n| `nome`      | string  | Nome do cliente     |\n| `email`     | string  | Email do cliente    |\n| `telefone`  | string  | Telefone do cliente |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Agendamentos do Cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/clientes/agendamentos/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "clientes",
+                "agendamentos",
+                "1"
+              ]
+            },
+            "description": "## Buscar Agendamentos do Cliente\n\nEste endpoint retorna todos os agendamentos associados a um cliente específico, identificado pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/clientes/agendamentos/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição                      |\n| --------- | ------- | ------------------------------ |\n| `id`      | integer | ID do cliente a ser consultado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"m4x8qp\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Exemplo de Requisição\n\n```http id=\"k9v2zn\"\nGET /clientes/agendamentos/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW8iLCJ1c2VyX2lkIjozLCJuaXZlbF9hY2Vzc28iOiJDTElFTlRFIiwiZXhwIjoxNzc4MDA3NjI2fQ.r70sAWnPwXpTKm39_YE4EvL-C7fnzNpx3r3hhf780Yo\n```\n\n### Resposta\n\nRetorna uma lista de agendamentos do cliente em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p7x3rt\"\n[\n  {\n    \"agendamentoId\": 3,\n    \"dataHorario\": \"2026-03-31T14:00:00\",\n    \"status\": \"PENDENTE\",\n    \"observacao\": \"\",\n    \"servicosIds\": [2],\n    \"valorTotal\": 40.00,\n    \"duracaoTotal\": 60,\n    \"clienteId\": 1,\n    \"empresaId\": 2,\n    \"funcionarioId\": 3\n  },\n  {\n    \"agendamentoId\": 1,\n    \"dataHorario\": \"2026-03-31T10:00:00\",\n    \"status\": \"CONCLUIDO\",\n    \"observacao\": \"\",\n    \"servicosIds\": [1],\n    \"valorTotal\": 50.00,\n    \"duracaoTotal\": 30,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 1\n  },\n  {\n    \"agendamentoId\": 2,\n    \"dataHorario\": \"2026-03-31T11:00:00\",\n    \"status\": \"CONCLUIDO\",\n    \"observacao\": \"Preferência por fade\",\n    \"servicosIds\": [3],\n    \"valorTotal\": 80.00,\n    \"duracaoTotal\": 25,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 2\n  },\n  {\n    \"agendamentoId\": 5,\n    \"dataHorario\": \"2026-05-04T16:30:00\",\n    \"status\": \"CONCLUIDO\",\n    \"observacao\": \"Agendamento realizado pelo cliente via app\",\n    \"servicosIds\": [1, 2, 3],\n    \"valorTotal\": 170.00,\n    \"duracaoTotal\": 115,\n    \"clienteId\": 1,\n    \"empresaId\": 1,\n    \"funcionarioId\": 2\n  }\n]\n```\n\n### Campos da resposta\n\n| Campo           | Tipo              | Descrição                                       |\n| --------------- | ----------------- | ----------------------------------------------- |\n| `agendamentoId` | integer           | ID do agendamento                               |\n| `dataHorario`   | string (ISO 8601) | Data e horário do agendamento                   |\n| `status`        | string            | Status do agendamento (ex: PENDENTE, CONCLUIDO) |\n| `observacao`    | string            | Observações do agendamento                      |\n| `servicosIds`   | array             | Lista de IDs dos serviços associados            |\n| `valorTotal`    | number            | Valor total do agendamento                      |\n| `duracaoTotal`  | integer           | Duração total em minutos                        |\n| `clienteId`     | integer           | ID do cliente                                   |\n| `empresaId`     | integer           | ID da empresa                                   |\n| `funcionarioId` | integer           | ID do funcionário responsável                   |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"erickin\",\r\n    \"email\": \"erickin@email.com\",\r\n    \"senha\": \"123\",\r\n    \"telefone\": \"69984432512\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/clientes/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "clientes",
+                "1"
+              ]
+            },
+            "description": "## Editar Cliente\n\nEste endpoint permite atualizar os dados de um cliente existente, identificado pelo seu ID na URL.\n\n### Método\n\n`PUT`\n\n### URL\n\n`{{baseURL}}/clientes/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição                      |\n| --------- | ------- | ------------------------------ |\n| `id`      | integer | ID do cliente a ser atualizado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"a8k3qp\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Headers\n\n| Header        | Tipo   | Descrição                   |\n| ------------- | ------ | --------------------------- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type  | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n```http id=\"z4m9xn\"\nPUT /clientes/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW8iLCJ1c2VyX2lkIjozLCJuaXZlbF9hY2Vzc28iOiJDTElFTlRFIiwiZXhwIjoxNzc4MDA3NjI2fQ.r70sAWnPwXpTKm39_YE4EvL-C7fnzNpx3r3hhf780Yo\nContent-Type: application/json\nContent-Length: 115\n\n{\n  \"nome\": \"erickin\",\n  \"email\": \"erickin@email.com\",\n  \"senha\": \"123\",\n  \"telefone\": \"69984432512\"\n}\n```\n\n### Corpo da Requisição\n\n| Campo      | Tipo   | Obrigatório | Descrição           |\n| ---------- | ------ | ----------- | ------------------- |\n| `nome`     | string | Sim         | Nome do cliente     |\n| `email`    | string | Sim         | Email do cliente    |\n| `senha`    | string | Sim         | Senha do cliente    |\n| `telefone` | string | Sim         | Telefone do cliente |\n\n### Resposta\n\nRetorna os dados atualizados do cliente em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p2x7rt\"\n{\n  \"clienteId\": 1,\n  \"nome\": \"erickin\",\n  \"email\": \"erickin@email.com\",\n  \"telefone\": \"69984432512\"\n}\n```\n\n### Campos da resposta\n\n| Campo       | Tipo    | Descrição           |\n| ----------- | ------- | ------------------- |\n| `clienteId` | integer | ID do cliente       |\n| `nome`      | string  | Nome atualizado     |\n| `email`     | string  | Email atualizado    |\n| `telefone`  | string  | Telefone atualizado |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Inativar Cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/clientes/3",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "clientes",
+                "3"
+              ]
+            },
+            "description": "## Inativar Cliente\n\nEste endpoint permite inativar um cliente existente, identificado pelo seu ID na URL.\n\n### Método\n\n`DELETE`\n\n### URL\n\n`{{baseURL}}/clientes/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID do cliente a ser removido |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nDELETE /clientes/3 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW8iLCJ1c2VyX2lkIjozLCJuaXZlbF9hY2Vzc28iOiJDTElFTlRFIiwiZXhwIjoxNzc4MDA3NjI2fQ.r70sAWnPwXpTKm39_YE4EvL-C7fnzNpx3r3hhf780Yo\n\n ```\n\n### Resposta\n\nNão retorna corpo na resposta.\n\n**Exemplo de resposta:**\n\nStatus: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Empresa",
+      "item": [
+        {
+          "name": "Buscar todas as Empresas",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/empresas",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas"
+              ]
+            },
+            "description": "## Buscar Todas as Empresas\n\nEste endpoint retorna todas as empresas cadastradas no sistema.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/empresas`\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"k7x2qp\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Exemplo de Requisição\n\n```http id=\"z3m8vn\"\nGET /empresas HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVyaWNraW5AZW1haWwuY29tIiwidXNlcl9pZCI6Mywibml2ZWxfYWNlc3NvIjoiQ0xJRU5URSIsImV4cCI6MTc3ODAyNjk2Mn0.9GtPx69RwB3S9edD_2mukBcaTGHzpQ82cKM6CjOcLnM\n```\n\n### Resposta\n\nRetorna uma lista de empresas em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p9x5rt\"\n[\n  {\n    \"empresaId\": 1,\n    \"razaoSocial\": \"Barber Boss LTDA\",\n    \"nomeFantasia\": \"Barber Boss\",\n    \"cnpj\": \"12345678000101\",\n    \"telefone\": \"44999999999\",\n    \"email\": \"contato@barberboss.com\",\n    \"tipoAssinatura\": \"PREMIUM\",\n    \"ativa\": true,\n    \"endereco\": {\n      \"enderecoId\": 1,\n      \"cep\": \"87010-000\",\n      \"logradouro\": \"Av. Brasil\",\n      \"complemento\": \"Sala 1\",\n      \"numero\": \"123\",\n      \"cidade\": \"Maringá\",\n      \"bairro\": \"Centro\",\n      \"uf\": \"PR\"\n    }\n  },\n  {\n    \"empresaId\": 2,\n    \"razaoSocial\": \"Corte Fino LTDA\",\n    \"nomeFantasia\": \"Corte Fino\",\n    \"cnpj\": \"22345678000102\",\n    \"telefone\": \"44988888888\",\n    \"email\": \"contato@cortefino.com\",\n    \"tipoAssinatura\": \"BASICO\",\n    \"ativa\": true,\n    \"endereco\": {\n      \"enderecoId\": 2,\n      \"cep\": \"87020-000\",\n      \"logradouro\": \"Rua Paraná\",\n      \"complemento\": \"Loja 2\",\n      \"numero\": \"456\",\n      \"cidade\": \"Maringá\",\n      \"bairro\": \"Zona 7\",\n      \"uf\": \"PR\"\n    }\n  },\n  {\n    \"empresaId\": 3,\n    \"razaoSocial\": \"Navalha King LTDA\",\n    \"nomeFantasia\": \"Navalha King\",\n    \"cnpj\": \"32345678000103\",\n    \"telefone\": \"44977777777\",\n    \"email\": \"contato@navalhaking.com\",\n    \"tipoAssinatura\": \"PRO\",\n    \"ativa\": true,\n    \"endereco\": {\n      \"enderecoId\": 3,\n      \"cep\": \"87030-000\",\n      \"logradouro\": \"Av. Colombo\",\n      \"complemento\": \"Casa\",\n      \"numero\": \"789\",\n      \"cidade\": \"Maringá\",\n      \"bairro\": \"Zona 1\",\n      \"uf\": \"PR\"\n    }\n  }\n]\n```\n\n### Campos da resposta\n\n#### Empresa\n\n| Campo            | Tipo    | Descrição                                |\n| ---------------- | ------- | ---------------------------------------- |\n| `empresaId`      | integer | ID da empresa                            |\n| `razaoSocial`    | string  | Razão social da empresa                  |\n| `nomeFantasia`   | string  | Nome fantasia                            |\n| `cnpj`           | string  | CNPJ da empresa                          |\n| `telefone`       | string  | Telefone da empresa                      |\n| `email`          | string  | Email da empresa                         |\n| `tipoAssinatura` | string  | Tipo de assinatura (ex: BASICO, PREMIUM) |\n| `ativa`          | boolean | Indica se a empresa está ativa           |\n| `endereco`       | object  | Dados de endereço da empresa             |\n\n#### Endereço\n\n| Campo         | Tipo    | Descrição      |\n| ------------- | ------- | -------------- |\n| `enderecoId`  | integer | ID do endereço |\n| `cep`         | string  | CEP            |\n| `logradouro`  | string  | Rua/Avenida    |\n| `complemento` | string  | Complemento    |\n| `numero`      | string  | Número         |\n| `cidade`      | string  | Cidade         |\n| `bairro`      | string  | Bairro         |\n| `uf`          | string  | Estado (UF)    |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Empresa por Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/empresas/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas",
+                "1"
+              ]
+            },
+            "description": "## Buscar Empresa por ID\n\nEste endpoint retorna os dados de uma empresa específica, identificada pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/empresas/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição                      |\n| --------- | ------- | ------------------------------ |\n| `id`      | integer | ID da empresa a ser consultada |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"n7k3qp\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Exemplo de Requisição\n\n```http id=\"x2m9zn\"\nGET /empresas/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVyaWNraW5AZW1haWwuY29tIiwidXNlcl9pZCI6Mywibml2ZWxfYWNlc3NvIjoiQ0xJRU5URSIsImV4cCI6MTc3ODAyNjk2Mn0.9GtPx69RwB3S9edD_2mukBcaTGHzpQ82cKM6CjOcLnM\n```\n\n### Resposta\n\nRetorna os dados da empresa em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p5x8rt\"\n{\n  \"empresaId\": 1,\n  \"razaoSocial\": \"Barber Boss LTDA\",\n  \"nomeFantasia\": \"Barber Boss\",\n  \"cnpj\": \"12345678000101\",\n  \"telefone\": \"44999999999\",\n  \"email\": \"contato@barberboss.com\",\n  \"tipoAssinatura\": \"PREMIUM\",\n  \"ativa\": true,\n  \"endereco\": {\n    \"enderecoId\": 1,\n    \"cep\": \"87010-000\",\n    \"logradouro\": \"Av. Brasil\",\n    \"complemento\": \"Sala 1\",\n    \"numero\": \"123\",\n    \"cidade\": \"Maringá\",\n    \"bairro\": \"Centro\",\n    \"uf\": \"PR\"\n  }\n}\n```\n\n### Campos da resposta\n\n#### Empresa\n\n| Campo            | Tipo    | Descrição                                |\n| ---------------- | ------- | ---------------------------------------- |\n| `empresaId`      | integer | ID da empresa                            |\n| `razaoSocial`    | string  | Razão social da empresa                  |\n| `nomeFantasia`   | string  | Nome fantasia                            |\n| `cnpj`           | string  | CNPJ da empresa                          |\n| `telefone`       | string  | Telefone da empresa                      |\n| `email`          | string  | Email da empresa                         |\n| `tipoAssinatura` | string  | Tipo de assinatura (ex: BASICO, PREMIUM) |\n| `ativa`          | boolean | Indica se a empresa está ativa           |\n| `endereco`       | object  | Dados de endereço da empresa             |\n\n#### Endereço\n\n| Campo         | Tipo    | Descrição      |\n| ------------- | ------- | -------------- |\n| `enderecoId`  | integer | ID do endereço |\n| `cep`         | string  | CEP            |\n| `logradouro`  | string  | Rua/Avenida    |\n| `complemento` | string  | Complemento    |\n| `numero`      | string  | Número         |\n| `cidade`      | string  | Cidade         |\n| `bairro`      | string  | Bairro         |\n| `uf`          | string  | Estado (UF)    |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Endereço da Empresa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/empresas/1/endereco",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas",
+                "1",
+                "endereco"
+              ]
+            },
+            "description": "## Buscar Endereço da Empresa\n\nEste endpoint retorna os dados de endereço de uma empresa específica, identificada pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/empresas/{id}/endereco`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição     |\n| --------- | ------- | ------------- |\n| `id`      | integer | ID da empresa |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"q3k9zp\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Exemplo de Requisição\n\n```http id=\"x8m2vn\"\nGET /empresas/1/endereco HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVyaWNraW5AZW1haWwuY29tIiwidXNlcl9pZCI6Mywibml2ZWxfYWNlc3NvIjoiQ0xJRU5URSIsImV4cCI6MTc3ODAyNjk2Mn0.9GtPx69RwB3S9edD_2mukBcaTGHzpQ82cKM6CjOcLnM\n```\n\n### Resposta\n\nRetorna os dados de endereço da empresa em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p6x4rt\"\n{\n  \"enderecoId\": 1,\n  \"cep\": \"87010-000\",\n  \"logradouro\": \"Av. Brasil\",\n  \"complemento\": \"Sala 1\",\n  \"numero\": \"123\",\n  \"cidade\": \"Maringá\",\n  \"bairro\": \"Centro\",\n  \"uf\": \"PR\"\n}\n```\n\n### Campos da resposta\n\n| Campo         | Tipo    | Descrição      |\n| ------------- | ------- | -------------- |\n| `enderecoId`  | integer | ID do endereço |\n| `cep`         | string  | CEP            |\n| `logradouro`  | string  | Rua/Avenida    |\n| `complemento` | string  | Complemento    |\n| `numero`      | string  | Número         |\n| `cidade`      | string  | Cidade         |\n| `bairro`      | string  | Bairro         |\n| `uf`          | string  | Estado (UF)    |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Funcionarios da Empresa",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/empresas/1/funcionarios",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas",
+                "1",
+                "funcionarios"
+              ]
+            },
+            "description": "## Buscar Funcionários da Empresa\n\nEste endpoint retorna todos os funcionários associados a uma empresa específica, identificada pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/empresas/{id}/funcionarios`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da empresa |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nGET /empresas/1/funcionarios HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVyaWNraW5AZW1haWwuY29tIiwidXNlcl9pZCI6Mywibml2ZWxfYWNlc3NvIjoiQ0xJRU5URSIsImV4cCI6MTc3ODAyNjk2Mn0.9GtPx69RwB3S9edD_2mukBcaTGHzpQ82cKM6CjOcLnM\n\n ```\n\n### Resposta\n\nRetorna uma lista de funcionários da empresa em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n[\n  {\n    \"funcionarioId\": 1,\n    \"nome\": \"Lucas Barbeiro\",\n    \"cpf\": \"111.111.111-11\",\n    \"telefone\": \"(44) 94444-4444\",\n    \"email\": \"lucas@email.com\",\n    \"nascimento\": \"1990-01-01\",\n    \"dataContratacao\": \"2024-01-01\",\n    \"salarioBase\": 2000.00,\n    \"percentualComissao\": 10.00,\n    \"usuarioId\": 1,\n    \"nivelAcesso\": \"ADMIN\"\n  },\n  {\n    \"funcionarioId\": 2,\n    \"nome\": \"Carlos Fade\",\n    \"cpf\": \"222.222.222-22\",\n    \"telefone\": \"(44) 95555-5555\",\n    \"email\": \"carlos@email.com\",\n    \"nascimento\": \"1992-02-02\",\n    \"dataContratacao\": \"2024-02-01\",\n    \"salarioBase\": 2200.00,\n    \"percentualComissao\": 15.00,\n    \"usuarioId\": 2,\n    \"nivelAcesso\": \"COLABORADOR\"\n  },\n  {\n    \"funcionarioId\": 4,\n    \"nome\": \"Matheus Souza\",\n    \"cpf\": \"202.202.202-22\",\n    \"telefone\": \"(21) 95263-2022\",\n    \"email\": \"matheussouza@email.com\",\n    \"nascimento\": \"2000-11-01\",\n    \"dataContratacao\": \"2026-01-01\",\n    \"salarioBase\": 10000.00,\n    \"percentualComissao\": 20.00,\n    \"usuarioId\": 6,\n    \"nivelAcesso\": \"COLABORADOR\"\n  }\n]\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `funcionarioId` | integer | ID do funcionário |\n| `nome` | string | Nome completo do funcionário |\n| `cpf` | string | CPF do funcionário |\n| `telefone` | string | Telefone do funcionário |\n| `email` | string | Email do funcionário |\n| `nascimento` | string (ISO 8601) | Data de nascimento |\n| `dataContratacao` | string (ISO 8601) | Data de contratação |\n| `salarioBase` | number | Salário base |\n| `percentualComissao` | number | Percentual de comissão |\n| `usuarioId` | integer | ID do usuário associado |\n| `nivelAcesso` | string | Nível de acesso (ex: ADMIN, COLABORADOR) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar  Empresa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"razaoSocial\": \"Empresa Nova\",\r\n    \"nomeFantasia\": \"EmpresaNova\",\r\n    \"cnpj\": \"12.345.876/0001-09\",\r\n    \"telefone\": \"(11) 98765-1231\",\r\n    \"email\": \"contato@empresanova.com.br\",\r\n    \"tipoAssinatura\": \"PREMIUM\",\r\n    \"endereco\": {\r\n        \"cep\": \"87031-010\",\r\n        \"logradouro\": \"Av. Porto Alegre\",\r\n        \"complemento\": \"\",\r\n        \"numero\": \"101\",\r\n        \"cidade\": \"Maringá\",\r\n        \"bairro\": \"Zona 2\",\r\n        \"uf\": \"PR\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/empresas",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas"
+              ]
+            },
+            "description": "## Cadastrar Empresa\n\nEste endpoint permite cadastrar uma nova empresa no sistema.\n\n### Método\n\n`POST`\n\n### URL\n\n`{{baseURL}}/empresas`\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Headers\n\n| Header | Tipo | Descrição |\n| --- | --- | --- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n``` http\nPOST /empresas HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6Im5vdm91c2VyQGVtYWlsLmNvbSIsInVzZXJfaWQiOjgsIm5pdmVsX2FjZXNzbyI6IkFETUlOIiwiZXhwIjoxNzc4MDI3NzQzfQ.lWoo0ueADOP0H5sEVrJklHGgmuzmpK5lmYYTaA4CFs0\nContent-Type: application/json\nContent-Length: 456\n{\n  \"razaoSocial\": \"Empresa Nova\",\n  \"nomeFantasia\": \"EmpresaNova\",\n  \"cnpj\": \"12.345.876/0001-09\",\n  \"telefone\": \"(11) 98765-1231\",\n  \"email\": \"contato@empresanova.com.br\",\n  \"tipoAssinatura\": \"PREMIUM\",\n  \"endereco\": {\n    \"cep\": \"87031-010\",\n    \"logradouro\": \"Av. Porto Alegre\",\n    \"complemento\": \"\",\n    \"numero\": \"101\",\n    \"cidade\": \"Maringá\",\n    \"bairro\": \"Zona 2\",\n    \"uf\": \"PR\"\n  }\n}\n\n ```\n\n### Corpo da Requisição\n\n#### Empresa\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `razaoSocial` | string | Sim | Razão social da empresa |\n| `nomeFantasia` | string | Sim | Nome fantasia |\n| `cnpj` | string | Sim | CNPJ da empresa |\n| `telefone` | string | Sim | Telefone da empresa |\n| `email` | string | Sim | Email da empresa |\n| `tipoAssinatura` | string | Sim | Tipo de assinatura (ex: BASICO, PREMIUM) |\n| `endereco` | object | Sim | Dados de endereço da empresa |\n\n#### Endereço\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `cep` | string | Sim | CEP |\n| `logradouro` | string | Sim | Rua/Avenida |\n| `complemento` | string | Não | Complemento |\n| `numero` | string | Sim | Número |\n| `cidade` | string | Sim | Cidade |\n| `bairro` | string | Sim | Bairro |\n| `uf` | string | Sim | Estado (UF) |\n\n### Resposta\n\nRetorna os dados da empresa criada em formato JSON.\n\n**Exemplo de resposta (****`201 Created`****):**\n\n``` json\n{\n  \"empresaId\": 4,\n  \"razaoSocial\": \"Empresa Nova\",\n  \"nomeFantasia\": \"EmpresaNova\",\n  \"cnpj\": \"12.345.876/0001-09\",\n  \"telefone\": \"(11) 98765-1231\",\n  \"email\": \"contato@empresanova.com.br\",\n  \"tipoAssinatura\": \"PREMIUM\",\n  \"ativa\": false,\n  \"endereco\": {\n    \"enderecoId\": 5,\n    \"cep\": \"87031-010\",\n    \"logradouro\": \"Av. Porto Alegre\",\n    \"complemento\": \"\",\n    \"numero\": \"101\",\n    \"cidade\": \"Maringá\",\n    \"bairro\": \"Zona 2\",\n    \"uf\": \"PR\"\n  }\n}\n\n ```\n\n### Campos da resposta\n\n#### Empresa\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `empresaId` | integer | ID da empresa |\n| `razaoSocial` | string | Razão social da empresa |\n| `nomeFantasia` | string | Nome fantasia |\n| `cnpj` | string | CNPJ da empresa |\n| `telefone` | string | Telefone da empresa |\n| `email` | string | Email da empresa |\n| `tipoAssinatura` | string | Tipo de assinatura |\n| `ativa` | boolean | Indica se a empresa está ativa |\n| `endereco` | object | Dados de endereço da empresa |\n\n#### Endereço\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `enderecoId` | integer | ID do endereço |\n| `cep` | string | CEP |\n| `logradouro` | string | Rua/Avenida |\n| `complemento` | string | Complemento |\n| `numero` | string | Número |\n| `cidade` | string | Cidade |\n| `bairro` | string | Bairro |\n| `uf` | string | Estado (UF) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Empresa",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"razaoSocial\": \"Barber ab\",\r\n    \"nomeFantasia\": \"Barber Bross2\",\r\n    \"cnpj\": \"12.345.678/0002-09\",\r\n    \"telefone\": \"(11) 98765-4325\",\r\n    \"email\": \"contato@barberbross3.com.br\",\r\n    \"tipoAssinatura\": \"PREMIUM\",\r\n    \"endereco\": {\r\n        \"enderecoId\": 1,\r\n        \"cep\": \"87010-000\",\r\n        \"logradouro\": \"Av. Brasil\",\r\n        \"complemento\": \"Sala 1\",\r\n        \"numero\": \"123\",\r\n        \"cidade\": \"Maringá\",\r\n        \"bairro\": \"Centro\",\r\n        \"uf\": \"PR\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/empresas/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas",
+                "1"
+              ]
+            },
+            "description": "## Editar Empresa\n\nEste endpoint permite atualizar os dados de uma empresa existente, identificada pelo seu ID na URL.\n\n### Método\n\n`PUT`\n\n### URL\n\n`{{baseURL}}/empresas/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição                      |\n| --------- | ------- | ------------------------------ |\n| `id`      | integer | ID da empresa a ser atualizada |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"k2p9qm\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Headers\n\n| Header        | Tipo   | Descrição                   |\n| ------------- | ------ | --------------------------- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type  | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n```http id=\"x7m3zt\"\nPUT /empresas/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\nContent-Type: application/json\nContent-Length: 482\n\n{\n  \"razaoSocial\": \"Barber ab\",\n  \"nomeFantasia\": \"Barber Bross2\",\n  \"cnpj\": \"12.345.678/0002-09\",\n  \"telefone\": \"(11) 98765-4325\",\n  \"email\": \"contato@barberbross3.com.br\",\n  \"tipoAssinatura\": \"PREMIUM\",\n  \"endereco\": {\n    \"enderecoId\": 1,\n    \"cep\": \"87010-000\",\n    \"logradouro\": \"Av. Brasil\",\n    \"complemento\": \"Sala 1\",\n    \"numero\": \"123\",\n    \"cidade\": \"Maringá\",\n    \"bairro\": \"Centro\",\n    \"uf\": \"PR\"\n  }\n}\n```\n\n### Corpo da Requisição\n\n#### Empresa\n\n| Campo            | Tipo   | Obrigatório | Descrição                                |\n| ---------------- | ------ | ----------- | ---------------------------------------- |\n| `razaoSocial`    | string | Sim         | Razão social da empresa                  |\n| `nomeFantasia`   | string | Sim         | Nome fantasia                            |\n| `cnpj`           | string | Sim         | CNPJ da empresa                          |\n| `telefone`       | string | Sim         | Telefone da empresa                      |\n| `email`          | string | Sim         | Email da empresa                         |\n| `tipoAssinatura` | string | Sim         | Tipo de assinatura (ex: BASICO, PREMIUM) |\n| `endereco`       | object | Sim         | Dados de endereço da empresa             |\n\n#### Endereço\n\n| Campo         | Tipo    | Obrigatório | Descrição      |\n| ------------- | ------- | ----------- | -------------- |\n| `enderecoId`  | integer | Sim         | ID do endereço |\n| `cep`         | string  | Sim         | CEP            |\n| `logradouro`  | string  | Sim         | Rua/Avenida    |\n| `complemento` | string  | Não         | Complemento    |\n| `numero`      | string  | Sim         | Número         |\n| `cidade`      | string  | Sim         | Cidade         |\n| `bairro`      | string  | Sim         | Bairro         |\n| `uf`          | string  | Sim         | Estado (UF)    |\n\n### Resposta\n\nRetorna os dados atualizados da empresa em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p6x2rt\"\n{\n  \"empresaId\": 1,\n  \"razaoSocial\": \"Barber ab\",\n  \"nomeFantasia\": \"Barber Bross2\",\n  \"cnpj\": \"12.345.678/0002-09\",\n  \"telefone\": \"(11) 98765-4325\",\n  \"email\": \"contato@barberbross3.com.br\",\n  \"tipoAssinatura\": \"PREMIUM\",\n  \"ativa\": true,\n  \"endereco\": {\n    \"enderecoId\": 1,\n    \"cep\": \"87010-000\",\n    \"logradouro\": \"Av. Brasil\",\n    \"complemento\": \"Sala 1\",\n    \"numero\": \"123\",\n    \"cidade\": \"Maringá\",\n    \"bairro\": \"Centro\",\n    \"uf\": \"PR\"\n  }\n}\n```\n\n### Campos da resposta\n\n#### Empresa\n\n| Campo            | Tipo    | Descrição                      |\n| ---------------- | ------- | ------------------------------ |\n| `empresaId`      | integer | ID da empresa                  |\n| `razaoSocial`    | string  | Razão social da empresa        |\n| `nomeFantasia`   | string  | Nome fantasia                  |\n| `cnpj`           | string  | CNPJ da empresa                |\n| `telefone`       | string  | Telefone da empresa            |\n| `email`          | string  | Email da empresa               |\n| `tipoAssinatura` | string  | Tipo de assinatura             |\n| `ativa`          | boolean | Indica se a empresa está ativa |\n| `endereco`       | object  | Dados de endereço da empresa   |\n\n#### Endereço\n\n| Campo         | Tipo    | Descrição      |\n| ------------- | ------- | -------------- |\n| `enderecoId`  | integer | ID do endereço |\n| `cep`         | string  | CEP            |\n| `logradouro`  | string  | Rua/Avenida    |\n| `complemento` | string  | Complemento    |\n| `numero`      | string  | Número         |\n| `cidade`      | string  | Cidade         |\n| `bairro`      | string  | Bairro         |\n| `uf`          | string  | Estado (UF)    |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Endereço da Empresa",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cep\": \"01001-000\",\r\n    \"logradouro\": \"Praça da Sé\",\r\n    \"complemento\": \"lado ímpar\",\r\n    \"numero\": \"107\",\r\n    \"cidade\": \"São Paulo\",\r\n    \"bairro\": \"Sé\",\r\n    \"uf\": \"SP\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/empresas/1/endereco",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas",
+                "1",
+                "endereco"
+              ]
+            },
+            "description": "## Editar Endereço da Empresa\n\nEste endpoint permite atualizar o endereço de uma empresa existente, identificada pelo seu ID na URL.\n\n### Método\n\n`PUT`\n\n### URL\n\n`{{baseURL}}/empresas/{id}/endereco`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da empresa |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Headers\n\n| Header | Tipo | Descrição |\n| --- | --- | --- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n``` http\nPUT /empresas/1/endereco HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\nContent-Type: application/json\nContent-Length: 184\n{\n  \"cep\": \"01001-000\",\n  \"logradouro\": \"Praça da Sé\",\n  \"complemento\": \"lado ímpar\",\n  \"numero\": \"107\",\n  \"cidade\": \"São Paulo\",\n  \"bairro\": \"Sé\",\n  \"uf\": \"SP\"\n}\n\n ```\n\n### Corpo da Requisição\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `cep` | string | Sim | CEP |\n| `logradouro` | string | Sim | Rua/Avenida |\n| `complemento` | string | Não | Complemento |\n| `numero` | string | Sim | Número |\n| `cidade` | string | Sim | Cidade |\n| `bairro` | string | Sim | Bairro |\n| `uf` | string | Sim | Estado (UF) |\n\n### Resposta\n\nNão retorna corpo na resposta.\n\n**Exemplo de resposta:**\n\nStatus: `200 OK`"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Empresa",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/empresas/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas",
+                "1"
+              ]
+            },
+            "description": "## Deletar Empresa\n\nEste endpoint permite remover uma empresa existente, identificada pelo seu ID na URL.\n\n### Método\n\n`DELETE`\n\n### URL\n\n`{{baseURL}}/empresas/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da empresa a ser removida |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nDELETE /empresas/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMD53OTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\n\n ```\n\n### Resposta\n\nNão retorna corpo na resposta.\n\n**Exemplo de resposta:**\n\nStatus: `204 No Content`"
+          },
+          "response": []
+        },
+        {
+          "name": "Ativar Empresa",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/empresas/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "empresas",
+                "1"
+              ]
+            },
+            "description": "## Ativar Empresa\n\nEste endpoint permite ativar uma empresa existente, identificada pelo seu ID na URL.\n\n### Método\n\n`PATCH`\n\n### URL\n\n`{{baseURL}}/empresas/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da empresa a ser ativada |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nPATCH /empresas/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\n\n ```\n\n### Resposta\n\nNão retorna corpo na resposta.\n\n**Exemplo de resposta:**\n\nStatus: `200 OK`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Endereço",
+      "item": [
+        {
+          "name": "Buscar todos os Enderecos(só pra dev)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/enderecos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "enderecos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar endereco por Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/enderecos/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "enderecos",
+                "1"
+              ]
+            },
+            "description": "## Buscar Endereço por ID\n\nEste endpoint retorna os dados de um endereço específico, identificado pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/enderecos/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição                       |\n| --------- | ------- | ------------------------------- |\n| `id`      | integer | ID do endereço a ser consultado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"k2m7qp\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Exemplo de Requisição\n\n```http id=\"x9m1zn\"\nGET /enderecos/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\n```\n\n### Resposta\n\nRetorna os dados do endereço em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p4x2rt\"\n{\n  \"enderecoId\": 1,\n  \"cep\": \"01001-000\",\n  \"logradouro\": \"Praça da Sé\",\n  \"complemento\": \"lado ímpar\",\n  \"numero\": \"107\",\n  \"cidade\": \"São Paulo\",\n  \"bairro\": \"Sé\",\n  \"uf\": \"SP\"\n}\n```\n\n### Campos da resposta\n\n| Campo         | Tipo    | Descrição      |\n| ------------- | ------- | -------------- |\n| `enderecoId`  | integer | ID do endereço |\n| `cep`         | string  | CEP            |\n| `logradouro`  | string  | Rua/Avenida    |\n| `complemento` | string  | Complemento    |\n| `numero`      | string  | Número         |\n| `cidade`      | string  | Cidade         |\n| `bairro`      | string  | Bairro         |\n| `uf`          | string  | Estado (UF)    |\n"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Fornecedor",
+      "item": [
+        {
+          "name": "Buscar todos os Fornecedores",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"dataHorario\": \"2026-01-28T14:30:00\",\r\n    \"observacao\": \"Agendamento realizado pelo cliente via app\",\r\n    \"clienteId\": 1,\r\n    \"empresaId\": 1,\r\n    \"funcionarioId\": 1,\r\n    \"listaDeServicosId\": [\r\n        1,\r\n        2,\r\n        5\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}/fornecedores",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "fornecedores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar novo Fornecedor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Empresa Exemplo LTDA\",\r\n    \"cnpj\": \"12.345.678/0001-91\",\r\n    \"telefone\": \"(11) 98765-4322\",\r\n    \"email\": \"contato@empresaexemplo2.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/fornecedores",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "fornecedores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar Endereço do Fornecedor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cep\": \"01001-000\",\r\n    \"logradouro\": \"Praça da Sé\",\r\n    \"complemento\": \"lado ímpar\",\r\n    \"numero\": \"101\",\r\n    \"cidade\": \"São Paulo\",\r\n    \"bairro\": \"Sé\",\r\n    \"uf\": \"SP\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/fornecedores/1/endereco",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "fornecedores",
+                "1",
+                "endereco"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Fornecedor por Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"dataHorario\": \"2026-01-28T14:30:00\",\r\n    \"observacao\": \"Agendamento realizado pelo cliente via app\",\r\n    \"clienteId\": 1,\r\n    \"empresaId\": 1,\r\n    \"funcionarioId\": 1,\r\n    \"listaDeServicosId\": [\r\n        1,\r\n        2,\r\n        5\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}/fornecedores/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "fornecedores",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Fornecedor",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Empresa Exemplo LTDA2\",\r\n    \"cnpj\": \"12.345.678/0001-97\",\r\n    \"telefone\": \"(11) 98765-4322\",\r\n    \"email\": \"contato@empresaexemplo2.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/fornecedores/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "fornecedores",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Endereço do Fornecedor",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cep\": \"01001-000\",\r\n    \"logradouro\": \"Praça da Sé\",\r\n    \"complemento\": \"lado ímpar\",\r\n    \"numero\": \"100\",\r\n    \"cidade\": \"São Paulo\",\r\n    \"bairro\": \"Sé\",\r\n    \"uf\": \"SP\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/fornecedores/endereco/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "fornecedores",
+                "endereco",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Fornecedor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/fornecedores/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "fornecedores",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Funcionário",
+      "item": [
+        {
+          "name": "Buscar todos os Funcionários",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/funcionarios/empresa/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "funcionarios",
+                "empresa",
+                "1"
+              ]
+            },
+            "description": "## Buscar todos os Funcionários\n\nRetorna a lista de todos os funcionários cadastrados para uma empresa específica.\n\n---\n\n### Detalhes da Requisição\n\n**Método:** `GET`  \n**URL:** `{{baseURL}}/funcionarios/empresa/1`\n\n> O valor `1` no caminho da URL representa o ID da empresa (`empresaId`). Substitua conforme necessário para consultar funcionários de outra empresa. \n  \n\n---\n\n### Autenticação\n\nEsta requisição requer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho `Authorization`:\n\n| Header | Valor |\n| --- | --- |\n| `Authorization` | `Bearer {{auth_token}}` |\n\nA variável `{{auth_token}}` deve estar definida no ambiente ativo com um token válido obtido no endpoint de login.\n\n---\n\n### Exemplo de Resposta\n\n**Status:** `200 OK`\n\n``` json\n[\n  {\n    \"funcionarioId\": 34,\n    \"nome\": \"Novo User\",\n    \"cpf\": \"123.123.321-21\",\n    \"telefone\": \"(44)98445-8521\",\n    \"email\": \"novouser@email.com\",\n    \"nascimento\": \"2000-11-01\",\n    \"dataContratacao\": \"2026-05-02\",\n    \"salarioBase\": 5000,\n    \"percentualComissao\": 20,\n    \"usuarioId\": 34,\n    \"nivelAcesso\": \"ADMIN\"\n  }\n]\n\n ```\n\n### Campos da Resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `funcionarioId` | `number` | Identificador único do funcionário |\n| `nome` | `string` | Nome completo do funcionário |\n| `cpf` | `string` | CPF do funcionário |\n| `telefone` | `string` | Número de telefone do funcionário |\n| `email` | `string` | Endereço de e-mail do funcionário |\n| `nascimento` | `string` | Data de nascimento no formato `YYYY-MM-DD` |\n| `dataContratacao` | `string` | Data de contratação no formato `YYYY-MM-DD` |\n| `salarioBase` | `number` | Salário base do funcionário |\n| `percentualComissao` | `number` | Percentual de comissão do funcionário |\n| `usuarioId` | `number` | ID do usuário vinculado ao funcionário |\n| `nivelAcesso` | `string` | Nível de acesso do funcionário (ex: `ADMIN`, `COLABORADOR`) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Funcionário por Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/funcionarios/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "funcionarios",
+                "1"
+              ]
+            },
+            "description": "## Buscar Funcionário por ID\n\nEste endpoint retorna os dados de um funcionário específico, identificado pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/funcionarios/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID do funcionário a ser consultado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nGET /funcionarios/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\n\n ```\n\n### Resposta\n\nRetorna os dados do funcionário em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n{\n  \"funcionarioId\": 1,\n  \"nome\": \"Lucas Barbeiro\",\n  \"cpf\": \"111.111.111-11\",\n  \"telefone\": \"(44) 94444-4444\",\n  \"email\": \"lucas@email.com\",\n  \"nascimento\": \"1990-01-01\",\n  \"dataContratacao\": \"2024-01-01\",\n  \"salarioBase\": 2000.00,\n  \"percentualComissao\": 10.00,\n  \"usuarioId\": 1,\n  \"nivelAcesso\": \"ADMIN\"\n}\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `funcionarioId` | integer | ID do funcionário |\n| `nome` | string | Nome completo do funcionário |\n| `cpf` | string | CPF do funcionário |\n| `telefone` | string | Telefone do funcionário |\n| `email` | string | Email do funcionário |\n| `nascimento` | string (ISO 8601) | Data de nascimento |\n| `dataContratacao` | string (ISO 8601) | Data de contratação |\n| `salarioBase` | number | Salário base |\n| `percentualComissao` | number | Percentual de comissão |\n| `usuarioId` | integer | ID do usuário associado |\n| `nivelAcesso` | string | Nível de acesso (ex: ADMIN, COLABORADOR) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Perfil Funcionário",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Carlos Oliveira\",\r\n    \"cpf\": \"123.123.121-32\",\r\n    \"telefone\": \"(69)99243-1211\",\r\n    \"email\": \"carlos@email.com\",\r\n    \"senha\": \"123\",\r\n    \"nascimento\": \"2000-11-01\",\r\n    \"nivelAcesso\": \"COLABORADOR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/funcionarios/perfil/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "funcionarios",
+                "perfil",
+                "2"
+              ]
+            },
+            "description": "## Editar Perfil Funcionário\n\nAtualiza parcialmente os dados do perfil de um funcionário específico. Permite modificar informações pessoais e de acesso do funcionário identificado pelo ID informado na URL.\n\n---\n\n### Método e URL\n\n```\nPATCH {{baseURL}}/funcionarios/perfil/{id}\n\n ```\n\n| Parâmetro de Rota | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID único do funcionário a ser editado |\n\n---\n\n### Autenticação\n\n> ⚠️ **Autenticação obrigatória.** Esta rota requer um token JWT válido no cabeçalho da requisição. \n  \n\n---\n\n### Cabeçalhos (Headers)\n\n| Chave | Valor | Descrição |\n| --- | --- | --- |\n| `Authorization` | `Bearer {{auth_token}}` | Token de autenticação JWT do usuário |\n| `Content-Type` | `application/json` | Tipo do conteúdo enviado no corpo |\n\n---\n\nA variável `{{auth_token}}` deve estar definida no ambiente ativo com um token válido obtido no endpoint de login.\n\n---\n\n### Corpo da Requisição (Request Body)\n\nFormato: `JSON (raw)`\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `nome` | string | Nome completo do funcionário |\n| `cpf` | string | CPF do funcionário no formato `000.000.000-00` |\n| `telefone` | string | Telefone de contato no formato `(XX)XXXXX-XXXX` |\n| `email` | string | Endereço de e-mail do funcionário |\n| `senha` | string | Nova senha de acesso do funcionário |\n| `nascimento` | string | Data de nascimento no formato `YYYY-MM-DD` |\n| `nivelAcesso` | string | Nível de acesso do funcionário. Valores possíveis: `COLABORADOR`, etc. |\n\n**Exemplo de corpo:**\n\n``` json\n{\n  \"nome\": \"Carlos Oliveira\",\n  \"cpf\": \"123.123.121-32\",\n  \"telefone\": \"(69)99243-1211\",\n  \"email\": \"carlos@email.com\",\n  \"senha\": \"123\",\n  \"nascimento\": \"2000-11-01\",\n  \"nivelAcesso\": \"COLABORADOR\"\n}\n\n ```\n\n---\n\n### Resposta de Sucesso\n\n**Status:** `200 OK`\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `funcionarioId` | integer | ID único do funcionário |\n| `nome` | string | Nome completo do funcionário |\n| `cpf` | string | CPF do funcionário |\n| `telefone` | string | Telefone de contato |\n| `email` | string | Endereço de e-mail |\n| `nascimento` | string | Data de nascimento no formato `YYYY-MM-DD` |\n| `dataContratacao` | string | Data de contratação no formato `YYYY-MM-DD` |\n| `salarioBase` | number | Salário base do funcionário |\n| `percentualComissao` | number | Percentual de comissão do funcionário |\n| `usuarioId` | integer | ID do usuário vinculado ao funcionário |\n| `nivelAcesso` | string | Nível de acesso do funcionário |\n\n**Exemplo de resposta:**\n\n``` json\n{\n  \"funcionarioId\": 2,\n  \"nome\": \"Carlos Oliveira\",\n  \"cpf\": \"123.123.121-32\",\n  \"telefone\": \"(69)99243-1211\",\n  \"email\": \"carlos@email.com\",\n  \"nascimento\": \"2000-11-01\",\n  \"dataContratacao\": \"2024-02-01\",\n  \"salarioBase\": 2200,\n  \"percentualComissao\": 15,\n  \"usuarioId\": 2,\n  \"nivelAcesso\": \"COLABORADOR\"\n}\n\n ```\n\n---\n\n### Observações\n\n- Esta rota utiliza o método `PATCH`, portanto apenas os campos enviados no corpo serão atualizados.\n    \n- O campo `senha` será armazenado de forma segura pelo servidor.\n    \n- O `nivelAcesso` controla as permissões do funcionário dentro do sistema."
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Funcionário Completo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Novo User\",\r\n    \"cpf\": \"123.123.321-21\",\r\n    \"telefone\": \"(44)98445-8521\",\r\n    \"email\": \"novouser@email.com\",\r\n    \"senha\": \"123\",\r\n    \"nascimento\": \"2000-11-01\",\r\n    \"empresaId\": 4,\r\n    \"dataContratacao\": \"2026-05-02\",\r\n    \"salarioBase\": \"5000\",\r\n    \"percentualComissao\": \"20\",\r\n    \"nivelAcesso\": \"ADMIN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/funcionarios/6",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "funcionarios",
+                "6"
+              ]
+            },
+            "description": "## Editar Funcionário Completo\n\nEste endpoint permite atualizar todos os dados de um funcionário existente, identificado pelo seu ID na URL.\n\n### Método\n\n`PUT`\n\n### URL\n\n`{{baseURL}}/funcionarios/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo    | Descrição                          |\n| --------- | ------- | ---------------------------------- |\n| `id`      | integer | ID do funcionário a ser atualizado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"k1p8qm\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Headers\n\n| Header        | Tipo   | Descrição                   |\n| ------------- | ------ | --------------------------- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type  | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n```http id=\"x7m1zt\"\nPUT /funcionarios/6 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6Im5vdm91c2VyQGVtYWlsLmNvbSIsInVzZXJfaWQiOjgsIm5pdmVsX2FjZXNzbyI6IkFETUlOIiwiZXhwIjoxNzc4MDI5MTc1fQ.pk9RTOdkp3FabSTxwnAbHIUS60grfFLpkrQ9PNpmsA4\nContent-Type: application/json\nContent-Length: 333\n\n{\n  \"nome\": \"Novo User\",\n  \"cpf\": \"123.123.321-21\",\n  \"telefone\": \"(44) 98445-8521\",\n  \"email\": \"novouser@email.com\",\n  \"senha\": \"123\",\n  \"nascimento\": \"2000-11-01\",\n  \"empresaId\": 4,\n  \"dataContratacao\": \"2026-05-02\",\n  \"salarioBase\": \"5000\",\n  \"percentualComissao\": \"20\",\n  \"nivelAcesso\": \"ADMIN\"\n}\n```\n\n### Corpo da Requisição\n\n| Campo                | Tipo    | Obrigatório | Descrição                                |\n| -------------------- | ------- | ----------- | ---------------------------------------- |\n| `nome`               | string  | Sim         | Nome do funcionário                      |\n| `cpf`                | string  | Sim         | CPF do funcionário                       |\n| `telefone`           | string  | Sim         | Telefone do funcionário                  |\n| `email`              | string  | Sim         | Email do funcionário                     |\n| `senha`              | string  | Sim         | Senha do usuário associado               |\n| `nascimento`         | string  | Sim         | Data de nascimento (ISO 8601)            |\n| `empresaId`          | integer | Sim         | ID da empresa                            |\n| `dataContratacao`    | string  | Sim         | Data de contratação (ISO 8601)           |\n| `salarioBase`        | string  | Sim         | Salário base                             |\n| `percentualComissao` | string  | Sim         | Percentual de comissão                   |\n| `nivelAcesso`        | string  | Sim         | Nível de acesso (ex: ADMIN, COLABORADOR) |\n\n### Resposta\n\nRetorna os dados atualizados do funcionário em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p3x6rt\"\n{\n  \"funcionarioId\": 6,\n  \"nome\": \"Novo User\",\n  \"cpf\": \"123.123.321-21\",\n  \"telefone\": \"(44)98445-8521\",\n  \"email\": \"novouser@email.com\",\n  \"nascimento\": \"2000-11-01\",\n  \"dataContratacao\": \"2026-05-03\",\n  \"salarioBase\": 5000,\n  \"percentualComissao\": 20,\n  \"usuarioId\": 8,\n  \"nivelAcesso\": \"ADMIN\"\n}\n```\n\n### Campos da resposta\n\n| Campo                | Tipo              | Descrição               |\n| -------------------- | ----------------- | ----------------------- |\n| `funcionarioId`      | integer           | ID do funcionário       |\n| `nome`               | string            | Nome do funcionário     |\n| `cpf`                | string            | CPF do funcionário      |\n| `telefone`           | string            | Telefone do funcionário |\n| `email`              | string            | Email do funcionário    |\n| `nascimento`         | string (ISO 8601) | Data de nascimento      |\n| `dataContratacao`    | string (ISO 8601) | Data de contratação     |\n| `salarioBase`        | number            | Salário base            |\n| `percentualComissao` | number            | Percentual de comissão  |\n| `usuarioId`          | integer           | ID do usuário associado |\n| `nivelAcesso`        | string            | Nível de acesso         |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Funcionário",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/funcionarios/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "funcionarios",
+                "2"
+              ]
+            },
+            "description": "## Deletar Funcionário\n\nEste endpoint permite remover um funcionário existente, identificado pelo seu ID na URL.\n\n### Método\n\n`DELETE`\n\n### URL\n\n`{{baseURL}}/funcionarios/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID do funcionário a ser removido |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nDELETE /funcionarios/2 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMDUzOTd9.MM1hYEZ4it-K4_VTE8H3Hn_NqerRtjOMbCv9SuquiEM\n\n ```\n\n### Resposta\n\nNão retorna corpo na resposta.\n\n**Exemplo de resposta:**\n\nStatus: `204 No Content`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Produto",
+      "item": [
+        {
+          "name": "Buscar todos os Produtos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW9zb3V6YSIsInVzZXJfaWQiOjIsIm5pdmVsX2FjZXNzbyI6IkNMSUVOVEUiLCJleHAiOjE3NzM1MDQ3MTN9.ICUBu5BSauOfBrdrtTqarByo9GqMLJbcNIXw8rDfz6A",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/produtos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar Produto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImpvYW9zb3V6YSIsInVzZXJfaWQiOjIsIm5pdmVsX2FjZXNzbyI6IkNMSUVOVEUiLCJleHAiOjE3NzM1MDQ3MTN9.ICUBu5BSauOfBrdrtTqarByo9GqMLJbcNIXw8rDfz6A",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\" : \"Pomada Tal 500g\",\r\n    \"descricao\" : \"Pomada de cabelo da marca Tal.\",\r\n    \"categoriaId\" : 5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/produtos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Produto",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Pomada Tal 200g\",\r\n    \"descricao\": \"Pomada de cabelo da marca Tal.\",\r\n    \"categoriaId\": 4\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/produtos/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Produto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/produtos/3",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "produtos",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Serviço",
+      "item": [
+        {
+          "name": "Buscar todos Serviços por Empresa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/servicos/empresa/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "servicos",
+                "empresa",
+                "1"
+              ]
+            },
+            "description": "## Buscar Todos os Serviços por Empresa\n\nEste endpoint retorna todos os serviços associados a uma empresa específica, identificada pelo seu ID na URL.\n\n### Método\n\n`GET`\n\n### URL\n\n`{{baseURL}}/servicos/empresa/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID da empresa |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Exemplo de Requisição\n\n``` http\nGET /servicos/empresa/1 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMzA3MjB9.D4pLnMEuv_aMbRhItzEsRKkh4wdfC9gMx9hSUvIrSwY\n\n ```\n\n### Resposta\n\nRetorna uma lista de serviços da empresa em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n[\n  {\n    \"servicoId\": 1,\n    \"nome\": \"Corte Masculino\",\n    \"descricao\": \"Corte tradicional\",\n    \"categoriaId\": 1,\n    \"preco\": 50.00,\n    \"duracao\": 30,\n    \"empresaId\": 1\n  },\n  {\n    \"servicoId\": 2,\n    \"nome\": \"Barba Completa\",\n    \"descricao\": \"Barba com toalha quente\",\n    \"categoriaId\": 2,\n    \"preco\": 40.00,\n    \"duracao\": 25,\n    \"empresaId\": 1\n  },\n  {\n    \"servicoId\": 3,\n    \"nome\": \"Corte + Barba\",\n    \"descricao\": \"Combo completo\",\n    \"categoriaId\": 1,\n    \"preco\": 80.00,\n    \"duracao\": 60,\n    \"empresaId\": 1\n  }\n]\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `servicoId` | integer | ID do serviço |\n| `nome` | string | Nome do serviço |\n| `descricao` | string | Descrição do serviço |\n| `categoriaId` | integer | ID da categoria associada |\n| `preco` | number | Preço do serviço |\n| `duracao` | integer | Duração em minutos |\n| `empresaId` | integer | ID da empresa |"
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar Serviço",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\" : \"Corte da Empresa 1\",\r\n    \"categoriaId\" : 1,\r\n    \"preco\" : 45.00,\r\n    \"duracao\" : 30,\r\n    \"empresaId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/servicos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "servicos"
+              ]
+            },
+            "description": "## Cadastrar Serviço\n\nEste endpoint permite cadastrar um novo serviço.\n\n### Método\n\n`POST`\n\n### URL\n\n`{{baseURL}}/servicos`\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n```http id=\"k5p2qm\"\nAuthorization: Bearer {{auth_token}}\n```\n\n### Headers\n\n| Header        | Tipo   | Descrição                   |\n| ------------- | ------ | --------------------------- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type  | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n```http id=\"x4m7zn\"\nPOST /servicos HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMzA3MjB9.D4pLnMEuv_aMbRhItzEsRKkh4wdfC9gMx9hSUvIrSwY\nContent-Type: application/json\nContent-Length: 127\n\n{\n  \"nome\": \"Corte da Empresa 1\",\n  \"categoriaId\": 1,\n  \"preco\": 45.00,\n  \"duracao\": 30,\n  \"empresaId\": 1\n}\n```\n\n### Corpo da Requisição\n\n| Campo         | Tipo    | Obrigatório | Descrição          |\n| ------------- | ------- | ----------- | ------------------ |\n| `nome`        | string  | Sim         | Nome do serviço    |\n| `categoriaId` | integer | Sim         | ID da categoria    |\n| `preco`       | number  | Sim         | Preço do serviço   |\n| `duracao`     | integer | Sim         | Duração em minutos |\n| `empresaId`   | integer | Sim         | ID da empresa      |\n\n### Resposta\n\nRetorna os dados do serviço cadastrado em formato JSON.\n\n**Exemplo de resposta (`200 OK`):**\n\n```json id=\"p6x3rt\"\n{\n  \"servicoId\": 4,\n  \"nome\": \"Corte da Empresa 1\",\n  \"descricao\": null,\n  \"categoriaId\": 1,\n  \"preco\": 45.00,\n  \"duracao\": 30,\n  \"empresaId\": 1\n}\n```\n\n### Campos da resposta\n\n| Campo         | Tipo    | Descrição                            |\n| ------------- | ------- | ------------------------------------ |\n| `servicoId`   | integer | ID do serviço                        |\n| `nome`        | string  | Nome do serviço                      |\n| `descricao`   | string  | Descrição do serviço (pode ser nula) |\n| `categoriaId` | integer | ID da categoria                      |\n| `preco`       | number  | Preço do serviço                     |\n| `duracao`     | integer | Duração em minutos                   |\n| `empresaId`   | integer | ID da empresa                        |\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Serviço",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Corte Social da Empresa 1\",\r\n    \"descricao\": \"Corte de cabelo social tradicional.\",\r\n    \"categoriaId\": 4,\r\n    \"preco\": 45.0,\r\n    \"duracao\": 30,\r\n    \"empresaId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/servicos/4",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "servicos",
+                "4"
+              ]
+            },
+            "description": "## Editar Serviço\n\nEste endpoint permite atualizar os dados de um serviço existente, identificado pelo seu ID na URL.\n\n### Método\n\n`PATCH`\n\n### URL\n\n`{{baseURL}}/servicos/{id}`\n\n### Parâmetro de URL\n\n| Parâmetro | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | integer | ID do serviço a ser atualizado |\n\n### Autenticação\n\nRequer autenticação via **Bearer Token**. O token deve ser enviado no cabeçalho da requisição:\n\n``` http\nAuthorization: Bearer {{auth_token}}\n\n ```\n\n### Headers\n\n| Header | Tipo | Descrição |\n| --- | --- | --- |\n| Authorization | string | Token JWT no formato Bearer |\n| Content-Type | string | Deve ser `application/json` |\n\n### Exemplo de Requisição\n\n``` http\nPATCH /servicos/4 HTTP/1.1\nHost: localhost:8080\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkbWluIiwidXNlcl9pZCI6MSwibml2ZWxfYWNlc3NvIjoiQURNSU4iLCJleHAiOjE3NzgwMzA3MjB9.D4pLnMEuv_aMbRhItzEsRKkh4wdfC9gMx9hSUvIrSwY\nContent-Type: application/json\nContent-Length: 186\n{\n  \"nome\": \"Corte Social da Empresa 1\",\n  \"descricao\": \"Corte de cabelo social tradicional.\",\n  \"categoriaId\": 4,\n  \"preco\": 45.0,\n  \"duracao\": 30,\n  \"empresaId\": 1\n}\n\n ```\n\n### Corpo da Requisição\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `nome` | string | Sim | Nome do serviço |\n| `descricao` | string | Não | Descrição do serviço |\n| `categoriaId` | integer | Sim | ID da categoria |\n| `preco` | number | Sim | Preço do serviço |\n| `duracao` | integer | Sim | Duração em minutos |\n| `empresaId` | integer | Sim | ID da empresa |\n\n### Resposta\n\nRetorna os dados atualizados do serviço em formato JSON.\n\n**Exemplo de resposta (****`200 OK`****):**\n\n``` json\n{\n  \"servicoId\": 4,\n  \"nome\": \"Corte Social da Empresa 1\",\n  \"descricao\": \"Corte de cabelo social tradicional.\",\n  \"categoriaId\": 4,\n  \"preco\": 45.0,\n  \"duracao\": 30,\n  \"empresaId\": 1\n}\n\n ```\n\n### Campos da resposta\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `servicoId` | integer | ID do serviço |\n| `nome` | string | Nome do serviço |\n| `descricao` | string | Descrição do serviço |\n| `categoriaId` | integer | ID da categoria |\n| `preco` | number | Preço do serviço |\n| `duracao` | integer | Duração em minutos |\n| `empresaId` | integer | ID da empresa |"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Serviço",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/servicos/6",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "servicos",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "SocialMedia",
+      "item": [
+        {
+          "name": "Buscar todas as SocialMedias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/socialmedias",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "socialmedias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar SocialMedia",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"url\" : \"https://www.instagram.com/teste23/\",\r\n    \"empresaId\": 1\r\n    \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/socialmedias",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "socialmedias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar SocialMedia",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"url\": \"https://www.instagram.com/teste/\",\r\n    \"empresaId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/socialmedias/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "socialmedias",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Excluir SocialMedia",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"url\" : \"https://www.instagram.com/teste/\",\r\n    \r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}/socialmedias/3",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "socialmedias",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuário",
+      "item": [
+        {
+          "name": "Buscar todos os Usuários",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/usuarios",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"paqueta\",\r\n    \"senha\": \"paqueta123\",\r\n    \"funcionarioId\": 1,\r\n    \"nivelAcesso\": \"COLABORADOR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/usuarios",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Usuário",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"fornecedor\",\r\n    \"senha\" : \"123\",\r\n    \"nivelAcesso\": \"FORNECEDOR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/usuarios/5",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Excluir Usuário",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/usuarios/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

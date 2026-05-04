@@ -2,7 +2,6 @@ package com.barberbross.BarberBross.config.websocket;
 
 import com.barberbross.BarberBross.config.security.TokenService;
 import com.barberbross.BarberBross.exceptions.NotFoundException;
-import com.barberbross.BarberBross.model.CustomUserPrincipal;
 import com.barberbross.BarberBross.model.Funcionario;
 import com.barberbross.BarberBross.model.Usuario;
 import com.barberbross.BarberBross.repository.FuncionarioRepository;
@@ -35,15 +34,14 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
         try {
             var accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
+            assert accessor != null;
             if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                 Usuario usuario = usuarioRepository.findByUsuarioId(tokenService.getUserId(pegaToken(accessor)));
                 Funcionario funcionario = funcionarioRepository.findByUsuarioUsuarioId(usuario.getUsuarioId())
                         .orElseThrow(() -> new NotFoundException("Nenhum Funcionário encontrado."));
 
-                CustomUserPrincipal principal = new CustomUserPrincipal(usuario.getUsuarioId(),
-                        funcionario.getFuncionarioId(),
-                        funcionario.getEmpresa().getEmpresaId(),
-                        usuario.getAuthorities());
+                Usuario principal = new Usuario(usuario.getUsuarioId(),
+                        funcionario, funcionario.getEmpresa(), usuario.getAuthorities(), usuario.getNivelAcesso());
 
                 accessor.setUser(new UsernamePasswordAuthenticationToken(
                         principal, null, principal.getAuthorities()
@@ -62,8 +60,8 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
                     throw new IllegalArgumentException("Usuário não autenticado");
                 }
 
-                CustomUserPrincipal principal = (CustomUserPrincipal) auth.getPrincipal();
-                Long empresaIdUsuario = principal.getEmpresaId();
+                Usuario principal = (Usuario) auth.getPrincipal();
+                Long empresaIdUsuario = principal.getEmpresa().getEmpresaId();
 
                 // EXEMPLO: /topic/empresa/1
                 if (destination.startsWith("/topic/empresa/")) {
@@ -78,13 +76,13 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
                 if (destination.startsWith("/queue/agenda/")) {
                     Long funcionarioIdDestino = extrairId(destination);
 
-                    if (!principal.getFuncionarioId().equals(funcionarioIdDestino)) {
+                    if (!principal.getFuncionario().getFuncionarioId().equals(funcionarioIdDestino)) {
                         throw new IllegalArgumentException("Acesso negado à agenda");
                     }
                 }
             }
             return message;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }

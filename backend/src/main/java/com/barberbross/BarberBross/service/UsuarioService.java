@@ -27,6 +27,7 @@ public class UsuarioService {
         validator.validar(dto);
         String senhaEncriptada = new BCryptPasswordEncoder().encode(dto.senha());
         Usuario u = new Usuario(dto, senhaEncriptada);
+        u.setAuthorities(u.getAuthorities());
         usuarioRepository.save(u);
 
         return new DTOUsuarioResponse(u);
