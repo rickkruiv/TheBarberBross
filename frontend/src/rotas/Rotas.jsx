@@ -5,7 +5,9 @@ import ProtectedRoute from "./Protected";
 import DashboardLayout from "../layouts/DashboardLayout";
 import { AuthProvider } from "../contexts/AuthContext";
 import { WebSocketProvider } from "../contexts/WebSocketContext";
+import { NotificationsProvider } from "../contexts/NotificationsContext";
 
+const Home = lazy(() => import("../pages/home/Home"));
 const EmployeesCreate = lazy(() => import("../pages/empregados/EmployeesCreate"));
 const EmployeesList = lazy(() => import("../pages/empregados/EmployeesList"));
 const ServicesCreate = lazy(() => import("../pages/servicos/ServicesCreate"));
@@ -27,16 +29,18 @@ export default function Rotas() {
   return (
     <AuthProvider>
       <WebSocketProvider>
-        <BrowserRouter>
-          <Suspense fallback={<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", color: "primary.main" }}>Carregando...</Box>}>
-            <Routes>
-              <Route path="/login" element={<Login />} />
+        <NotificationsProvider>
+          <BrowserRouter>
+            <Suspense fallback={<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", color: "primary.main" }}>Carregando...</Box>}>
+              <Routes>
+                <Route path="/login" element={<Login />} />
 
-              <Route element={<ProtectedRoute />}>
-                <Route path="/" element={<DashboardLayout />}>
-                  <Route index element={<Dashboard />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/" element={<DashboardLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path="dashboard" element={<Dashboard />} />
 
-                  <Route path="funcionarios">
+                    <Route path="funcionarios">
                     <Route path="cadastrar" element={<EmployeesCreate />} />
                     <Route path="visualizar" element={<EmployeesList />} />
                     <Route path=":id" element={<EmployeesCreate />} />
@@ -84,6 +88,7 @@ export default function Rotas() {
             </Routes>
           </Suspense>
         </BrowserRouter>
+        </NotificationsProvider>
       </WebSocketProvider>
     </AuthProvider>
   );
