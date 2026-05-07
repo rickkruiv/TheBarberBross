@@ -65,7 +65,7 @@ const NAVBAR_ITEMS = [
 export default function Topbar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const { mode, toggleTheme } = useThemeContext();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -247,11 +247,19 @@ export default function Topbar() {
         <MenuItem onClick={toggleTheme}>
           {mode === "dark" ? "Modo Claro" : "Modo Escuro"}
         </MenuItem>
+        {user?.nivelAcesso === "ADMIN" && (
+          <MenuItem onClick={() => {
+            setUserAnchorEl(null);
+            navigate("/configuracoes/dados-barbearia");
+          }}>
+            Minha Barbearia
+          </MenuItem>
+        )}
         <MenuItem onClick={() => {
           setUserAnchorEl(null);
-          navigate("/configuracoes/dados-barbearia");
+          navigate("/perfil");
         }}>
-          Minha Barbearia
+          Meu Perfil
         </MenuItem>
         <MenuItem onClick={handleLogout} sx={{ color: "#ef4444" }}>
           Sair
