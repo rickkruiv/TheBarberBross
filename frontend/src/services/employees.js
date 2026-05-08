@@ -74,6 +74,21 @@ export async function updateEmployee(id, values) {
   return data
 }
 
+export async function updateEmployeeProfile(id, values) {
+  const payload = {
+    nome: values.nome,
+    cpf: values.cpf,
+    telefone: values.telefone,
+    email: values.email,
+    senha: values.senha,
+    nascimento: normalizeDate(values.nascimento),
+    nivelAcesso: values.nivelAcesso || "COLABORADOR"
+  }
+
+  const { data } = await api.patch(`/funcionarios/perfil/${id}`, payload)
+  return data
+}
+
 export async function exportEmployees(params) {
   const res = await api.get("/funcionarios/export", {
     params,
@@ -121,6 +136,17 @@ export const useUpdateEmployee = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ id, values }) => updateEmployee(id, values),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] })
+      queryClient.invalidateQueries({ queryKey: ["employee", variables.id] })
+    }
+  })
+}
+
+export const useUpdateEmployeeProfile = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, values }) => updateEmployeeProfile(id, values),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["employees"] })
       queryClient.invalidateQueries({ queryKey: ["employee", variables.id] })

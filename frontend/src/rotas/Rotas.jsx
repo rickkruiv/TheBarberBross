@@ -24,6 +24,7 @@ const AgendamentosList = lazy(() => import("../pages/agendamento/AgendamentosLis
 const AgendaSemanal = lazy(() => import("../pages/agendamento/AgendaSemanal"));
 const DadosBarbearia = lazy(() => import("../pages/config/config"));
 const Login = lazy(() => import("../pages/login/Login"));
+const MyProfile = lazy(() => import("../pages/perfil/MyProfile"));
 
 export default function Rotas() {
   return (
@@ -46,6 +47,8 @@ export default function Rotas() {
                     <Route path=":id" element={<EmployeesCreate />} />
                     <Route path=":id/editar" element={<EmployeesCreate />} />
                   </Route>
+
+                  <Route path="perfil" element={<MyProfile />} />
 
                   <Route path="servicos">
                     <Route path="cadastrar" element={<ServicesCreate />} />
